@@ -12,8 +12,23 @@ app.use(
   }),
 );
 
-app.get("/hello", (req, res) => {
-  res.json({ message: "hello world" });
+app.get("/health", async (req, res) => {
+  let dbStatus = "unknown";
+  /*try {
+    // Simula chequeo de DB, reemplaza con tu lógica real
+    // await db.ping();
+    dbStatus = "ok";
+  } catch (e) {
+    dbStatus = "error";
+  }*/
+  dbStatus = "disconnected"; 
+  res.json({
+    status: "ok",
+    db: dbStatus,
+    version: process.env.npm_package_version,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 app.listen(process.env.SERVER_PORT, () => {
