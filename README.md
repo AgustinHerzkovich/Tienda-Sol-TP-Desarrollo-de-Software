@@ -9,7 +9,7 @@ ___
 - Tadeo Sorrentino
 ___
 ## Gitflow Utilizado
-El gitflow que utilizamos es el `Github Flow` que consta de una rama principal "*main*", y diferentes ramas "*entregas*" para cada update que hagamos en el código. Para cada nueva update se realiza una pull request antes de mergear los cambios a "*main*", y cada cambio una vez aceptado contará con su correspondiente release.
+El gitflow que utilizamos es el `Github Flow` que consta de una rama principal "*main*", y diferentes ramas "*entregas*" para cada update que hagamos en el código. Para cada nueva update se realiza una pull request antes de mergear los cambios a "*main*", y cada cambio una vez aceptado contará con su correspondiente tag y release.
 ___
 #### Versionado
 Utilizamos Semantic Versioning para los nombres de los commits:
