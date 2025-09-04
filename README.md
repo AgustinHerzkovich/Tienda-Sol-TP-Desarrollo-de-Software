@@ -17,7 +17,32 @@ Utilizamos Semantic Versioning para los nombres de los commits:
 - MINOR version when you add functionality in a backward compatible manner. `X.1.X`
 - PATCH version when you make backward compatible bug fixes. `X.X.1`
   
-![[]]
   
 ![alt text](resources/github_flow.png)
 
+
+#### Ejecutar el Backend
+
+```bash
+npm run start:backend
+```
+
+Para el desarrollo con reinicio automático:
+
+```bash
+npm run dev:backend
+```
+
+#### Ejecutar el Frontend
+
+```bash
+npm run start:frontend
+```
+
+#### Ejecutar Ambos (Desarrollo)
+
+Para iniciar el backend en modo `dev` y el frontend simultáneamente, usá:
+
+```bash
+npm run start:dev
+```
