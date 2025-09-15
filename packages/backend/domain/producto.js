@@ -1,8 +1,4 @@
-import { Usuario } from './usuario.js';
-import { Categoria } from './categoria.js';
-import { Moneda } from './moneda.js';
-
-export class Producto {
+export default class Producto {
   constructor(
     id,
     vendedor,

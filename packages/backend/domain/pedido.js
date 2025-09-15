@@ -1,12 +1,7 @@
-import { Usuario } from './usuario.js';
-import { ItemPedido } from './itemPedido.js';
-import { Moneda } from './moneda.js';
-import { DireccionEntrega } from './direccionEntrega.js';
-import { EstadoPedido } from './estadoPedido.js';
-import { CambioEstadoPedido } from './cambioEstadoPedido.js';
-import { FactoryNotificacion } from './FactoryNotificacio.js';
+import CambioEstadoPedido from './cambioEstadoPedido.js';
+import _ from 'lodash';
 
-export class Pedido {
+export default class Pedido {
   constructor(
     id,
     comprador,
@@ -20,7 +15,7 @@ export class Pedido {
     this.id = id;
     this.comprador = comprador;
     this.items = items; // Asumimos que no va a tener dos itemsPedido para un mismo producto, en ese caso es uno solo con las cantidades sumadas
-    this.descontarStocks();
+    this.#descontarStocks();
     this.total = this.calcularTotal(); // El total no se pasa en el constructor
     this.moneda = moneda;
     this.direccionEntrega = direccionEntrega;
@@ -29,30 +24,34 @@ export class Pedido {
   }
 
   calcularTotal() {
-    return this.items.reduce((contador, item) => contador + item.subtotal(), 0);
+    return _.sumBy(this.items, (item) => item.subtotal());
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {
-    cambioEstado = new CambioEstadoPedido(this.estado, this, quien, motivo);
+    const cambioEstado = new CambioEstadoPedido(
+      this.estado,
+      this,
+      quien,
+      motivo
+    );
     this.historialEstados.push(cambioEstado);
     this.estado = nuevoEstado;
   }
 
   //bool
   validarStock() {
-    // mutex.lock();
-    let hayStock = this.items.every((itemPedido) => itemPedido.tieneStock());
-    // mutex.unlock();
-    return hayStock;
+    return this.items.every((itemPedido) => itemPedido.tieneStock());
   }
 
   //void
-  descontarStocks() {
-    if (!this.validarStock) {
+  #descontarStocks() {
+    // Podría no tener sentido si un service invoca a validarStock y hace la reducción
+    // de stock por cada producto
+    if (!this.validarStock()) {
       throw new Error('No hay stock suficiente para realizar el pedido');
     } else {
       this.items.forEach((itemPedido) => {
-        itemPedido.producto.descontarStock(itemPedido.cantidad);
+        itemPedido.producto.reducirStock(itemPedido.cantidad);
       });
     }
   }

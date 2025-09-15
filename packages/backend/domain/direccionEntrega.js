@@ -1,4 +1,4 @@
-export class DireccionEntrega {
+export default class DireccionEntrega {
   constructor(
     calle,
     altura,

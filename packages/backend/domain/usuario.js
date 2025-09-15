@@ -1,6 +1,4 @@
-import { TipoUsuario } from './tipoUsuario.js';
-
-export class Usuario {
+export default class Usuario {
   constructor(id, nombre, mail, telefono, tipo, fechaAlta) {
     this.id = id;
     this.nombre = nombre;
