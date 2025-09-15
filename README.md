@@ -11,11 +11,13 @@ ___
 ## Gitflow Utilizado
 El gitflow que utilizamos es el `Github Flow` que consta de una rama principal "*main*", y diferentes ramas "*entregas*" para cada update que hagamos en el código. Para cada nueva update se realiza una pull request antes de mergear los cambios a "*main*", y cada cambio una vez aceptado contará con su correspondiente tag y release.
 ___
-#### Versionado
-Utilizamos Semantic Versioning para los nombres de los commits:
-- MAJOR version when you make incompatible API changes. `1.X.X`
-- MINOR version when you add functionality in a backward compatible manner. `X.1.X`
-- PATCH version when you make backward compatible bug fixes. `X.X.1`
+#### Convención de Commits
+Utilizamos Conventional Commit para los nombres de los commits:
+- *fix*: a commit of the _type_ fix patches a bug in your codebase (this correlates with PATCH in Semantic Versioning).
+- *feat*: a commit of the _type_ feat introduces a new feature to the codebase (this correlates with MINOR in Semantic Versioning).
+- *BREAKING CHANGE*: a commit that has a footer BREAKING CHANGE:, or appends a ! after the type/scope, introduces a breaking API change (correlating with MAJOR in Semantic Versioning). A BREAKING CHANGE can be part of commits of any _type_.
+- _types_ other than fix: and feat: are allowed, for example @commitlint/config-conventional (based on the Angular convention) recommends build:, chore:, ci:, docs:, style:, refactor:, perf:, test:, and others.
+- _footers_ other than BREAKING CHANGE: <description> may be provided and follow a convention similar to git trailer format..
   
   
 ![alt text](resources/github_flow.png)
