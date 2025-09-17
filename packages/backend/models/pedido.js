@@ -1,26 +1,16 @@
 import CambioEstadoPedido from './cambioEstadoPedido.js';
 import _ from 'lodash';
+import {EstadoPedido} from './estadoPedido.js';
 
 export default class Pedido {
-  constructor(
-    id,
-    comprador,
-    items,
-    moneda,
-    direccionEntrega,
-    estado,
-    fechaCreacion,
-    historialEstados // Solo guardamos el estado previo, y el nuevo no lo guardamos hasta que se vuelve a cambiar de estado
-  ) {
-    this.id = id;
+  constructor(comprador, items, moneda, direccionEntrega) {
     this.comprador = comprador;
     this.items = items; // Asumimos que no va a tener dos itemsPedido para un mismo producto, en ese caso es uno solo con las cantidades sumadas
-    this.#descontarStocks();
     this.total = this.calcularTotal(); // El total no se pasa en el constructor
     this.moneda = moneda;
     this.direccionEntrega = direccionEntrega;
-    this.estado = estado;
-    this.fechaCreacion = fechaCreacion;
+    this.estado = EstadoPedido.PENDIENTE;
+    this.fechaCreacion = Date.now();
   }
 
   calcularTotal() {
@@ -34,7 +24,7 @@ export default class Pedido {
       quien,
       motivo
     );
-    this.historialEstados.push(cambioEstado);
+    this.historialEstados.push(cambioEstado); // Solo guardamos el estado previo, y el nuevo no lo guardamos hasta que se vuelve a cambiar de estado
     this.estado = nuevoEstado;
   }
 
@@ -43,16 +33,11 @@ export default class Pedido {
     return this.items.every((itemPedido) => itemPedido.tieneStock());
   }
 
-  //void
-  #descontarStocks() {
-    // Podría no tener sentido si un service invoca a validarStock y hace la reducción
-    // de stock por cada producto
-    if (!this.validarStock()) {
-      throw new Error('No hay stock suficiente para realizar el pedido');
-    } else {
-      this.items.forEach((itemPedido) => {
-        itemPedido.producto.reducirStock(itemPedido.cantidad);
-      });
-    }
+  getVendedor() {
+    return _.first(this.items).producto.vendedor; // Asumimos que todos los items de un pedido son del mismo vendedor
+  }
+
+  getProductos() {
+    return this.items.map((itemPedido) => itemPedido.producto);
   }
 }
