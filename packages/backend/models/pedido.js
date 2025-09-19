@@ -11,6 +11,7 @@ export default class Pedido {
     this.direccionEntrega = direccionEntrega;
     this.estado = EstadoPedido.PENDIENTE;
     this.fechaCreacion = Date.now();
+    this.historialEstados = []
   }
 
   calcularTotal() {

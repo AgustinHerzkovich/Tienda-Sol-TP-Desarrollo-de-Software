@@ -27,7 +27,28 @@
  *           type: string
  *           enum: [PESO_ARG, DOLAR_USA, REAL]
  *         direccionEntrega:
- *           type: string
+ *           type: object
+ *           properties:
+ *             calle:
+ *               type: string
+ *             altura:
+ *               type: string
+ *             piso:
+ *               type: string
+ *             departamento:
+ *               type: string
+ *             codigoPostal:
+ *               type: string
+ *             ciudad:
+ *               type: string
+ *             provincia:
+ *               type: string
+ *             pais:
+ *               type: string
+ *             lat:
+ *               type: string
+ *             lon:
+ *               type: string
  *
  *     Producto:
  *       type: object
