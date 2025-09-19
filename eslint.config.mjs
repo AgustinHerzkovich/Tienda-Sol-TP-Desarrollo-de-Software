@@ -19,6 +19,9 @@ export default defineConfig([
         },
       ],
     },
+      "env": {
+    "jest": true
+    },
   },
   {
     files: ['packages/frontend/src/**/*.{js,jsx,mjs,cjs}'],
