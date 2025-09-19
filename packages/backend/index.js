@@ -46,13 +46,13 @@ async function main() {
   // Acá se instancian los controllers, services y repositories
   const healthCheckController = new HealthCheckController();
 
-  const productoRepository = new ProductoRepository();
   const usuarioRepository = new UsuarioRepository();
+  const productoRepository = new ProductoRepository();
   const notificacionRepository = new NotificacionRepository();
   const pedidoRepository = new PedidoRepository();
 
-  const productoService = new ProductoService(productoRepository);
   const usuarioService = new UsuarioService(usuarioRepository);
+  const productoService = new ProductoService(productoRepository, usuarioService);
   const notificacionService = new NotificacionService(notificacionRepository);
   const pedidoService = new PedidoService(
     pedidoRepository,
@@ -61,12 +61,12 @@ async function main() {
     notificacionService
   );
 
-  const productoController = new ProductoController(productoService);
   const usuarioController = new UsuarioController(
     usuarioService,
     pedidoService,
     notificacionService
   );
+  const productoController = new ProductoController(productoService);
   const notificacionController = new NotificacionController(
     notificacionService
   );

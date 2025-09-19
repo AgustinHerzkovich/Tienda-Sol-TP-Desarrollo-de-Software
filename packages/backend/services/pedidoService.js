@@ -2,7 +2,6 @@ import Pedido from '../models/pedido.js';
 import Item from '../models/itemPedido.js';
 import OutOfStockError from '../exceptions/outOfStockError.js';
 import CancellationError from '../exceptions/cancellationError.js';
-import Usuario from '../models/usuario.js';
 import {EstadoPedido} from '../models/estadoPedido.js';
 import _ from 'lodash';
 
@@ -20,29 +19,40 @@ export default class PedidoService {
   }
 
   async crear(pedidoJSON) {
-    const itemsCreados = pedidoJSON.items.forEach((item) =>
-      this.getItem(item.id, item.cantidad)
+    // Generar los items
+    const itemsCreados = await Promise.all(pedidoJSON.items.map((item) =>
+      this.getItem(item.productoId, item.cantidad))
     );
-    const comprador = this.getComprador(pedidoJSON.comprador.id);
+
+    // Traer el comprador
+    const comprador = await this.getComprador(pedidoJSON.compradorId);
+
+    // Construir el pedido con items reales
     const pedido = new Pedido(
       comprador,
       itemsCreados,
       pedidoJSON.moneda,
       pedidoJSON.direccionEntrega
     );
-    if (!this.validarStock(pedido)) {
+
+    // Validar stock
+    if (!pedido.validarStock()) {
       const cantidad = _.sumBy(pedido.items, (item) => item.cantidad);
-      throw new OutOfStockError(pedido.id, cantidad);
+      throw new OutOfStockError(cantidad);
     }
 
-    itemsCreados.forEach((itemPedido) => async () => {
-      await this.productoService.modificarStock(
-        itemPedido.producto,
-        -1 * itemPedido.cantidad
-      );
-    });
+    // Actualizar stock de cada producto
+    await Promise.all(
+      itemsCreados.map((itemPedido) =>
+        this.productoService.modificarStock(
+          itemPedido.producto,
+          -1 * itemPedido.cantidad
+        )
+      )
+    );
 
-    await this.notificacionService.notificarEstadoPedido(pedido);
+    // Notificar
+    await this.notificacionService.notificarPedido(pedido);
 
     return await this.pedidoRepository.save(pedido);
   }
@@ -75,7 +85,7 @@ export default class PedidoService {
     }
     pedidoAlmacenado.estado = pedidoModificadoJSON.estado;
 
-    await this.notificacionService.notificarEstadoPedido(pedidoAlmacenado);
+    await this.notificacionService.notificarPedido(pedidoAlmacenado);
 
     return await this.pedidoRepository.save(pedidoAlmacenado);
   }
@@ -86,9 +96,11 @@ export default class PedidoService {
   }
 
   async getItem(id, cantidad) {
-    return new Item(await this.productoService.findById(id), cantidad);
+    const producto = await this.productoService.findById(id)
+    return new Item(producto, cantidad);
   }
+
   async getComprador(id) {
-    return new Usuario(await this.usuarioService.findById(id));
+    return await this.usuarioService.findById(id);
   }
 }
