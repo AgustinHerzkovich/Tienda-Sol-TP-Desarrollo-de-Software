@@ -1,5 +1,5 @@
 import express from 'express';
-import PedidoController from '../controllers/healthCheckController.js';
+import PedidoController from '../controllers/pedidoController.js';
 
 const pedidoPath = '/pedidos';
 

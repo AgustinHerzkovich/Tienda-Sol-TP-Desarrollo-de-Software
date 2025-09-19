@@ -1,10 +1,9 @@
 export default class Usuario {
-  constructor(id, nombre, mail, telefono, tipo, fechaAlta) {
-    this.id = id;
+  constructor(nombre, mail, telefono, tipo) {
     this.nombre = nombre;
     this.mail = mail;
     this.telefono = telefono;
     this.tipo = tipo;
-    this.fechaAlta = fechaAlta;
+    this.fechaAlta = Date.now();
   }
 }

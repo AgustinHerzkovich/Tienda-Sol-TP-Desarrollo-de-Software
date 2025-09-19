@@ -1,6 +1,8 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const options = {
   definition: {
@@ -8,8 +10,7 @@ const options = {
     info: {
       title: 'Tienda Sol - Plataforma de Comercio Electrónico',
       version: '1.0.0',
-      description: ` f
-      `,
+      description: `Documentación de la API de Tienda Sol`,
     },
     servers: [
       {

@@ -87,5 +87,29 @@ export default function usuarioRoutes(getController) {
     await usuarioController.notificaciones(req, res);
   });
 
+  /**
+   * @swagger
+   * /usuarios:
+   *   post:
+   *     summary: Crear un usuario
+   *     tags: [Usuarios]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Usuario'
+   *     responses:
+   *       201:
+   *         description: Usuario creado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Usuario'
+   */
+  router.post(usuarioPath, async (req, res) => {
+    await usuarioController.crear(req, res);
+  });
+
   return router;
 }

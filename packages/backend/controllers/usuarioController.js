@@ -1,4 +1,5 @@
 import { notificacionPatchSchema } from '../schemas/notificacionSchema.js';
+import { usuarioPostSchema } from '../schemas/usuarioSchema.js';
 
 export default class UsuarioController {
   constructor(usuarioService, pedidoService, notificacionService) {
@@ -76,5 +77,17 @@ export default class UsuarioController {
     } catch (err) {
       res.status(err.statusCode).json({ error: err.message });
     }
+  }
+
+  async crear(req, res) {
+    const body = req.body
+    const resultBody = usuarioPostSchema.safeParse(body)
+    
+    if (resultBody.error) {
+      res.status(400).json(resultBody.error.issues)
+    }
+
+    const usuario = await this.usuarioService.crear(resultBody.data)
+    res.status(201).json(usuario)
   }
 }

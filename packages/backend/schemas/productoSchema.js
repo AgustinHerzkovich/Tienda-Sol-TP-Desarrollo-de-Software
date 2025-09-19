@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Moneda } from '../models/moneda.js';
+import { Moneda} from '../models/moneda.js';
 
 export const productoPostSchema = z.object({
   titulo: z.string().min(1),
@@ -10,5 +10,5 @@ export const productoPostSchema = z.object({
   stock: z.number().int().nonnegative(),
   fotos: z.array(z.url()).optional(),
   activo: z.boolean(),
-  vendedor: z.uuid(),
+  vendedorId: z.uuid(),
 });

@@ -2,7 +2,7 @@ export default class ItemPedido {
   constructor(producto, cantidad) {
     this.producto = producto;
     this.cantidad = cantidad;
-    this.precioUnitario = this.producto.precio();
+    this.precioUnitario = producto.precio;
   }
 
   subtotal() {

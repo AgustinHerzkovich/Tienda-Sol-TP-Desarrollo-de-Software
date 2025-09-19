@@ -3,11 +3,11 @@ import {EstadoPedido} from '../models/estadoPedido.js';
 import {Moneda} from '../models/moneda.js';
 
 export const pedidoPostSchema = z.object({
-  comprador: z.uuid(),
+  compradorId: z.uuid(),
   items: z
     .array(
       z.object({
-        producto: z.uuid(),
+        productoId: z.uuid(),
         cantidad: z.number().min(1),
       })
     )

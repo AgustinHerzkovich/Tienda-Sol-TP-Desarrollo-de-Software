@@ -1,4 +1,5 @@
 import UsuarioNotFoundError from '../exceptions/usuarioNotFoundError.js';
+import Usuario from '../models/usuario.js';
 
 export default class UsuarioService {
   constructor(usuarioRepository) {
@@ -14,5 +15,10 @@ export default class UsuarioService {
 
   async findById(usuarioId) {
     return this.usuarioRepository.findById(usuarioId);
+  }
+
+  async crear(usuarioJSON) {
+    const usuario = new Usuario(usuarioJSON.nombre, usuarioJSON.mail, usuarioJSON.telefono, usuarioJSON.tipo)
+    return await this.usuarioRepository.save(usuario)
   }
 }

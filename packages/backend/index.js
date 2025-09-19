@@ -33,7 +33,7 @@ async function main() {
         : true,
     })
   );
-
+  
   // Configuramos el puerto con el .env
   const port = process.env.SERVER_PORT || 3000;
 
