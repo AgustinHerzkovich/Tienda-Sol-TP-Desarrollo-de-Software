@@ -19,8 +19,8 @@ export default defineConfig([
         },
       ],
     },
-      "env": {
-    "jest": true
+    env: {
+      jest: true,
     },
   },
   {

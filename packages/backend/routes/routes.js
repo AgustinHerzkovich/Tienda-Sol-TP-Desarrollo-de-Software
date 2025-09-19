@@ -10,7 +10,7 @@ const routes = [
   pedidoRoutes,
   usuarioRoutes,
   productoRoutes,
-  notitificacionRoutes
+  notitificacionRoutes,
 ];
 
 export default routes;

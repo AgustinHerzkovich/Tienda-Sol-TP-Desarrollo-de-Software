@@ -18,7 +18,12 @@ export default class UsuarioService {
   }
 
   async crear(usuarioJSON) {
-    const usuario = new Usuario(usuarioJSON.nombre, usuarioJSON.mail, usuarioJSON.telefono, usuarioJSON.tipo)
-    return await this.usuarioRepository.save(usuario)
+    const usuario = new Usuario(
+      usuarioJSON.nombre,
+      usuarioJSON.mail,
+      usuarioJSON.telefono,
+      usuarioJSON.tipo
+    );
+    return await this.usuarioRepository.save(usuario);
   }
 }

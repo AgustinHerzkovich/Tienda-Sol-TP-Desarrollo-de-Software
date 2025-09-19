@@ -1,13 +1,15 @@
-import Producto from "../models/producto.js";
+import Producto from '../models/producto.js';
 
 export default class ProductoService {
   constructor(productoRepository, usuarioService) {
     this.productoRepository = productoRepository;
-    this.usuarioService = usuarioService
+    this.usuarioService = usuarioService;
   }
 
   async crear(productoJSON) {
-    const vendedor = await this.usuarioService.findById(productoJSON.vendedorId)
+    const vendedor = await this.usuarioService.findById(
+      productoJSON.vendedorId
+    );
     const producto = new Producto(
       vendedor,
       productoJSON.titulo,
@@ -19,7 +21,7 @@ export default class ProductoService {
       productoJSON.fotos,
       productoJSON.activo
     );
-    
+
     return await this.productoRepository.save(producto);
   }
 

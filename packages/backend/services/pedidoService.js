@@ -2,7 +2,7 @@ import Pedido from '../models/pedido.js';
 import Item from '../models/itemPedido.js';
 import OutOfStockError from '../exceptions/outOfStockError.js';
 import CancellationError from '../exceptions/cancellationError.js';
-import {EstadoPedido} from '../models/estadoPedido.js';
+import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
 
 export default class PedidoService {
@@ -20,8 +20,10 @@ export default class PedidoService {
 
   async crear(pedidoJSON) {
     // Generar los items
-    const itemsCreados = await Promise.all(pedidoJSON.items.map((item) =>
-      this.getItem(item.productoId, item.cantidad))
+    const itemsCreados = await Promise.all(
+      pedidoJSON.items.map((item) =>
+        this.getItem(item.productoId, item.cantidad)
+      )
     );
 
     // Traer el comprador
@@ -96,7 +98,7 @@ export default class PedidoService {
   }
 
   async getItem(id, cantidad) {
-    const producto = await this.productoService.findById(id)
+    const producto = await this.productoService.findById(id);
     return new Item(producto, cantidad);
   }
 

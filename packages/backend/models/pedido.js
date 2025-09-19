@@ -1,6 +1,6 @@
 import CambioEstadoPedido from './cambioEstadoPedido.js';
 import _ from 'lodash';
-import {EstadoPedido} from './estadoPedido.js';
+import { EstadoPedido } from './estadoPedido.js';
 
 export default class Pedido {
   constructor(comprador, items, moneda, direccionEntrega) {
@@ -11,7 +11,7 @@ export default class Pedido {
     this.direccionEntrega = direccionEntrega;
     this.estado = EstadoPedido.PENDIENTE;
     this.fechaCreacion = Date.now();
-    this.historialEstados = []
+    this.historialEstados = [];
   }
 
   calcularTotal() {

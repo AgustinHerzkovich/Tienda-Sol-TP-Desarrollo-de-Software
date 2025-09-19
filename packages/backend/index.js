@@ -17,7 +17,7 @@ import UsuarioController from './controllers/usuarioController.js';
 import NotificacionRepository from './repositories/notificacionRepository.js';
 import NotificacionService from './services/notificacionService.js';
 import NotificacionController from './controllers/notificacionController.js';
-import {setupSwagger} from './swagger.js'
+import { setupSwagger } from './swagger.js';
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ async function main() {
         : true,
     })
   );
-  
+
   // Configuramos el puerto con el .env
   const port = process.env.SERVER_PORT || 3000;
 
@@ -52,7 +52,10 @@ async function main() {
   const pedidoRepository = new PedidoRepository();
 
   const usuarioService = new UsuarioService(usuarioRepository);
-  const productoService = new ProductoService(productoRepository, usuarioService);
+  const productoService = new ProductoService(
+    productoRepository,
+    usuarioService
+  );
   const notificacionService = new NotificacionService(notificacionRepository);
   const pedidoService = new PedidoService(
     pedidoRepository,
@@ -81,7 +84,7 @@ async function main() {
   routes.forEach((route) => server.addRoute(route));
   server.configureRoutes();
   server.launch();
-  console.log("")
+  console.log('');
 }
 
 main().catch((err) => console.error('Error al iniciar la app: ', err));

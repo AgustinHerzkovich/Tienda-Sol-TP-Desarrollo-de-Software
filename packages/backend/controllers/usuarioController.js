@@ -80,14 +80,14 @@ export default class UsuarioController {
   }
 
   async crear(req, res) {
-    const body = req.body
-    const resultBody = usuarioPostSchema.safeParse(body)
-    
+    const body = req.body;
+    const resultBody = usuarioPostSchema.safeParse(body);
+
     if (resultBody.error) {
-      res.status(400).json(resultBody.error.issues)
+      res.status(400).json(resultBody.error.issues);
     }
 
-    const usuario = await this.usuarioService.crear(resultBody.data)
-    res.status(201).json(usuario)
+    const usuario = await this.usuarioService.crear(resultBody.data);
+    res.status(201).json(usuario);
   }
 }
