@@ -8,7 +8,7 @@ import DireccionEntrega from '../models/direccionEntrega.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import Categoria from '../models/categoria.js';
 
-describe('pruebas de pedido', () => {
+describe('Tests unitarios de pedido', () => {
   let pedido;
   let vendedor;
   beforeAll(() => {
