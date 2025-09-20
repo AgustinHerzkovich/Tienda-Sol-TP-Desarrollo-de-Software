@@ -1,13 +1,13 @@
-import { EstadoPedido } from '../models/estadoPedido.js';
-import FactoryNotificacion from '../models/factoryNotificacion.js';
-import Usuario from '../models/usuario.js';
-import Producto from '../models/producto.js';
-import Categoria from '../models/categoria.js';
-import { TipoUsuario } from '../models/tipoUsuario.js';
-import { Moneda } from '../models/moneda.js';
-import ItemPedido from '../models/itemPedido.js';
-import DireccionEntrega from '../models/direccionEntrega.js';
-import Pedido from '../models/pedido.js';
+import { EstadoPedido } from '../../models/estadoPedido.js';
+import FactoryNotificacion from '../../models/factoryNotificacion.js';
+import Usuario from '../../models/usuario.js';
+import Producto from '../../models/producto.js';
+import Categoria from '../../models/categoria.js';
+import { TipoUsuario } from '../../models/tipoUsuario.js';
+import { Moneda } from '../../models/moneda.js';
+import ItemPedido from '../../models/itemPedido.js';
+import DireccionEntrega from '../../models/direccionEntrega.js';
+import Pedido from '../../models/pedido.js';
 
 describe('Tests unitarios de factory notificación', () => {
   const comprador = new Usuario(

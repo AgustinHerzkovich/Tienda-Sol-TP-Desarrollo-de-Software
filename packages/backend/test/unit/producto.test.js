@@ -1,6 +1,6 @@
-import Producto from '../models/producto.js';
-import Categoria from '../models/categoria.js';
-import { Moneda } from '../models/moneda.js';
+import Producto from '../../models/producto.js';
+import Categoria from '../../models/categoria.js';
+import { Moneda } from '../../models/moneda.js';
 
 describe('Tests unitarios de producto', () => {
   let producto = new Producto(

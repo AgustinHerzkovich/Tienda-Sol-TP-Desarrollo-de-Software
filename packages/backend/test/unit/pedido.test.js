@@ -1,12 +1,12 @@
-import Pedido from '../models/pedido.js';
-import Usuario from '../models/usuario.js';
-import Producto from '../models/producto.js';
-import ItemPedido from '../models/itemPedido.js';
-import { TipoUsuario } from '../models/tipoUsuario.js';
-import { Moneda } from '../models/moneda.js';
-import DireccionEntrega from '../models/direccionEntrega.js';
-import { EstadoPedido } from '../models/estadoPedido.js';
-import Categoria from '../models/categoria.js';
+import Pedido from '../../models/pedido.js';
+import Usuario from '../../models/usuario.js';
+import Producto from '../../models/producto.js';
+import ItemPedido from '../../models/itemPedido.js';
+import { TipoUsuario } from '../../models/tipoUsuario.js';
+import { Moneda } from '../../models/moneda.js';
+import DireccionEntrega from '../../models/direccionEntrega.js';
+import { EstadoPedido } from '../../models/estadoPedido.js';
+import Categoria from '../../models/categoria.js';
 
 describe('Tests unitarios de pedido', () => {
   let pedido;

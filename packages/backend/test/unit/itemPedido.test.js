@@ -1,9 +1,9 @@
-import ItemPedido from '../models/itemPedido.js';
-import Usuario from '../models/usuario.js';
-import { TipoUsuario } from '../models/tipoUsuario.js';
-import Producto from '../models/producto.js';
-import Categoria from '../models/categoria.js';
-import { Moneda } from '../models/moneda.js';
+import ItemPedido from '../../models/itemPedido.js';
+import Usuario from '../../models/usuario.js';
+import { TipoUsuario } from '../../models/tipoUsuario.js';
+import Producto from '../../models/producto.js';
+import Categoria from '../../models/categoria.js';
+import { Moneda } from '../../models/moneda.js';
 
 describe('Tests unitarios de itemPedido', () => {
   const vendedor = new Usuario(

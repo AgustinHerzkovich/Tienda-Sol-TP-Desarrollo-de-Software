@@ -1,6 +1,6 @@
-import Notificacion from '../models/notificacion.js';
-import Usuario from '../models/usuario.js';
-import { TipoUsuario } from '../models/tipoUsuario.js';
+import Notificacion from '../../models/notificacion.js';
+import Usuario from '../../models/usuario.js';
+import { TipoUsuario } from '../../models/tipoUsuario.js';
 
 describe('Tests unitarios de notificación', () => {
   const usuario = new Usuario(
