@@ -5,7 +5,7 @@ import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
   {
-    files: ['packages/backend/test/**/*.{js,mjs,cjs,jsx}'],
+    files: ['packages/backend/tests/**/*.{js,mjs,cjs,jsx}'],
     plugins: { js },
     extends: ['js/recommended'],
     languageOptions: {
