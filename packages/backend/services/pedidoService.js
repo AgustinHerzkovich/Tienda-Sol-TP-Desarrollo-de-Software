@@ -1,6 +1,6 @@
 import Pedido from '../models/pedido.js';
 import Item from '../models/itemPedido.js';
-import OutOfStockError from '../exceptions/outOfStockError.js';
+import PedidoOutOfStockError from '../exceptions/PedidoOutOfStockError.js';
 import CancellationError from '../exceptions/cancellationError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
@@ -40,7 +40,7 @@ export default class PedidoService {
     // Validar stock
     if (!pedido.validarStock()) {
       const cantidad = _.sumBy(pedido.items, (item) => item.cantidad);
-      throw new OutOfStockError(cantidad);
+      throw new PedidoOutOfStockError(pedido.id, cantidad);
     }
 
     // Actualizar stock de cada producto

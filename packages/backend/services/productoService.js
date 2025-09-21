@@ -10,6 +10,9 @@ export default class ProductoService {
     const vendedor = await this.usuarioService.findById(
       productoJSON.vendedorId
     );
+    if (vendedor == undefined) {
+      throw new Error('No existe el vendedor');
+    }
     const producto = new Producto(
       vendedor,
       productoJSON.titulo,
@@ -21,7 +24,6 @@ export default class ProductoService {
       productoJSON.fotos,
       productoJSON.activo
     );
-
     return await this.productoRepository.save(producto);
   }
 
@@ -42,7 +44,7 @@ export default class ProductoService {
     if (cantidad > 0) {
       producto.aumentarStock(cantidad);
     }
-    producto.reducirStock(cantidad);
+    producto.reducirStock(Math.abs(cantidad));
     await this.productoRepository.save(producto);
   }
 

@@ -1,11 +1,15 @@
+import Crypto from 'crypto';
+
 export default class NotificacionRepository {
   constructor() {
     this.notifications = [];
   }
 
   async guardar(notification) {
-    notification.id = crypto.randomUUID();
+    if (notification.id === undefined) {
+    notification.id = Crypto.randomUUID();
     this.notifications.push(notification);
+    } 
     return notification;
   }
 
@@ -15,11 +19,11 @@ export default class NotificacionRepository {
   }
 
   async getById(idBuscado) {
-    this.notifications.find((notification) => notification.id == idBuscado);
+    this.notifications.find((notification) => notification.id === idBuscado);
   }
   async getAllByUserId(idBuscado) {
     this.notifications.filter(
-      (notification) => notification.usuarioDestino.id == idBuscado
+      (notification) => notification.usuarioDestino.id === idBuscado
     );
   }
 }

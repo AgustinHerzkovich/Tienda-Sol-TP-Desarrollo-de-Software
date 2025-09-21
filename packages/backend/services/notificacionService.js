@@ -12,15 +12,17 @@ export default class NotificacionService {
   }
 
   async findByUsuarioId(usuarioId, leido) {
-    return await this.notificacionRepository
-      .getAllByUserId(usuarioId)
-      .filter((noti) => noti.leida === leido);
+    const notificacionesDeUsuario =
+      await this.notificacionRepository.getAllByUserId(usuarioId);
+    return notificacionesDeUsuario.filter((noti) => noti.leida === leido);
   }
 
   async modificar(notificacionId, leidoJSON) {
     const notificacion =
       await this.notificacionRepository.getById(notificacionId);
-    notificacion.leida = leidoJSON.read;
+    if (leidoJSON.read) {
+      notificacion.marcarComoLeida();
+    }
     this.notificacionRepository.save(notificacion);
     return notificacion;
   }

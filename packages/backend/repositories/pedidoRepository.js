@@ -1,3 +1,4 @@
+import Crypto from 'crypto'
 export default class PedidoRepository {
   constructor() {
     this.pedidos = [];
@@ -6,8 +7,10 @@ export default class PedidoRepository {
   // Usen solo el metodo "save"
 
   async guardar(pedido) {
-    pedido.id = crypto.randomUUID();
-    this.pedidos.push(pedido);
+    if (pedido.id === undefined) {
+      pedido.id = Crypto.randomUUID();
+      this.pedidos.push(pedido);
+    }
     return pedido;
   }
 

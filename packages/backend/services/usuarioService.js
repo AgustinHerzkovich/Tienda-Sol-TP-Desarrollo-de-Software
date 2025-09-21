@@ -1,5 +1,6 @@
 import UsuarioNotFoundError from '../exceptions/usuarioNotFoundError.js';
 import Usuario from '../models/usuario.js';
+import { TipoUsuario } from '../models/tipoUsuario.js';
 
 export default class UsuarioService {
   constructor(usuarioRepository) {
@@ -18,6 +19,20 @@ export default class UsuarioService {
   }
 
   async crear(usuarioJSON) {
+    let tipoUsuario;
+    switch (usuarioJSON.tipo) {
+      case 'COMPRADOR':
+        tipoUsuario = TipoUsuario.COMPRADOR;
+        break;
+      case 'ADMIN':
+        tipoUsuario = TipoUsuario.ADMIN;
+        break;
+      case 'VENDEDOR':
+        tipoUsuario = TipoUsuario.VENDEDOR;
+        break;
+      default:
+        throw new Error('Tipo de usuario no válido, posible falla de zod');
+    }
     const usuario = new Usuario(
       usuarioJSON.nombre,
       usuarioJSON.mail,

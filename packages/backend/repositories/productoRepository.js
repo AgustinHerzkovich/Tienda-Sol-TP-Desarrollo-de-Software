@@ -1,3 +1,5 @@
+import Crypto from 'crypto';
+
 export default class productoRepository {
   constructor(ProductoModel) {
     this.productos = [];
@@ -5,8 +7,10 @@ export default class productoRepository {
   }
 
   async guardar(producto) {
-    producto.id = crypto.randomUUID();
-    this.productos.push(producto);
+    if (producto.id === undefined) {
+      producto.id = Crypto.randomUUID();
+      this.productos.push(producto);
+    }
     return producto;
   }
 

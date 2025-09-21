@@ -1,3 +1,5 @@
+import NotificacionAlreadyReadError from '../exceptions/notificacionAlreadyReadError.js';
+
 export default class Notificacion {
   constructor(
     usuarioDestino,
@@ -14,6 +16,9 @@ export default class Notificacion {
   }
 
   marcarComoLeida() {
+    if (this.leida) {
+      throw new NotificacionAlreadyReadError(this.id);
+    }
     this.leida = true;
     this.fechaLeida = Date.now();
   }

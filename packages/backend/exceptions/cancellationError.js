@@ -6,6 +6,6 @@ export default class cancellationError extends Error {
     this.name = 'CancellationError';
     this.pedidoId = pedidoId;
     this.estadoActual = estadoActual;
-    this.statusCode = 404;
+    this.statusCode = 400;
   }
 }
