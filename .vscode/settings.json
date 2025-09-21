@@ -1,0 +1,10 @@
+{
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "jest.jestCommandLine": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand",
+  "jestrunner.jestCommand": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+  "jestrunner.configPath": "packages/backend/jest.config.cjs",
+  "jestrunner.runOptions": ["--runInBand"]
+}
