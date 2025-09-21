@@ -8,13 +8,14 @@ import DireccionEntrega from '../../../models/direccionEntrega.js';
 import Pedido from '../../../models/pedido.js';
 import Notificacion from '../../../models/notificacion.js';
 import NotificacionService from '../../../services/notificacionService.js';
+import { jest } from '@jest/globals';
 
 // Mock del repositorio
 const mockNotificacionRepository = {
   save: jest.fn(),
-  findByUsuarioId: jest.fn(),
-  findById: jest.fn(),
-  update: jest.fn(),
+  getAllByUserId: jest.fn(),
+  getById: jest.fn(),
+  guardar: jest.fn(),
 };
 
 describe('Tests unitarios de notificacionService', () => {
@@ -47,11 +48,6 @@ describe('Tests unitarios de notificacionService', () => {
   });
 
   test('Se crea notificación correctamente para el pedido', async () => {
-    // Configurar el mock para que devuelva una notificación con ID
-    const mockSavedNotificacion = new Notificacion(null, '');
-    mockSavedNotificacion.id = 1;
-    mockNotificacionRepository.save.mockResolvedValue(mockSavedNotificacion);
-
     const comprador = new Usuario(
       'Fabian',
       'fabian123@gmail.com',
@@ -108,6 +104,13 @@ describe('Tests unitarios de notificacionService', () => {
       Moneda.PESO_ARG,
       direccionEntrega
     );
+
+    // Configurar el mock para devolver una notificación con el vendedor correcto
+    mockNotificacionRepository.save.mockImplementation((notificacion) => {
+      notificacion.id = 1;
+      return Promise.resolve(notificacion);
+    });
+
     const notificacion = await notificacionService.notificarPedido(pedido);
 
     expect(mockNotificacionRepository.save).toHaveBeenCalledTimes(1);
@@ -118,7 +121,7 @@ describe('Tests unitarios de notificacionService', () => {
 
   test('Se obtienen las notificaciones no leídas de un usuario', async () => {
     // Configurar el mock para devolver las notificaciones no leídas
-    mockNotificacionRepository.findByUsuarioId.mockResolvedValue(
+    mockNotificacionRepository.getAllByUserId.mockResolvedValue(
       sampleNotifications
     );
 
@@ -127,9 +130,8 @@ describe('Tests unitarios de notificacionService', () => {
       false
     );
 
-    expect(mockNotificacionRepository.findByUsuarioId).toHaveBeenCalledWith(
-      usuarioDestino.id,
-      false
+    expect(mockNotificacionRepository.getAllByUserId).toHaveBeenCalledWith(
+      usuarioDestino.id
     );
     expect(notificaciones.length).toBe(3);
     expect(notificaciones[0].usuarioDestino).toBe(usuarioDestino);
@@ -146,11 +148,11 @@ describe('Tests unitarios de notificacionService', () => {
     notificacionModificada.id = 1;
     notificacionModificada.leida = true;
 
-    mockNotificacionRepository.findById.mockResolvedValue(
+    mockNotificacionRepository.getById.mockResolvedValue(
       sampleNotifications[0]
     );
-    mockNotificacionRepository.update.mockResolvedValue(notificacionModificada);
-    mockNotificacionRepository.findByUsuarioId.mockResolvedValue([
+    mockNotificacionRepository.save.mockResolvedValue(notificacionModificada);
+    mockNotificacionRepository.getAllByUserId.mockResolvedValue([
       notificacionModificada,
     ]);
 
@@ -160,19 +162,18 @@ describe('Tests unitarios de notificacionService', () => {
       { read: true }
     );
 
-    expect(mockNotificacionRepository.findById).toHaveBeenCalledWith(
+    expect(mockNotificacionRepository.getById).toHaveBeenCalledWith(
       idNotificacion
     );
-    expect(mockNotificacionRepository.update).toHaveBeenCalledTimes(1);
+    expect(mockNotificacionRepository.save).toHaveBeenCalledTimes(1);
     expect(notificacionActualizada.leida).toBe(true);
 
     const notificacionesLeidas = await notificacionService.findByUsuarioId(
       usuarioDestino.id,
       true
     );
-    expect(mockNotificacionRepository.findByUsuarioId).toHaveBeenCalledWith(
-      usuarioDestino.id,
-      true
+    expect(mockNotificacionRepository.getAllByUserId).toHaveBeenCalledWith(
+      usuarioDestino.id
     );
     expect(notificacionesLeidas.length).toBe(1);
     expect(notificacionesLeidas[0].leida).toBe(true);

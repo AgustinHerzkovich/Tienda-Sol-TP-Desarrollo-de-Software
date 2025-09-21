@@ -15,6 +15,19 @@ describe('Tests unitarios de factory notificación', () => {
   let factoryNotificacion;
   let pedidoBase;
 
+  // Helper function para crear copias correctas del pedido
+  const crearPedidoCopia = (estado, id = 1) => {
+    const pedidoCopy = new Pedido(
+      pedidoBase.comprador,
+      pedidoBase.items,
+      pedidoBase.moneda,
+      pedidoBase.direccionEntrega
+    );
+    pedidoCopy.estado = estado;
+    pedidoCopy.id = id;
+    return pedidoCopy;
+  };
+
   beforeAll(() => {
     comprador = new Usuario(
       'Fabian',
@@ -113,31 +126,34 @@ describe('Tests unitarios de factory notificación', () => {
 
   describe('Creación de notificaciones según pedido', () => {
     test('Notificación para pedido PENDIENTE va al vendedor', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.PENDIENTE;
-      pedido.id = 1;
+      // Usar directamente pedidoBase que ya tiene estado PENDIENTE por defecto
+      pedidoBase.id = 1;
 
-      const notificacion = factoryNotificacion.crearSegunPedido(pedido);
+      const notificacion = factoryNotificacion.crearSegunPedido(pedidoBase);
 
       expect(notificacion.usuarioDestino).toBe(vendedor);
       expect(notificacion.mensaje).toContain('Se ha realizado un pedido!');
     });
 
     test('Notificación para pedido CONFIRMADO va al comprador', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.CONFIRMADO;
-      pedido.id = 1;
+      // Crear una copia correcta manteniendo los métodos
+      const pedidoCopy = new Pedido(
+        pedidoBase.comprador,
+        pedidoBase.items,
+        pedidoBase.moneda,
+        pedidoBase.direccionEntrega
+      );
+      pedidoCopy.estado = EstadoPedido.CONFIRMADO;
+      pedidoCopy.id = 1;
 
-      const notificacion = factoryNotificacion.crearSegunPedido(pedido);
+      const notificacion = factoryNotificacion.crearSegunPedido(pedidoCopy);
 
       expect(notificacion.usuarioDestino).toBe(comprador);
       expect(notificacion.mensaje).toContain('Confirmamos tu pedido!!');
     });
 
     test('Notificación para pedido EN_PREPARACION va al comprador', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.EN_PREPARACION;
-      pedido.id = 1;
+      const pedido = crearPedidoCopia(EstadoPedido.EN_PREPARACION);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
@@ -146,9 +162,7 @@ describe('Tests unitarios de factory notificación', () => {
     });
 
     test('Notificación para pedido ENVIADO va al comprador', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.ENVIADO;
-      pedido.id = 1;
+      const pedido = crearPedidoCopia(EstadoPedido.ENVIADO);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
@@ -157,9 +171,7 @@ describe('Tests unitarios de factory notificación', () => {
     });
 
     test('Notificación para pedido ENTREGADO va al comprador', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.ENTREGADO;
-      pedido.id = 1;
+      const pedido = crearPedidoCopia(EstadoPedido.ENTREGADO);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
@@ -168,9 +180,7 @@ describe('Tests unitarios de factory notificación', () => {
     });
 
     test('Notificación para pedido CANCELADO va al vendedor', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.CANCELADO;
-      pedido.id = 1;
+      const pedido = crearPedidoCopia(EstadoPedido.CANCELADO);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
@@ -181,9 +191,7 @@ describe('Tests unitarios de factory notificación', () => {
 
   describe('Validación del mensaje completo', () => {
     test('El mensaje se concatena correctamente con información del pedido', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.CONFIRMADO;
-      pedido.id = 123;
+      const pedido = crearPedidoCopia(EstadoPedido.CONFIRMADO, 123);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
@@ -192,9 +200,7 @@ describe('Tests unitarios de factory notificación', () => {
     });
 
     test('La notificación creada es una instancia válida', () => {
-      const pedido = { ...pedidoBase };
-      pedido.estado = EstadoPedido.CONFIRMADO;
-      pedido.id = 1;
+      const pedido = crearPedidoCopia(EstadoPedido.CONFIRMADO);
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 

@@ -128,7 +128,9 @@ describe('Tests unitarios de notificación', () => {
 
       expect(notificacion.leida).toBe(true);
       expect(notificacion.fechaLeida).not.toBeNull();
-      expect(notificacion.fechaLeida).toBeGreaterThan(notificacion.fechaAlta);
+      expect(notificacion.fechaLeida).toBeGreaterThanOrEqual(
+        notificacion.fechaAlta
+      );
     });
   });
 

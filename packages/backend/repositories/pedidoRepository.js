@@ -1,4 +1,4 @@
-import Crypto from 'crypto'
+import Crypto from 'crypto';
 export default class PedidoRepository {
   constructor() {
     this.pedidos = [];
@@ -20,10 +20,10 @@ export default class PedidoRepository {
   }
 
   async findById(idBuscado) {
-    this.pedidos.find((pedido) => pedido.id == idBuscado);
+    return this.pedidos.find((pedido) => pedido.id == idBuscado);
   }
 
   findByUsuarioId(usuarioId) {
-    return this.pedidos.find((pedido) => pedido.usuario.id === usuarioId);
+    return this.pedidos.filter((pedido) => pedido.comprador.id === usuarioId);
   }
 }

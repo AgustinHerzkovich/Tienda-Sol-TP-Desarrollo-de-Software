@@ -43,8 +43,9 @@ export default class ProductoService {
   async modificarStock(producto, cantidad) {
     if (cantidad > 0) {
       producto.aumentarStock(cantidad);
+    } else {
+      producto.reducirStock(Math.abs(cantidad));
     }
-    producto.reducirStock(Math.abs(cantidad));
     await this.productoRepository.save(producto);
   }
 

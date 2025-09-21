@@ -5,6 +5,7 @@ import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import { Moneda } from '../../../models/moneda.js';
 import ProductoService from '../../../services/productoService.js';
 import ProductoOutOfStockError from '../../../exceptions/productoOutOfStockError.js';
+import { jest } from '@jest/globals';
 
 describe('Tests unitarios de productoService', () => {
   let vendedor;

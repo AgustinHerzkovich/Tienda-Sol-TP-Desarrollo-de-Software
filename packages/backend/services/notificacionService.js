@@ -8,7 +8,7 @@ export default class NotificacionService {
 
   async notificarPedido(pedido) {
     const notificacion = this.notificationFactory.crearSegunPedido(pedido);
-    return await this.notificacionRepository.guardar(notificacion);
+    return await this.notificacionRepository.save(notificacion);
   }
 
   async findByUsuarioId(usuarioId, leido) {

@@ -201,9 +201,9 @@ describe('Tests unitarios de pedido', () => {
       );
 
       const cambioEstado = pedidoParaEstados.historialEstados[0];
-      expect(cambioEstado.estadoAnterior).toBe(EstadoPedido.PENDIENTE);
+      expect(cambioEstado.estado).toBe(EstadoPedido.PENDIENTE);
       expect(cambioEstado.pedido).toBe(pedidoParaEstados);
-      expect(cambioEstado.quien).toBe(vendedor);
+      expect(cambioEstado.usuario).toBe(vendedor);
       expect(cambioEstado.motivo).toBe(motivo);
     });
 
@@ -228,13 +228,13 @@ describe('Tests unitarios de pedido', () => {
       expect(pedidoParaEstados.estado).toBe(EstadoPedido.ENVIADO);
 
       // Verificar secuencia de estados
-      expect(pedidoParaEstados.historialEstados[0].estadoAnterior).toBe(
+      expect(pedidoParaEstados.historialEstados[0].estado).toBe(
         EstadoPedido.PENDIENTE
       );
-      expect(pedidoParaEstados.historialEstados[1].estadoAnterior).toBe(
+      expect(pedidoParaEstados.historialEstados[1].estado).toBe(
         EstadoPedido.CONFIRMADO
       );
-      expect(pedidoParaEstados.historialEstados[2].estadoAnterior).toBe(
+      expect(pedidoParaEstados.historialEstados[2].estado).toBe(
         EstadoPedido.EN_PREPARACION
       );
     });
