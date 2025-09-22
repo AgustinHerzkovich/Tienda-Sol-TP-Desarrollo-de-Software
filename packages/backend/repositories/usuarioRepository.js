@@ -15,7 +15,6 @@ export default class UsuarioRepository {
   }
 
   async findById(id) {
-    console.log(this.usuarios);
     const usuario = this.usuarios.find((user) => user.id === id);
     return usuario;
   }
