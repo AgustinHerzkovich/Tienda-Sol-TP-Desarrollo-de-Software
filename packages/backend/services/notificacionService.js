@@ -6,15 +6,28 @@ export default class NotificacionService {
     this.notificationFactory = new FactoryNotification();
   }
 
+  toDTO(notificacion) {
+    return {
+      id: notificacion.id || notificacion._id,
+      usuarioDestino: notificacion.usuarioDestino,
+      mensaje: notificacion.mensaje,
+      leida: notificacion.leida,
+    };
+  }
+
   async notificarPedido(pedido) {
     const notificacion = this.notificationFactory.crearSegunPedido(pedido);
-    return await this.notificacionRepository.save(notificacion);
+    notificacion = await this.notificacionRepository.save(notificacion);
+    return this.toDTO(notificacion);
   }
 
   async findByUsuarioId(usuarioId, leido) {
     const notificacionesDeUsuario =
       await this.notificacionRepository.getAllByUserId(usuarioId);
-    return notificacionesDeUsuario.filter((noti) => noti.leida === leido);
+    notificacionesDeUsuario = notificacionesDeUsuario.filter(
+      (noti) => noti.leida === leido
+    );
+    return notificacionesDeUsuario.map((noti) => this.toDTO(noti));
   }
 
   async modificar(notificacionId, leidoJSON) {
@@ -23,7 +36,7 @@ export default class NotificacionService {
     if (leidoJSON.read) {
       notificacion.marcarComoLeida();
     }
-    this.notificacionRepository.save(notificacion);
-    return notificacion;
+    notificacion = await this.notificacionRepository.save(notificacion);
+    return this.toDTO(notificacion);
   }
 }

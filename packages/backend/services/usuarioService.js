@@ -7,6 +7,16 @@ export default class UsuarioService {
     this.usuarioRepository = usuarioRepository;
   }
 
+  toDTO(usuario) {
+    return {
+      id: usuario.id || usuario._id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      telefono: usuario.telefono,
+      tipo: usuario.tipo,
+    };
+  }
+
   async validarUsuarioId(usuarioId) {
     const usuario = await this.usuarioRepository.findById(usuarioId);
     if (!usuario) {
@@ -15,7 +25,8 @@ export default class UsuarioService {
   }
 
   async findById(usuarioId) {
-    return this.usuarioRepository.findById(usuarioId);
+    const usuario = await this.usuarioRepository.findById(usuarioId);
+    return this.toDTO(usuario);
   }
 
   async crear(usuarioJSON) {
@@ -39,6 +50,7 @@ export default class UsuarioService {
       usuarioJSON.telefono,
       usuarioJSON.tipo
     );
-    return await this.usuarioRepository.save(usuario);
+    usuario = await this.usuarioRepository.save(usuario);
+    return this.toDTO(usuario);
   }
 }

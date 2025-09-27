@@ -6,6 +6,20 @@ export default class ProductoService {
     this.usuarioService = usuarioService;
   }
 
+  toDTO(producto) {
+    return {
+      id: producto.id || producto._id,
+      vendedor: producto.vendedor,
+      titulo: producto.titulo,
+      descripcion: producto.descripcion,
+      categorias: producto.categorias,
+      precio: producto.precio,
+      moneda: producto.moneda,
+      stock: producto.stock,
+      fotos: producto.fotos,
+    };
+  }
+
   async crear(productoJSON) {
     const vendedor = await this.usuarioService.findById(
       productoJSON.vendedorId
@@ -24,11 +38,15 @@ export default class ProductoService {
       productoJSON.fotos,
       productoJSON.activo
     );
-    return await this.productoRepository.save(producto);
+
+    producto = await this.productoRepository.save(producto);
+
+    return this.toDTO(producto);
   }
 
   async findById(id) {
-    return await this.productoRepository.findById(id);
+    const producto = await this.productoRepository.findById(id);
+    return this.toDTO(producto);
   }
 
   async findByVendedorId(userId, filtros, paginacion) {
@@ -37,7 +55,7 @@ export default class ProductoService {
       filtros,
       paginacion
     );
-    return productos;
+    return productos.map((producto) => this.toDTO(producto));
   }
 
   async modificarStock(producto, cantidad) {
