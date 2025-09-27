@@ -1,6 +1,6 @@
 import z from 'zod';
-import { EstadoPedido } from '../models/estadoPedido.js';
-import { Moneda } from '../models/moneda.js';
+import { EstadoPedido } from '../../models/estadoPedido.js';
+import { Moneda } from '../../models/moneda.js';
 
 export const pedidoPostSchema = z.object({
   compradorId: z.uuid(),

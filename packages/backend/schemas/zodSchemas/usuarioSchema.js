@@ -1,5 +1,5 @@
 import z from 'zod';
-import { TipoUsuario } from '../models/tipoUsuario.js';
+import { TipoUsuario } from '../../models/tipoUsuario.js';
 
 export const usuarioPostSchema = z.object({
   nombre: z.string().min(1),
