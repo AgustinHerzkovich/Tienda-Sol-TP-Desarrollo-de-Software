@@ -6,9 +6,9 @@ export default class Usuario {
   tipo;
   fechaAlta;
 
-  constructor(nombre, mail, telefono, tipo) {
+  constructor(nombre, email, telefono, tipo) {
     this.nombre = nombre;
-    this.mail = mail;
+    this.email = email;
     this.telefono = telefono;
     this.tipo = tipo;
     this.fechaAlta = Date.now();
