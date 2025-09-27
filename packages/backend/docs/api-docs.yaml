@@ -387,7 +387,7 @@ components:
       type: object
       required:
         - nombre
-        - mail
+        - email
         - telefono
         - tipo
       properties:
@@ -395,7 +395,7 @@ components:
           type: string
           minLength: 1
           description: Nombre completo del usuario
-        mail:
+        email:
           type: string
           format: email
           description: Correo electrónico del usuario
@@ -475,7 +475,7 @@ components:
         nombre:
           type: string
           description: Nombre completo del usuario
-        mail:
+        email:
           type: string
           format: email
           description: Correo electrónico del usuario

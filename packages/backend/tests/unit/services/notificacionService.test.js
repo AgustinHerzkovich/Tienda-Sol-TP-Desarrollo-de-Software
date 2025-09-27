@@ -106,14 +106,14 @@ describe('Tests unitarios de notificacionService', () => {
     );
 
     // Configurar el mock para devolver una notificación con el vendedor correcto
-    mockNotificacionRepository.save.mockImplementation((notificacion) => {
+    mockNotificacionRepository.create.mockImplementation((notificacion) => {
       notificacion.id = 1;
       return Promise.resolve(notificacion);
     });
 
     const notificacion = await notificacionService.notificarPedido(pedido);
 
-    expect(mockNotificacionRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockNotificacionRepository.create).toHaveBeenCalledTimes(1);
     expect(notificacion.usuarioDestino).toBe(vendedor);
     expect(notificacion.leida).toBe(false);
     expect(notificacion.id).toBeDefined();
@@ -121,7 +121,7 @@ describe('Tests unitarios de notificacionService', () => {
 
   test('Se obtienen las notificaciones no leídas de un usuario', async () => {
     // Configurar el mock para devolver las notificaciones no leídas
-    mockNotificacionRepository.getAllByUserId.mockResolvedValue(
+    mockNotificacionRepository.findByUserId.mockResolvedValue(
       sampleNotifications
     );
 
@@ -130,7 +130,7 @@ describe('Tests unitarios de notificacionService', () => {
       false
     );
 
-    expect(mockNotificacionRepository.getAllByUserId).toHaveBeenCalledWith(
+    expect(mockNotificacionRepository.findByUserId).toHaveBeenCalledWith(
       usuarioDestino.id
     );
     expect(notificaciones.length).toBe(3);
@@ -148,11 +148,11 @@ describe('Tests unitarios de notificacionService', () => {
     notificacionModificada.id = 1;
     notificacionModificada.leida = true;
 
-    mockNotificacionRepository.getById.mockResolvedValue(
+    mockNotificacionRepository.findById.mockResolvedValue(
       sampleNotifications[0]
     );
-    mockNotificacionRepository.save.mockResolvedValue(notificacionModificada);
-    mockNotificacionRepository.getAllByUserId.mockResolvedValue([
+    mockNotificacionRepository.update.mockResolvedValue(notificacionModificada);
+    mockNotificacionRepository.findByUserId.mockResolvedValue([
       notificacionModificada,
     ]);
 
@@ -162,17 +162,17 @@ describe('Tests unitarios de notificacionService', () => {
       { read: true }
     );
 
-    expect(mockNotificacionRepository.getById).toHaveBeenCalledWith(
+    expect(mockNotificacionRepository.findById).toHaveBeenCalledWith(
       idNotificacion
     );
-    expect(mockNotificacionRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockNotificacionRepository.update).toHaveBeenCalledTimes(1);
     expect(notificacionActualizada.leida).toBe(true);
 
     const notificacionesLeidas = await notificacionService.findByUsuarioId(
       usuarioDestino.id,
       true
     );
-    expect(mockNotificacionRepository.getAllByUserId).toHaveBeenCalledWith(
+    expect(mockNotificacionRepository.findByUserId).toHaveBeenCalledWith(
       usuarioDestino.id
     );
     expect(notificacionesLeidas.length).toBe(1);

@@ -16,13 +16,13 @@ export default class NotificacionService {
   }
 
   async notificarPedido(pedido) {
-    const notificacion = this.notificationFactory.crearSegunPedido(pedido);
+    let notificacion = this.notificationFactory.crearSegunPedido(pedido);
     notificacion = await this.notificacionRepository.create(notificacion);
     return this.toDTO(notificacion);
   }
 
   async findByUsuarioId(usuarioId, leido) {
-    const notificacionesDeUsuario =
+    let notificacionesDeUsuario =
       await this.notificacionRepository.findByUserId(usuarioId);
     notificacionesDeUsuario = notificacionesDeUsuario.filter(
       (noti) => noti.leida === leido
@@ -31,12 +31,15 @@ export default class NotificacionService {
   }
 
   async modificar(notificacionId, leidoJSON) {
-    const notificacion =
+    let notificacion =
       await this.notificacionRepository.findById(notificacionId);
     if (leidoJSON.read) {
       notificacion.marcarComoLeida();
     }
-    notificacion = await this.notificacionRepository.update(notificacionId, notificacion);
+    notificacion = await this.notificacionRepository.update(
+      notificacionId,
+      notificacion
+    );
     return this.toDTO(notificacion);
   }
 }

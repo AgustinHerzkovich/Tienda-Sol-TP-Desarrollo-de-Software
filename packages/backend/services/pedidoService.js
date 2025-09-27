@@ -27,6 +27,7 @@ export default class PedidoService {
       moneda: pedido.moneda,
       direccionEntrega: pedido.direccionEntrega,
       estado: pedido.estado,
+      fechaCreacion: pedido.fechaCreacion,
     };
   }
 
@@ -42,13 +43,12 @@ export default class PedidoService {
     const comprador = await this.getComprador(pedidoJSON.compradorId);
 
     // Construir el pedido con items reales
-    const pedido = new Pedido(
+    let pedido = new Pedido(
       comprador,
       itemsCreados,
       pedidoJSON.moneda,
       pedidoJSON.direccionEntrega
     );
-
     // Validar stock
     if (!pedido.validarStock()) {
       const cantidad = _.sumBy(pedido.items, (item) => item.cantidad);
@@ -69,7 +69,6 @@ export default class PedidoService {
     await this.notificacionService.notificarPedido(pedido);
 
     pedido = await this.pedidoRepository.create(pedido);
-
     return this.toDTO(pedido);
   }
 
@@ -84,21 +83,29 @@ export default class PedidoService {
         // No se puede cancelar un pedido si ya fue enviado o entregado
         throw new CancellationError(pedidoAlmacenado.id, estadoActual);
       }
-      items.forEach((itemPedido) => async () => {
-        await this.productoService.modificarStock(
-          itemPedido.producto,
-          itemPedido.cantidad
-        );
-      });
-      if (nuevoEstado === EstadoPedido.ENTREGADO) {
-        items.forEach((itemPedido) => async () => {
-          await this.productoService.aumentarVentas(
+
+      await Promise.all(
+        items.map((itemPedido) =>
+          this.productoService.modificarStock(
             itemPedido.producto,
             itemPedido.cantidad
-          );
-        });
-      }
+          )
+        )
+      );
     }
+    if (nuevoEstado === EstadoPedido.ENTREGADO) {
+      console.log(nuevoEstado + ' Se entro al if de entregado');
+      console.log('items: ' + items + ' q: ' + items.length);
+      await Promise.all(
+        items.map((itemPedido) =>
+          this.productoService.aumentarVentas(
+            itemPedido.producto,
+            itemPedido.cantidad
+          )
+        )
+      );
+    }
+
     pedidoAlmacenado.estado = pedidoModificadoJSON.estado;
 
     await this.notificacionService.notificarPedido(pedidoAlmacenado);

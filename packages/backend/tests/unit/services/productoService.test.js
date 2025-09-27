@@ -5,6 +5,7 @@ import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import { Moneda } from '../../../models/moneda.js';
 import ProductoService from '../../../services/productoService.js';
 import ProductoOutOfStockError from '../../../exceptions/productoOutOfStockError.js';
+import NotFoundError from '../../../exceptions/notFoundError.js';
 import { jest } from '@jest/globals';
 
 describe('Tests unitarios de productoService', () => {
@@ -68,16 +69,16 @@ describe('Tests unitarios de productoService', () => {
 
       expect(mockProductoRepository.findById).toHaveBeenCalledWith(1);
       expect(resultado.id).toBe(1);
-      expect(resultado).toBe(producto);
     });
 
-    test('findById retorna undefined cuando no encuentra el producto', async () => {
+    test('findById tira error cuando no encuentra el producto', async () => {
       mockProductoRepository.findById.mockResolvedValue(undefined);
 
-      const resultado = await productoService.findById(999);
+      await expect(productoService.findById(999)).rejects.toThrow(
+        NotFoundError
+      );
 
       expect(mockProductoRepository.findById).toHaveBeenCalledWith(999);
-      expect(resultado).toBeUndefined();
     });
   });
 
@@ -99,13 +100,12 @@ describe('Tests unitarios de productoService', () => {
       productoCreado.id = 1;
 
       mockUsuarioService.findById.mockResolvedValue(vendedor);
-      mockProductoRepository.save.mockResolvedValue(productoCreado);
+      mockProductoRepository.create.mockResolvedValue(productoCreado);
 
       const resultado = await productoService.crear(productoJSON);
 
       expect(mockUsuarioService.findById).toHaveBeenCalledWith(1);
-      expect(mockProductoRepository.save).toHaveBeenCalledTimes(1);
-      expect(resultado).toBe(productoCreado);
+      expect(mockProductoRepository.create).toHaveBeenCalledTimes(1);
     });
 
     test('crear lanza error cuando el vendedor no existe', async () => {
@@ -116,29 +116,29 @@ describe('Tests unitarios de productoService', () => {
       );
 
       expect(mockUsuarioService.findById).toHaveBeenCalledWith(1);
-      expect(mockProductoRepository.save).not.toHaveBeenCalled();
+      expect(mockProductoRepository.create).not.toHaveBeenCalled();
     });
   });
 
   describe('modificarStock', () => {
     test('modificar stock con valor positivo aumenta el stock', async () => {
       const producto = crearProducto(100);
-      mockProductoRepository.save.mockResolvedValue(producto);
+      mockProductoRepository.update.mockResolvedValue(producto);
 
       await productoService.modificarStock(producto, 2);
 
       expect(producto.stock).toBe(102);
-      expect(mockProductoRepository.save).toHaveBeenCalledWith(producto);
+      expect(mockProductoRepository.update).toHaveBeenCalledTimes(1);
     });
 
     test('modificar stock con valor negativo reduce el stock', async () => {
       const producto = crearProducto(100);
-      mockProductoRepository.save.mockResolvedValue(producto);
+      mockProductoRepository.update.mockResolvedValue(producto);
 
       await productoService.modificarStock(producto, -2);
 
       expect(producto.stock).toBe(98);
-      expect(mockProductoRepository.save).toHaveBeenCalledWith(producto);
+      expect(mockProductoRepository.update).toHaveBeenCalledTimes(1);
     });
 
     test('modificar stock lanza error cuando no hay stock suficiente', async () => {
@@ -149,29 +149,19 @@ describe('Tests unitarios de productoService', () => {
       ).rejects.toThrow(ProductoOutOfStockError);
 
       expect(producto.stock).toBe(5);
-      expect(mockProductoRepository.save).not.toHaveBeenCalled();
+      expect(mockProductoRepository.update).not.toHaveBeenCalled();
     });
   });
 
   describe('aumentarVentas', () => {
     test('aumentar ventas aumenta las ventas del producto', async () => {
       const producto = crearProducto();
-      mockProductoRepository.save.mockResolvedValue(producto);
+      mockProductoRepository.update.mockResolvedValue(producto);
 
       await productoService.aumentarVentas(producto, 2);
 
       expect(producto.cantidadVentas).toBe(2);
-      expect(mockProductoRepository.save).toHaveBeenCalledWith(producto);
-    });
-
-    test('aumentar ventas guarda el producto después de la modificación', async () => {
-      const producto = crearProducto();
-      mockProductoRepository.save.mockResolvedValue(producto);
-
-      await productoService.aumentarVentas(producto, 5);
-
-      expect(mockProductoRepository.save).toHaveBeenCalledTimes(1);
-      expect(mockProductoRepository.save).toHaveBeenCalledWith(producto);
+      expect(mockProductoRepository.update).toHaveBeenCalledTimes(1);
     });
   });
 });

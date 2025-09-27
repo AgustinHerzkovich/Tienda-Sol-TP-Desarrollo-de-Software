@@ -13,7 +13,7 @@ export default class UsuarioController {
     const id = req.params.id;
 
     try {
-      await this.usuarioService.validarUsuarioId(id);
+      await this.usuarioService.findById(id);
       const pedidos = await this.pedidoService.pedidosByUser(id);
       res.status(200).json(pedidos);
     } catch (err) {
@@ -48,7 +48,7 @@ export default class UsuarioController {
     };
 
     try {
-      await this.usuarioService.validarUsuarioId(id);
+      await this.usuarioService.findById(id);
       const productos = await this.productoService.findByVendedorId(
         id,
         filtros,
@@ -68,7 +68,7 @@ export default class UsuarioController {
     const { read } = notificacionPatchSchema.safeParse(req.query);
 
     try {
-      await this.usuarioService.validarUsuarioId(id);
+      await this.usuarioService.findById(id);
       const notificaciones = await this.notificacionService.findByUsuarioId(
         id,
         read

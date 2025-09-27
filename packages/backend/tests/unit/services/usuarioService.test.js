@@ -1,7 +1,7 @@
 import UsuarioService from '../../../services/usuarioService.js';
 import Usuario from '../../../models/usuario.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
-import UsuarioNotFoundError from '../../../exceptions/usuarioNotFoundError.js';
+import NotFoundError from '../../../exceptions/notFoundError.js';
 import { jest } from '@jest/globals';
 
 describe('UsuarioService', () => {
@@ -16,45 +16,11 @@ describe('UsuarioService', () => {
     usuarioService = new UsuarioService(usuarioRepositoryMock);
     jest.clearAllMocks();
   });
-  describe('validarUsuarioId', () => {
-    test('lanza UsuarioNotFoundError si el usuario no existe', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-
-      await expect(usuarioService.validarUsuarioId(1)).rejects.toThrow(
-        UsuarioNotFoundError
-      );
-
-      expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(1);
-    });
-
-    test('no lanza error si el usuario existe', async () => {
-      const usuario = {
-        nombre: 'juan',
-        mail: 'mail@mail.com',
-        telefono: '35',
-        tipo: TipoUsuario.COMPRADOR,
-        id: 1,
-      };
-      usuarioRepositoryMock.findById.mockResolvedValue(usuario);
-
-      await expect(usuarioService.validarUsuarioId(1)).resolves.toBeUndefined();
-      expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(1);
-    });
-
-    test('lanza error con mensaje específico cuando usuario no existe', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(null);
-
-      await expect(usuarioService.validarUsuarioId(999)).rejects.toThrow(
-        'Usuario no encontrado'
-      );
-    });
-  });
-
   describe('findById', () => {
     test('devuelve el usuario cuando existe', async () => {
       const usuario = {
         nombre: 'juan',
-        mail: 'mail@mail.com',
+        email: 'mail@mail.com',
         telefono: '35',
         tipo: TipoUsuario.COMPRADOR,
         id: 1,
@@ -67,22 +33,8 @@ describe('UsuarioService', () => {
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(1);
     });
 
-    test('devuelve undefined cuando el usuario no existe', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-
-      const result = await usuarioService.findById(999);
-
-      expect(result).toBeUndefined();
-      expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(999);
-    });
-
-    test('devuelve null cuando el repositorio retorna null', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(null);
-
-      const result = await usuarioService.findById(123);
-
-      expect(result).toBeNull();
-      expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(123);
+    test('tira error cuando el usuario no existe', async () => {
+      await expect(usuarioService.findById(999)).rejects.toThrow(NotFoundError);
     });
   });
 
@@ -90,17 +42,17 @@ describe('UsuarioService', () => {
     test('crea un Usuario ADMIN correctamente', async () => {
       const usuarioJSON = {
         nombre: 'María',
-        mail: 'maria@mail.com',
+        email: 'maria@mail.com',
         telefono: '123456789',
         tipo: 'ADMIN',
       };
       const usuarioGuardado = { id: 10, ...usuarioJSON };
-      usuarioRepositoryMock.save.mockResolvedValue(usuarioGuardado);
+      usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledTimes(1);
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+      expect(usuarioRepositoryMock.create).toHaveBeenCalledTimes(1);
+      expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
       );
       expect(result).toEqual(usuarioGuardado);
@@ -109,16 +61,16 @@ describe('UsuarioService', () => {
     test('crea un Usuario COMPRADOR correctamente', async () => {
       const usuarioJSON = {
         nombre: 'Juan',
-        mail: 'juan@mail.com',
+        email: 'juan@mail.com',
         telefono: '987654321',
         tipo: 'COMPRADOR',
       };
       const usuarioGuardado = { id: 20, ...usuarioJSON };
-      usuarioRepositoryMock.save.mockResolvedValue(usuarioGuardado);
+      usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+      expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
       );
       expect(result).toEqual(usuarioGuardado);
@@ -127,16 +79,16 @@ describe('UsuarioService', () => {
     test('crea un Usuario VENDEDOR correctamente', async () => {
       const usuarioJSON = {
         nombre: 'Carlos',
-        mail: 'carlos@mail.com',
+        email: 'carlos@mail.com',
         telefono: '555123456',
         tipo: 'VENDEDOR',
       };
       const usuarioGuardado = { id: 30, ...usuarioJSON };
-      usuarioRepositoryMock.save.mockResolvedValue(usuarioGuardado);
+      usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+      expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
       );
       expect(result).toEqual(usuarioGuardado);
@@ -145,7 +97,7 @@ describe('UsuarioService', () => {
     test('lanza error cuando el tipo de usuario es inválido', async () => {
       const usuarioJSON = {
         nombre: 'Test',
-        mail: 'test@mail.com',
+        email: 'test@mail.com',
         telefono: '123',
         tipo: 'TIPO_INVALIDO',
       };
@@ -154,19 +106,19 @@ describe('UsuarioService', () => {
         'Tipo de usuario no válido, posible falla de zod'
       );
 
-      expect(usuarioRepositoryMock.save).not.toHaveBeenCalled();
+      expect(usuarioRepositoryMock.create).not.toHaveBeenCalled();
     });
 
     test('el Usuario creado tiene los parámetros correctos', async () => {
       const usuarioJSON = {
         nombre: 'Ana',
-        mail: 'ana@mail.com',
+        email: 'ana@mail.com',
         telefono: '111222333',
         tipo: 'COMPRADOR',
       };
-      usuarioRepositoryMock.save.mockImplementation((usuario) => {
+      usuarioRepositoryMock.create.mockImplementation((usuario) => {
         expect(usuario.nombre).toBe(usuarioJSON.nombre);
-        expect(usuario.mail).toBe(usuarioJSON.mail);
+        expect(usuario.email).toBe(usuarioJSON.email);
         expect(usuario.telefono).toBe(usuarioJSON.telefono);
         expect(usuario.tipo).toBe(usuarioJSON.tipo);
         return { id: 40, ...usuarioJSON };
@@ -174,18 +126,18 @@ describe('UsuarioService', () => {
 
       await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledTimes(1);
+      expect(usuarioRepositoryMock.create).toHaveBeenCalledTimes(1);
     });
 
     test('maneja tipos de usuario en diferentes casos', async () => {
       const casos = ['ADMIN', 'COMPRADOR', 'VENDEDOR'];
 
       for (const tipo of casos) {
-        usuarioRepositoryMock.save.mockResolvedValue({ id: 1 });
+        usuarioRepositoryMock.create.mockResolvedValue({ id: 1 });
 
         const usuarioJSON = {
           nombre: 'Test',
-          mail: 'test@test.com',
+          email: 'test@test.com',
           telefono: '123',
           tipo: tipo,
         };
@@ -196,27 +148,16 @@ describe('UsuarioService', () => {
   });
 
   describe('Casos edge', () => {
-    test('findById con ID undefined', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-
-      const result = await usuarioService.findById(undefined);
-
-      expect(result).toBeUndefined();
-      expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(undefined);
-    });
-
-    test('validarUsuarioId con ID null', async () => {
-      usuarioRepositoryMock.findById.mockResolvedValue(null);
-
-      await expect(usuarioService.validarUsuarioId(null)).rejects.toThrow(
-        UsuarioNotFoundError
+    test('findById con ID undefined lanza error', async () => {
+      await expect(usuarioService.findById(undefined)).rejects.toThrow(
+        NotFoundError
       );
     });
 
     test('crear con tipo null lanza error', async () => {
       const usuarioJSON = {
         nombre: 'Test',
-        mail: 'test@mail.com',
+        email: 'test@mail.com',
         telefono: '123',
         tipo: null,
       };
@@ -229,7 +170,7 @@ describe('UsuarioService', () => {
     test('crear con tipo undefined lanza error', async () => {
       const usuarioJSON = {
         nombre: 'Test',
-        mail: 'test@mail.com',
+        email: 'test@mail.com',
         telefono: '123',
         tipo: undefined,
       };

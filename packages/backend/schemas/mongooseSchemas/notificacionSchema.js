@@ -34,4 +34,7 @@ const NotificacionSchema = new mongoose.Schema(
 
 NotificacionSchema.loadClass(Notificacion);
 
-export const NotificacionModel = mongoose.model('Notificacion', NotificacionSchema);
+export const NotificacionModel = mongoose.model(
+  'Notificacion',
+  NotificacionSchema
+);

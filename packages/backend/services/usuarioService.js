@@ -1,4 +1,4 @@
-import UsuarioNotFoundError from '../exceptions/usuarioNotFoundError.js';
+import NotFoundError from '../exceptions/notFoundError.js';
 import Usuario from '../models/usuario.js';
 import { TipoUsuario } from '../models/tipoUsuario.js';
 
@@ -17,15 +17,12 @@ export default class UsuarioService {
     };
   }
 
-  async validarUsuarioId(usuarioId) {
-    const usuario = await this.usuarioRepository.findById(usuarioId);
-    if (!usuario) {
-      throw new UsuarioNotFoundError('Usuario no encontrado');
-    }
-  }
-
   async findById(usuarioId) {
     const usuario = await this.usuarioRepository.findById(usuarioId);
+    if (!usuario) {
+      throw new NotFoundError(`Usuario con id: ${usuarioId} no encontrado`);
+    }
+
     return this.toDTO(usuario);
   }
 
@@ -44,9 +41,9 @@ export default class UsuarioService {
       default:
         throw new Error('Tipo de usuario no válido, posible falla de zod');
     }
-    const usuario = new Usuario(
+    let usuario = new Usuario(
       usuarioJSON.nombre,
-      usuarioJSON.mail,
+      usuarioJSON.email,
       usuarioJSON.telefono,
       usuarioJSON.tipo
     );

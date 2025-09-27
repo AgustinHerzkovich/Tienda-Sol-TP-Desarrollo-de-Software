@@ -1,4 +1,5 @@
 import Producto from '../models/producto.js';
+import NotFoundError from '../exceptions/notFoundError.js';
 
 export default class ProductoService {
   constructor(productoRepository, usuarioService) {
@@ -27,7 +28,7 @@ export default class ProductoService {
     if (vendedor == undefined) {
       throw new Error('No existe el vendedor');
     }
-    const producto = new Producto(
+    let producto = new Producto(
       vendedor,
       productoJSON.titulo,
       productoJSON.descripcion,
@@ -46,6 +47,10 @@ export default class ProductoService {
 
   async findById(id) {
     const producto = await this.productoRepository.findById(id);
+    if (!producto) {
+      throw new NotFoundError(`Producto con id: ${id} no encontrado`);
+    }
+
     return this.toDTO(producto);
   }
 

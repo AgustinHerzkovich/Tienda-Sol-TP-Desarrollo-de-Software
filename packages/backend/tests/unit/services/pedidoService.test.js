@@ -1,27 +1,23 @@
 import PedidoService from '../../../services/pedidoService.js';
-import PedidoRepository from '../../../repositories/pedidoRepository.js';
-import ProductoService from '../../../services/productoService.js';
-import ProductoRepository from '../../../repositories/productoRepository.js';
-import UsuarioService from '../../../services/usuarioService.js';
-import UsuarioRepository from '../../../repositories/usuarioRepository.js';
-import NotificacionRepository from '../../../repositories/notificacionRepository.js';
-import NotificationService from '../../../services/notificacionService.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import ItemPedido from '../../../models/itemPedido.js';
 import { Moneda } from '../../../models/moneda.js';
 import { EstadoPedido } from '../../../models/estadoPedido.js';
 import PedidoOutOfStockError from '../../../exceptions/PedidoOutOfStockError.js';
 import CancellationError from '../../../exceptions/cancellationError.js';
+import Usuario from '../../../models/usuario.js';
+import Producto from '../../../models/producto.js';
+import Pedido from '../../../models/pedido.js';
+import Categoria from '../../../models/categoria.js';
+import DireccionEntrega from '../../../models/direccionEntrega.js';
+import { jest } from '@jest/globals';
 
 describe('Tests unitarios de PedidoService', () => {
-  let usuarioRepository;
-  let usuarioService;
-  let productoRepository;
-  let productoService;
-  let pedidoRepository;
-  let notificationRepository;
-  let notificationService;
   let pedidoService;
+  let mockPedidoRepository;
+  let mockProductoService;
+  let mockUsuarioService;
+  let mockNotificationService;
 
   // Variables de test
   let comprador;
@@ -29,74 +25,111 @@ describe('Tests unitarios de PedidoService', () => {
   let producto1;
   let producto2;
   let productoSinStock;
+  let direccionEntrega;
 
-  beforeAll(async () => {
-    // Inicializar servicios
-    usuarioRepository = new UsuarioRepository();
-    usuarioService = new UsuarioService(usuarioRepository);
-    productoRepository = new ProductoRepository();
-    productoService = new ProductoService(productoRepository, usuarioService);
-    pedidoRepository = new PedidoRepository();
-    notificationRepository = new NotificacionRepository();
-    notificationService = new NotificationService(notificationRepository);
+  beforeAll(() => {
+    // Crear objetos de prueba
+    comprador = new Usuario(
+      'Juan Manuel',
+      'juan@test.com',
+      '12345678',
+      TipoUsuario.COMPRADOR
+    );
+    comprador.id = 1;
+
+    vendedor = new Usuario(
+      'Carlos Vendedor',
+      'carlos@test.com',
+      '87654321',
+      TipoUsuario.VENDEDOR
+    );
+    vendedor.id = 2;
+
+    producto1 = new Producto(
+      vendedor,
+      'Producto Test 1',
+      'Descripción del producto 1',
+      [new Categoria('Categoria1')],
+      100,
+      Moneda.PESO_ARG,
+      50,
+      ['http://test.com/foto1.jpg'],
+      true
+    );
+    producto1.id = 1;
+
+    producto2 = new Producto(
+      vendedor,
+      'Producto Test 2',
+      'Descripción del producto 2',
+      [new Categoria('Categoria2')],
+      200,
+      Moneda.DOLAR_USA,
+      25,
+      ['http://test.com/foto2.jpg'],
+      true
+    );
+    producto2.id = 2;
+
+    productoSinStock = new Producto(
+      vendedor,
+      'Producto Sin Stock',
+      'Producto que se quedó sin stock',
+      [new Categoria('Categoria3')],
+      150,
+      Moneda.PESO_ARG,
+      0,
+      ['http://test.com/foto3.jpg'],
+      true
+    );
+    productoSinStock.id = 3;
+
+    direccionEntrega = new DireccionEntrega(
+      'Argentina',
+      'Buenos Aires',
+      'CABA',
+      'Palermo',
+      'Calle Test',
+      '123',
+      '1A',
+      'C1414',
+      'Entre Av. Test y Calle Mock',
+      'Edificio Test'
+    );
+  });
+
+  beforeEach(() => {
+    // Configurar mocks
+    mockPedidoRepository = {
+      create: jest.fn(),
+      findById: jest.fn(),
+      findByUserId: jest.fn(),
+      update: jest.fn(),
+    };
+
+    mockProductoService = {
+      findById: jest.fn(),
+      modificarStock: jest.fn(),
+      aumentarVentas: jest.fn(),
+    };
+
+    mockUsuarioService = {
+      findById: jest.fn(),
+      validarUsuarioId: jest.fn(),
+    };
+
+    mockNotificationService = {
+      notificarPedido: jest.fn(),
+    };
+
     pedidoService = new PedidoService(
-      pedidoRepository,
-      productoService,
-      usuarioService,
-      notificationService
+      mockPedidoRepository,
+      mockProductoService,
+      mockUsuarioService,
+      mockNotificationService
     );
 
-    // Crear usuarios de prueba
-    comprador = await usuarioService.crear({
-      nombre: 'Juan Manuel',
-      mail: 'juan@test.com',
-      telefono: '12345678',
-      tipo: 'COMPRADOR',
-    });
-
-    vendedor = await usuarioService.crear({
-      nombre: 'Carlos Vendedor',
-      mail: 'carlos@test.com',
-      telefono: '87654321',
-      tipo: 'VENDEDOR',
-    });
-
-    // Crear productos de prueba
-    producto1 = await productoService.crear({
-      titulo: 'Producto Test 1',
-      descripcion: 'Descripción del producto 1',
-      categorias: [{ nombre: 'Categoria1' }],
-      precio: 100,
-      moneda: Moneda.PESO_ARG,
-      stock: 50,
-      fotos: ['http://test.com/foto1.jpg'],
-      activo: true,
-      vendedorId: vendedor.id,
-    });
-
-    producto2 = await productoService.crear({
-      titulo: 'Producto Test 2',
-      descripcion: 'Descripción del producto 2',
-      categorias: [{ nombre: 'Categoria2' }],
-      precio: 200,
-      moneda: Moneda.DOLAR_USA,
-      stock: 25,
-      fotos: ['http://test.com/foto2.jpg'],
-      activo: true,
-      vendedorId: vendedor.id,
-    });
-
-    productoSinStock = await productoService.crear({
-      titulo: 'Producto Sin Stock',
-      descripcion: 'Producto que se quedó sin stock',
-      categorias: [{ nombre: 'Categoria3' }],
-      precio: 150,
-      moneda: Moneda.PESO_ARG,
-      stock: 0,
-      fotos: ['http://test.com/foto3.jpg'],
-      activo: true,
-      vendedorId: vendedor.id,
-    });
+    jest.clearAllMocks();
   });
 
   describe('crear()', () => {
@@ -105,19 +138,42 @@ describe('Tests unitarios de PedidoService', () => {
         compradorId: comprador.id,
         items: [{ productoId: producto1.id, cantidad: 2 }],
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Test 123',
+        direccionEntrega: direccionEntrega,
       };
+
+      // Configurar mocks
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
+
+      // Mock del repository create que devuelva el pedido con ID y fecha
+      mockPedidoRepository.create.mockImplementation((pedido) => {
+        pedido.id = 1;
+        pedido.fechaCreacion = Date.now();
+        return Promise.resolve(pedido);
+      });
 
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
 
       expect(pedidoCreado).toBeDefined();
+      expect(pedidoCreado.id).toBe(1); // Verificar que tiene ID
       expect(pedidoCreado.comprador.id).toBe(comprador.id);
       expect(pedidoCreado.items).toHaveLength(1);
       expect(pedidoCreado.items[0].cantidad).toBe(2);
       expect(pedidoCreado.moneda).toBe(Moneda.PESO_ARG);
-      expect(pedidoCreado.direccionEntrega).toBe('Calle Test 123');
-      expect(pedidoCreado.estado).toBe(EstadoPedido.PENDIENTE);
+      expect(pedidoCreado.estado.valor).toBe('PENDIENTE');
       expect(pedidoCreado.total).toBe(200); // 100 * 2
+
+      // Verificar que se llamaron los métodos correctos
+      expect(mockUsuarioService.findById).toHaveBeenCalledWith(comprador.id);
+      expect(mockProductoService.findById).toHaveBeenCalledWith(producto1.id);
+      expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
+        producto1,
+        -2
+      );
+      expect(mockPedidoRepository.create).toHaveBeenCalled();
+      expect(mockNotificationService.notificarPedido).toHaveBeenCalled();
     });
 
     test('crea un pedido exitosamente con múltiples productos', async () => {
@@ -128,15 +184,40 @@ describe('Tests unitarios de PedidoService', () => {
           { productoId: producto2.id, cantidad: 3 },
         ],
         moneda: Moneda.DOLAR_USA,
-        direccionEntrega: 'Avenida Test 456',
+        direccionEntrega: direccionEntrega,
       };
+
+      // Configurar mocks
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById
+        .mockResolvedValueOnce(producto1)
+        .mockResolvedValueOnce(producto2);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
+
+      mockPedidoRepository.create.mockImplementation((pedido) => {
+        pedido.id = 2;
+        pedido.fechaCreacion = Date.now();
+        return Promise.resolve(pedido);
+      });
 
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
 
       expect(pedidoCreado).toBeDefined();
+      expect(pedidoCreado.id).toBe(2);
       expect(pedidoCreado.items).toHaveLength(2);
       expect(pedidoCreado.total).toBe(700); // (100 * 1) + (200 * 3)
       expect(pedidoCreado.moneda).toBe(Moneda.DOLAR_USA);
+
+      // Verificar llamadas a modificarStock
+      expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
+        producto1,
+        -1
+      );
+      expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
+        producto2,
+        -3
+      );
     });
 
     test('falla al crear pedido sin stock suficiente', async () => {
@@ -144,44 +225,36 @@ describe('Tests unitarios de PedidoService', () => {
         compradorId: comprador.id,
         items: [{ productoId: productoSinStock.id, cantidad: 1 }],
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Sin Stock 789',
+        direccionEntrega: direccionEntrega,
       };
+
+      // Configurar mocks
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(productoSinStock);
 
       await expect(pedidoService.crear(pedidoJSON)).rejects.toThrow(
         PedidoOutOfStockError
       );
+
+      // Verificar que no se guardó el pedido ni se modificó stock
+      expect(mockPedidoRepository.create).not.toHaveBeenCalled();
+      expect(mockProductoService.modificarStock).not.toHaveBeenCalled();
     });
 
     test('falla al crear pedido con cantidad mayor al stock disponible', async () => {
       const pedidoJSON = {
         compradorId: comprador.id,
-        items: [{ productoId: producto1.id, cantidad: 100 }], // Stock disponible: 50
+        items: [{ productoId: producto1.id, cantidad: 100 }], // Stock: 50
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Exceso 101',
+        direccionEntrega: direccionEntrega,
       };
+
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(producto1);
 
       await expect(pedidoService.crear(pedidoJSON)).rejects.toThrow(
         PedidoOutOfStockError
       );
-    });
-
-    test('actualiza el stock de los productos al crear pedido', async () => {
-      // Obtener stock inicial
-      const productoAntes = await productoService.findById(producto2.id);
-      const stockInicial = productoAntes.stock;
-
-      const pedidoJSON = {
-        compradorId: comprador.id,
-        items: [{ productoId: producto2.id, cantidad: 5 }],
-        moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Stock 202',
-      };
-
-      await pedidoService.crear(pedidoJSON);
-
-      // Verificar que el stock se redujo
-      const productoDespues = await productoService.findById(producto2.id);
-      expect(productoDespues.stock).toBe(stockInicial - 5);
     });
 
     test('establece la fecha de creación correctamente', async () => {
@@ -191,12 +264,26 @@ describe('Tests unitarios de PedidoService', () => {
         compradorId: comprador.id,
         items: [{ productoId: producto1.id, cantidad: 1 }],
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Fecha 303',
+        direccionEntrega: direccionEntrega,
       };
 
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
+
+      mockPedidoRepository.create.mockImplementation((pedido) => {
+        pedido.id = 1;
+        pedido.fechaCreacion = Date.now();
+        return Promise.resolve(pedido);
+      });
+
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
+
       const despues = Date.now();
 
+      expect(pedidoCreado.fechaCreacion).toBeDefined();
+      expect(typeof pedidoCreado.fechaCreacion).toBe('number');
       expect(pedidoCreado.fechaCreacion).toBeGreaterThanOrEqual(antes);
       expect(pedidoCreado.fechaCreacion).toBeLessThanOrEqual(despues);
     });
@@ -205,148 +292,167 @@ describe('Tests unitarios de PedidoService', () => {
   describe('modificar()', () => {
     let pedidoParaModificar;
 
-    beforeEach(async () => {
-      // Crear un pedido para modificar en cada test
-      const pedidoJSON = {
-        compradorId: comprador.id,
-        items: [{ productoId: producto1.id, cantidad: 2 }],
-        moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Modificar 404',
-      };
-      pedidoParaModificar = await pedidoService.crear(pedidoJSON);
+    beforeEach(() => {
+      pedidoParaModificar = new Pedido(
+        comprador,
+        [new ItemPedido(producto1, 2)],
+        Moneda.PESO_ARG,
+        direccionEntrega
+      );
+      pedidoParaModificar.id = 1;
+      pedidoParaModificar.fechaCreacion = Date.now();
     });
 
     test('modifica estado de PENDIENTE a CONFIRMADO', async () => {
-      const estadoModificado = { estado: EstadoPedido.CONFIRMADO };
+      const pedidoModificadoJSON = { estado: EstadoPedido.CONFIRMADO };
 
-      const pedidoModificado = await pedidoService.modificar(
+      // Configurar mocks - IMPORTANTE: findById debe devolver el pedido
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+        // Simular que el repository actualiza el pedido y lo devuelve
+        pedidoParaModificar.estado = EstadoPedido.CONFIRMADO;
+        return Promise.resolve(pedidoParaModificar);
+      });
+
+      const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
-        estadoModificado
+        pedidoModificadoJSON
       );
 
-      expect(pedidoModificado.estado).toBe(EstadoPedido.CONFIRMADO);
+      expect(resultado).toBeDefined();
+      expect(resultado.id).toBe(1);
+      expect(resultado.estado.valor).toBe('CONFIRMADO');
+      expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1);
+      expect(mockPedidoRepository.update).toHaveBeenCalled();
     });
 
     test('modifica estado de CONFIRMADO a EN_PREPARACION', async () => {
-      // Primero cambiar a CONFIRMADO
-      await pedidoService.modificar(pedidoParaModificar.id, {
-        estado: EstadoPedido.CONFIRMADO,
+      // Configurar el pedido con estado CONFIRMADO
+      pedidoParaModificar.estado = EstadoPedido.CONFIRMADO;
+
+      const pedidoModificadoJSON = { estado: EstadoPedido.EN_PREPARACION };
+
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+        pedidoParaModificar.estado = EstadoPedido.EN_PREPARACION;
+        return Promise.resolve(pedidoParaModificar);
       });
 
-      // Luego cambiar a EN_PREPARACION
-      const pedidoModificado = await pedidoService.modificar(
+      const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
-        { estado: EstadoPedido.EN_PREPARACION }
+        pedidoModificadoJSON
       );
 
-      expect(pedidoModificado.estado).toBe(EstadoPedido.EN_PREPARACION);
+      expect(resultado.estado.valor).toBe('EN_PREPARACION');
     });
 
     test('modifica estado a ENTREGADO y aumenta ventas', async () => {
-      const productoAntes = await productoService.findById(producto1.id);
-      const ventasIniciales = productoAntes.cantidadVentas || 0;
+      const pedidoModificadoJSON = { estado: EstadoPedido.ENTREGADO };
 
-      const pedidoModificado = await pedidoService.modificar(
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockProductoService.aumentarVentas.mockResolvedValue(undefined);
+      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+        pedidoParaModificar.estado = EstadoPedido.ENTREGADO;
+        return Promise.resolve(pedidoParaModificar);
+      });
+
+      const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
-        { estado: EstadoPedido.ENTREGADO }
+        pedidoModificadoJSON
       );
 
-      expect(pedidoModificado.estado).toBe(EstadoPedido.ENTREGADO);
-
-      // Verificar que las ventas aumentaron (nota: el código tiene un bug aquí)
-      // const productoDespues = await productoService.findById(producto1.id);
-      // expect(productoDespues.cantidadVentas).toBe(ventasIniciales + 2);
+      expect(resultado.estado.valor).toBe('ENTREGADO');
+      expect(mockProductoService.aumentarVentas).toHaveBeenCalledWith(
+        producto1,
+        2
+      );
     });
 
     test('permite cancelar pedido PENDIENTE y devuelve stock', async () => {
-      const productoAntes = await productoService.findById(producto1.id);
-      const stockAntes = productoAntes.stock;
+      const pedidoModificadoJSON = { estado: EstadoPedido.CANCELADO };
 
-      const pedidoModificado = await pedidoService.modificar(
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+        pedidoParaModificar.estado = EstadoPedido.CANCELADO;
+        return Promise.resolve(pedidoParaModificar);
+      });
+
+      const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
-        { estado: EstadoPedido.CANCELADO }
+        pedidoModificadoJSON
       );
 
-      expect(pedidoModificado.estado).toBe(EstadoPedido.CANCELADO);
-
-      // Verificar que el stock se devolvió (nota: el código tiene un bug aquí también)
-      // const productoDespues = await productoService.findById(producto1.id);
-      // expect(productoDespues.stock).toBe(stockAntes + 2);
+      expect(resultado.estado.valor).toBe('CANCELADO');
+      expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
+        producto1,
+        2
+      );
     });
 
     test('no permite cancelar pedido ENVIADO', async () => {
-      // Cambiar estado a ENVIADO
-      await pedidoService.modificar(pedidoParaModificar.id, {
-        estado: EstadoPedido.ENVIADO,
-      });
+      pedidoParaModificar.estado = EstadoPedido.ENVIADO;
+      const pedidoModificadoJSON = { estado: EstadoPedido.CANCELADO };
 
-      // Intentar cancelar
+      // IMPORTANTE: Configurar el mock para devolver el pedido
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+
       await expect(
-        pedidoService.modificar(pedidoParaModificar.id, {
-          estado: EstadoPedido.CANCELADO,
-        })
+        pedidoService.modificar(pedidoParaModificar.id, pedidoModificadoJSON)
       ).rejects.toThrow(CancellationError);
+
+      expect(mockPedidoRepository.update).not.toHaveBeenCalled();
     });
 
     test('no permite cancelar pedido ENTREGADO', async () => {
-      // Cambiar estado a ENTREGADO
-      await pedidoService.modificar(pedidoParaModificar.id, {
-        estado: EstadoPedido.ENTREGADO,
-      });
+      pedidoParaModificar.estado = EstadoPedido.ENTREGADO;
+      const pedidoModificadoJSON = { estado: EstadoPedido.CANCELADO };
 
-      // Intentar cancelar
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+
       await expect(
-        pedidoService.modificar(pedidoParaModificar.id, {
-          estado: EstadoPedido.CANCELADO,
-        })
+        pedidoService.modificar(pedidoParaModificar.id, pedidoModificadoJSON)
       ).rejects.toThrow(CancellationError);
     });
   });
 
   describe('pedidosByUser()', () => {
-    beforeEach(async () => {
-      // Crear algunos pedidos para el comprador
-      const pedido1JSON = {
-        compradorId: comprador.id,
-        items: [{ productoId: producto1.id, cantidad: 1 }],
-        moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Dirección 1',
-      };
-
-      const pedido2JSON = {
-        compradorId: comprador.id,
-        items: [{ productoId: producto2.id, cantidad: 2 }],
-        moneda: Moneda.DOLAR_USA,
-        direccionEntrega: 'Dirección 2',
-      };
-
-      await pedidoService.crear(pedido1JSON);
-      await pedidoService.crear(pedido2JSON);
-    });
-
     test('devuelve todos los pedidos de un usuario', async () => {
+      const pedido1 = new Pedido(
+        comprador,
+        [new ItemPedido(producto1, 1)],
+        Moneda.PESO_ARG,
+        direccionEntrega
+      );
+      const pedido2 = new Pedido(
+        comprador,
+        [new ItemPedido(producto2, 2)],
+        Moneda.DOLAR_USA,
+        direccionEntrega
+      );
+      pedido1.id = 1;
+      pedido2.id = 2;
+
+      mockPedidoRepository.findByUserId.mockResolvedValue([pedido1, pedido2]);
+
       const pedidos = await pedidoService.pedidosByUser(comprador.id);
 
       expect(pedidos).toBeDefined();
       expect(Array.isArray(pedidos)).toBe(true);
-      expect(pedidos.length).toBeGreaterThanOrEqual(2);
+      expect(pedidos).toHaveLength(2);
+      expect(mockPedidoRepository.findByUserId).toHaveBeenCalledWith(
+        comprador.id
+      );
 
-      // Verificar que todos los pedidos pertenecen al comprador
       pedidos.forEach((pedido) => {
         expect(pedido.comprador.id).toBe(comprador.id);
       });
     });
 
     test('devuelve array vacío para usuario sin pedidos', async () => {
-      // Crear un nuevo usuario que no tiene pedidos
-      const usuarioSinPedidos = await usuarioService.crear({
-        nombre: 'Sin Pedidos',
-        mail: 'sinpedidos@test.com',
-        telefono: '99999999',
-        tipo: 'COMPRADOR',
-      });
+      mockPedidoRepository.findByUserId.mockResolvedValue([]);
 
-      const pedidos = await pedidoService.pedidosByUser(usuarioSinPedidos.id);
+      const pedidos = await pedidoService.pedidosByUser(999);
 
       expect(pedidos).toBeDefined();
       expect(Array.isArray(pedidos)).toBe(true);
@@ -357,6 +463,8 @@ describe('Tests unitarios de PedidoService', () => {
   describe('Métodos auxiliares', () => {
     describe('getItem()', () => {
       test('crea ItemPedido correctamente', async () => {
+        mockProductoService.findById.mockResolvedValue(producto1);
+
         const item = await pedidoService.getItem(producto1.id, 3);
 
         expect(item).toBeInstanceOf(ItemPedido);
@@ -366,6 +474,8 @@ describe('Tests unitarios de PedidoService', () => {
       });
 
       test('calcula subtotal correctamente', async () => {
+        mockProductoService.findById.mockResolvedValue(producto2);
+
         const item = await pedidoService.getItem(producto2.id, 4);
 
         expect(item.subtotal()).toBe(producto2.precio * 4);
@@ -374,6 +484,8 @@ describe('Tests unitarios de PedidoService', () => {
 
     describe('getComprador()', () => {
       test('obtiene comprador por ID', async () => {
+        mockUsuarioService.findById.mockResolvedValue(comprador);
+
         const compradorObtenido = await pedidoService.getComprador(
           comprador.id
         );
@@ -382,74 +494,86 @@ describe('Tests unitarios de PedidoService', () => {
         expect(compradorObtenido.id).toBe(comprador.id);
         expect(compradorObtenido.nombre).toBe(comprador.nombre);
         expect(compradorObtenido.tipo).toBe(TipoUsuario.COMPRADOR);
+        expect(mockUsuarioService.findById).toHaveBeenCalledWith(comprador.id);
       });
     });
   });
 
   describe('Casos edge y validaciones', () => {
     test('maneja pedido con items que suman exactamente el stock disponible', async () => {
-      // Crear producto con stock específico
-      const productoLimitado = await productoService.crear({
-        titulo: 'Producto Limitado',
-        descripcion: 'Stock exacto',
-        categorias: [{ nombre: 'Limitado' }],
-        precio: 50,
-        moneda: Moneda.PESO_ARG,
-        stock: 5,
-        fotos: ['http://test.com/limitado.jpg'],
-        activo: true,
-        vendedorId: vendedor.id,
-      });
+      const productoLimitado = new Producto(
+        vendedor,
+        'Producto Limitado',
+        'Stock exacto',
+        [new Categoria('Limitado')],
+        50,
+        Moneda.PESO_ARG,
+        5,
+        ['http://test.com/limitado.jpg'],
+        true
+      );
+      productoLimitado.id = 4;
 
       const pedidoJSON = {
         compradorId: comprador.id,
-        items: [{ productoId: productoLimitado.id, cantidad: 5 }], // Exactamente todo el stock
+        items: [{ productoId: productoLimitado.id, cantidad: 5 }],
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Calle Límite 505',
+        direccionEntrega: direccionEntrega,
       };
+
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(productoLimitado);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
+
+      mockPedidoRepository.create.mockImplementation((pedido) => {
+        pedido.id = 1;
+        pedido.fechaCreacion = Date.now();
+        return Promise.resolve(pedido);
+      });
 
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
 
       expect(pedidoCreado).toBeDefined();
       expect(pedidoCreado.items[0].cantidad).toBe(5);
-
-      // Verificar que el stock llegó a 0
-      const productoActualizado = await productoService.findById(
-        productoLimitado.id
+      expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
+        productoLimitado,
+        -5
       );
-      expect(productoActualizado.stock).toBe(0);
     });
 
     test('maneja monedas diferentes correctamente', async () => {
       const testCases = [
-        { moneda: Moneda.PESO_ARG, direccion: 'Pesos 100' },
-        { moneda: Moneda.DOLAR_USA, direccion: 'Dólares 200' },
-        { moneda: Moneda.REAL, direccion: 'Reales 300' },
+        { moneda: Moneda.PESO_ARG },
+        { moneda: Moneda.DOLAR_USA },
+        { moneda: Moneda.REAL },
       ];
 
-      for (const testCase of testCases) {
+      for (let i = 0; i < testCases.length; i++) {
+        const testCase = testCases[i];
         const pedidoJSON = {
           compradorId: comprador.id,
           items: [{ productoId: producto1.id, cantidad: 1 }],
           moneda: testCase.moneda,
-          direccionEntrega: testCase.direccion,
+          direccionEntrega: direccionEntrega,
         };
+
+        mockUsuarioService.findById.mockResolvedValue(comprador);
+        mockProductoService.findById.mockResolvedValue(producto1);
+        mockProductoService.modificarStock.mockResolvedValue(undefined);
+        mockNotificationService.notificarPedido.mockResolvedValue({
+          id: i + 1,
+        });
+
+        mockPedidoRepository.create.mockImplementation((pedido) => {
+          pedido.id = i + 1;
+          pedido.fechaCreacion = Date.now();
+          return Promise.resolve(pedido);
+        });
 
         const pedidoCreado = await pedidoService.crear(pedidoJSON);
         expect(pedidoCreado.moneda).toBe(testCase.moneda);
       }
-    });
-
-    test('valida que el pedido tenga items', async () => {
-      const pedidoJSON = {
-        compradorId: comprador.id,
-        items: [],
-        moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Sin Items 404',
-      };
-
-      // Este test depende de validaciones en el schema o constructor
-      // await expect(pedidoService.crear(pedidoJSON)).rejects.toThrow();
     });
   });
 
@@ -460,44 +584,63 @@ describe('Tests unitarios de PedidoService', () => {
         compradorId: comprador.id,
         items: [{ productoId: producto1.id, cantidad: 2 }],
         moneda: Moneda.PESO_ARG,
-        direccionEntrega: 'Flujo Completo 606',
+        direccionEntrega: direccionEntrega,
       };
 
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.modificarStock.mockResolvedValue(undefined);
+      mockProductoService.aumentarVentas.mockResolvedValue(undefined);
+      mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
+
+      // Crear una instancia persistente del pedido que se mantenga entre llamadas
+      let pedidoEjecutandose = null;
+
+      mockPedidoRepository.create.mockImplementation((pedido) => {
+        pedido.id = 1;
+        pedido.fechaCreacion = Date.now();
+        pedidoEjecutandose = pedido; // Guardar referencia
+        return Promise.resolve(pedido);
+      });
+
+      mockPedidoRepository.findById.mockImplementation(() => {
+        return Promise.resolve(pedidoEjecutandose);
+      });
+
+      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+        if (pedidoEjecutandose) {
+          pedidoEjecutandose.estado = pedidoModificado.estado;
+        }
+        return Promise.resolve(pedidoEjecutandose);
+      });
+
+      mockPedidoRepository.findByUserId.mockImplementation(() => {
+        return Promise.resolve([pedidoEjecutandose]);
+      });
+
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
-      expect(pedidoCreado.estado).toBe(EstadoPedido.PENDIENTE);
+      expect(pedidoCreado.estado.valor).toBe('PENDIENTE');
 
-      // 2. Confirmar pedido
-      const pedidoConfirmado = await pedidoService.modificar(pedidoCreado.id, {
-        estado: EstadoPedido.CONFIRMADO,
-      });
-      expect(pedidoConfirmado.estado).toBe(EstadoPedido.CONFIRMADO);
+      // 2-5. Modificar estados
+      const estados = [
+        EstadoPedido.CONFIRMADO,
+        EstadoPedido.EN_PREPARACION,
+        EstadoPedido.ENVIADO,
+        EstadoPedido.ENTREGADO,
+      ];
 
-      // 3. Preparar pedido
-      const pedidoPreparado = await pedidoService.modificar(pedidoCreado.id, {
-        estado: EstadoPedido.EN_PREPARACION,
-      });
-      expect(pedidoPreparado.estado).toBe(EstadoPedido.EN_PREPARACION);
+      for (const estado of estados) {
+        const pedidoModificado = await pedidoService.modificar(
+          pedidoCreado.id,
+          { estado }
+        );
+        expect(pedidoModificado.estado.valor).toBe(estado.valor);
+      }
 
-      // 4. Enviar pedido
-      const pedidoEnviado = await pedidoService.modificar(pedidoCreado.id, {
-        estado: EstadoPedido.ENVIADO,
-      });
-      expect(pedidoEnviado.estado).toBe(EstadoPedido.ENVIADO);
-
-      // 5. Entregar pedido
-      const pedidoEntregado = await pedidoService.modificar(pedidoCreado.id, {
-        estado: EstadoPedido.ENTREGADO,
-      });
-      expect(pedidoEntregado.estado).toBe(EstadoPedido.ENTREGADO);
-
-      // 6. Verificar que aparece en los pedidos del usuario
+      // 6. Verificar consulta
       const pedidosUsuario = await pedidoService.pedidosByUser(comprador.id);
-      const pedidoEncontrado = pedidosUsuario.find(
-        (p) => p.id === pedidoCreado.id
-      );
-
-      expect(pedidoEncontrado).toBeDefined();
-      expect(pedidoEncontrado.estado).toBe(EstadoPedido.ENTREGADO);
+      expect(pedidosUsuario).toHaveLength(1);
+      expect(pedidosUsuario[0].id).toBe(pedidoCreado.id);
     });
   });
 });

@@ -96,7 +96,7 @@ const PedidoSchema = new mongoose.Schema({
     required: false,
   },
   fechaCreacion: {
-    type: Date,
+    type: Number,
     required: false,
   },
   historialEstados: [
