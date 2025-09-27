@@ -39,7 +39,7 @@ export default class ProductoService {
       productoJSON.activo
     );
 
-    producto = await this.productoRepository.save(producto);
+    producto = await this.productoRepository.create(producto);
 
     return this.toDTO(producto);
   }
@@ -64,11 +64,11 @@ export default class ProductoService {
     } else {
       producto.reducirStock(Math.abs(cantidad));
     }
-    await this.productoRepository.save(producto);
+    await this.productoRepository.update(producto.id, producto);
   }
 
   async aumentarVentas(producto, cantidad) {
     producto.aumentarVentas(cantidad);
-    await this.productoRepository.save(producto);
+    await this.productoRepository.update(producto.id, producto);
   }
 }

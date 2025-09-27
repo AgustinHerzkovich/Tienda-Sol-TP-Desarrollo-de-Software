@@ -11,7 +11,7 @@ describe('UsuarioService', () => {
   beforeEach(() => {
     usuarioRepositoryMock = {
       findById: jest.fn(),
-      save: jest.fn(),
+      create: jest.fn(),
     };
     usuarioService = new UsuarioService(usuarioRepositoryMock);
     jest.clearAllMocks();

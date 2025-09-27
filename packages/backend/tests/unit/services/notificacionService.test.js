@@ -12,10 +12,10 @@ import { jest } from '@jest/globals';
 
 // Mock del repositorio
 const mockNotificacionRepository = {
-  save: jest.fn(),
-  getAllByUserId: jest.fn(),
-  getById: jest.fn(),
-  guardar: jest.fn(),
+  create: jest.fn(),
+  update: jest.fn(),
+  findById: jest.fn(),
+  findByUserId: jest.fn(),
 };
 
 describe('Tests unitarios de notificacionService', () => {

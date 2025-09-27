@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Notificacion from '../../models/notificacion';
+import Notificacion from '../../models/notificacion.js';
 
 const NotificacionSchema = new mongoose.Schema(
   {
@@ -34,4 +34,4 @@ const NotificacionSchema = new mongoose.Schema(
 
 NotificacionSchema.loadClass(Notificacion);
 
-export default mongoose.model('Notificacion', NotificacionSchema);
+export const NotificacionModel = mongoose.model('Notificacion', NotificacionSchema);

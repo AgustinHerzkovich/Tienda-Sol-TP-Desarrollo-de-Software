@@ -1,4 +1,3 @@
-import Usuario from '../../../models/usuario.js';
 import PedidoService from '../../../services/pedidoService.js';
 import PedidoRepository from '../../../repositories/pedidoRepository.js';
 import ProductoService from '../../../services/productoService.js';
@@ -7,11 +6,8 @@ import UsuarioService from '../../../services/usuarioService.js';
 import UsuarioRepository from '../../../repositories/usuarioRepository.js';
 import NotificacionRepository from '../../../repositories/notificacionRepository.js';
 import NotificationService from '../../../services/notificacionService.js';
-import Pedido from '../../../models/pedido.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import ItemPedido from '../../../models/itemPedido.js';
-import Producto from '../../../models/producto.js';
-import Categoria from '../../../models/categoria.js';
 import { Moneda } from '../../../models/moneda.js';
 import { EstadoPedido } from '../../../models/estadoPedido.js';
 import PedidoOutOfStockError from '../../../exceptions/PedidoOutOfStockError.js';

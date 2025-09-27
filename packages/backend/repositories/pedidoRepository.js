@@ -1,29 +1,24 @@
-import Crypto from 'crypto';
+import { PedidoModel } from '../schemas/mongooseSchemas/pedidoSchema.js';
+
 export default class PedidoRepository {
   constructor() {
-    this.pedidos = [];
+    this.model = PedidoModel;
   }
 
-  // Usen solo el metodo "save"
-
-  async guardar(pedido) {
-    if (pedido.id === undefined) {
-      pedido.id = Crypto.randomUUID();
-      this.pedidos.push(pedido);
-    }
-    return pedido;
+  async create(pedido) {
+    const pedidoGuardado = new this.model(pedido);
+    return await pedidoGuardado.save();
   }
 
-  async save(pedido) {
-    //Base de batos, guardame el pedido!
-    return this.guardar(pedido);
+  async update(id, pedido) {
+    return await this.model.findByIdAndUpdate(id, pedido, { new: true });
   }
 
   async findById(idBuscado) {
-    return this.pedidos.find((pedido) => pedido.id == idBuscado);
+    return await this.model.findById(idBuscado);
   }
 
-  findByUsuarioId(usuarioId) {
-    return this.pedidos.filter((pedido) => pedido.comprador.id === usuarioId);
+  async findByUserId(usuarioId) {
+    return await this.model.find({ comprador: usuarioId });
   }
 }

@@ -1,21 +1,16 @@
-import { Console } from 'console';
-import Crypto from 'crypto';
+import { UsuarioModel } from '../schemas/mongooseSchemas/usuarioSchema.js';
 
 export default class UsuarioRepository {
   constructor() {
-    this.usuarios = [];
+    this.model = UsuarioModel;
   }
 
-  async save(usuario) {
-    if (usuario.id === undefined) {
-      usuario.id = Crypto.randomUUID();
-      this.usuarios.push(usuario);
-    }
-    return usuario;
+  async create(usuario) {
+    const usuarioGuardado = new this.model(usuario);
+    return await usuarioGuardado.save();
   }
 
   async findById(id) {
-    const usuario = this.usuarios.find((user) => user.id === id);
-    return usuario;
+    return await this.model.findById(id);
   }
 }

@@ -68,7 +68,7 @@ export default class PedidoService {
     // Notificar
     await this.notificacionService.notificarPedido(pedido);
 
-    pedido = await this.pedidoRepository.save(pedido);
+    pedido = await this.pedidoRepository.create(pedido);
 
     return this.toDTO(pedido);
   }
@@ -102,13 +102,13 @@ export default class PedidoService {
     pedidoAlmacenado.estado = pedidoModificadoJSON.estado;
 
     await this.notificacionService.notificarPedido(pedidoAlmacenado);
-    pedidoAlmacenado = await this.pedidoRepository.save(pedidoAlmacenado);
+    pedidoAlmacenado = await this.pedidoRepository.update(id, pedidoAlmacenado);
 
     return this.toDTO(pedidoAlmacenado);
   }
 
   async pedidosByUser(usuarioId) {
-    const pedidos = await this.pedidoRepository.findByUsuarioId(usuarioId);
+    const pedidos = await this.pedidoRepository.findByUserId(usuarioId);
     return pedidos.map((pedido) => this.toDTO(pedido));
   }
 

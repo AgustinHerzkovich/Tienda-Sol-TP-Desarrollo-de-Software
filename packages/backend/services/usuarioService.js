@@ -50,7 +50,7 @@ export default class UsuarioService {
       usuarioJSON.telefono,
       usuarioJSON.tipo
     );
-    usuario = await this.usuarioRepository.save(usuario);
+    usuario = await this.usuarioRepository.create(usuario);
     return this.toDTO(usuario);
   }
 }

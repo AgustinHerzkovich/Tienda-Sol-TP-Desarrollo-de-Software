@@ -27,7 +27,8 @@ describe('Tests unitarios de productoService', () => {
     // Configurar mocks limpios para cada test
     mockProductoRepository = {
       findById: jest.fn(),
-      save: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
       findByVendedorId: jest.fn(),
     };
 

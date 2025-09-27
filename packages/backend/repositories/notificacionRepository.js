@@ -1,31 +1,24 @@
-import Crypto from 'crypto';
+import { NotificacionModel } from '../schemas/mongooseSchemas/notificacionSchema.js';
 
 export default class NotificacionRepository {
   constructor() {
-    this.notifications = [];
+    this.model = NotificacionModel;
   }
 
-  async guardar(notification) {
-    if (notification.id === undefined) {
-      notification.id = Crypto.randomUUID();
-      this.notifications.push(notification);
-    }
-    return notification;
+  async create(notificacion) {
+    const notificacionGuardada = new this.model(notificacion);
+    return await notificacionGuardada.save();
   }
 
-  async save(notification) {
-    //Base de batos, guardame el notification!
-    return this.guardar(notification);
+  async update(id, notificacion) {
+    return await this.model.findByIdAndUpdate(id, notificacion, { new: true });
   }
 
-  async getById(idBuscado) {
-    return this.notifications.find(
-      (notification) => notification.id === idBuscado
-    );
+  async findById(idBuscado) {
+    return await this.model.findById(idBuscado);
   }
-  async getAllByUserId(idBuscado) {
-    return this.notifications.filter(
-      (notification) => notification.usuarioDestino.id === idBuscado
-    );
+
+  async findByUserId(idBuscado) {
+    return await this.model.find({ usuarioDestino: idBuscado });
   }
 }
