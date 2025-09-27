@@ -1,7 +1,7 @@
 import {
   pedidoPostSchema,
   pedidoPatchSchema,
-} from '../schemas/pedidoSchema.js';
+} from '../schemas/zodSchemas/pedidoSchema.js';
 
 export default class PedidoController {
   constructor(pedidoService) {

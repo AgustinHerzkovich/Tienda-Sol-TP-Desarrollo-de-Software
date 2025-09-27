@@ -19,10 +19,11 @@ describe('UsuarioService', () => {
   describe('validarUsuarioId', () => {
     test('lanza UsuarioNotFoundError si el usuario no existe', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-      
-      await expect(usuarioService.validarUsuarioId(1))
-        .rejects.toThrow(UsuarioNotFoundError);
-      
+
+      await expect(usuarioService.validarUsuarioId(1)).rejects.toThrow(
+        UsuarioNotFoundError
+      );
+
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(1);
     });
 
@@ -42,9 +43,10 @@ describe('UsuarioService', () => {
 
     test('lanza error con mensaje específico cuando usuario no existe', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(null);
-      
-      await expect(usuarioService.validarUsuarioId(999))
-        .rejects.toThrow('Usuario no encontrado');
+
+      await expect(usuarioService.validarUsuarioId(999)).rejects.toThrow(
+        'Usuario no encontrado'
+      );
     });
   });
 
@@ -58,27 +60,27 @@ describe('UsuarioService', () => {
         id: 1,
       };
       usuarioRepositoryMock.findById.mockResolvedValue(usuario);
-      
+
       const result = await usuarioService.findById(1);
-      
+
       expect(result).toEqual(usuario);
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(1);
     });
 
     test('devuelve undefined cuando el usuario no existe', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-      
+
       const result = await usuarioService.findById(999);
-      
+
       expect(result).toBeUndefined();
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(999);
     });
 
     test('devuelve null cuando el repositorio retorna null', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(null);
-      
+
       const result = await usuarioService.findById(123);
-      
+
       expect(result).toBeNull();
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(123);
     });
@@ -98,7 +100,9 @@ describe('UsuarioService', () => {
       const result = await usuarioService.crear(usuarioJSON);
 
       expect(usuarioRepositoryMock.save).toHaveBeenCalledTimes(1);
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(expect.any(Usuario));
+      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+        expect.any(Usuario)
+      );
       expect(result).toEqual(usuarioGuardado);
     });
 
@@ -114,7 +118,9 @@ describe('UsuarioService', () => {
 
       const result = await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(expect.any(Usuario));
+      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+        expect.any(Usuario)
+      );
       expect(result).toEqual(usuarioGuardado);
     });
 
@@ -130,7 +136,9 @@ describe('UsuarioService', () => {
 
       const result = await usuarioService.crear(usuarioJSON);
 
-      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(expect.any(Usuario));
+      expect(usuarioRepositoryMock.save).toHaveBeenCalledWith(
+        expect.any(Usuario)
+      );
       expect(result).toEqual(usuarioGuardado);
     });
 
@@ -142,8 +150,9 @@ describe('UsuarioService', () => {
         tipo: 'TIPO_INVALIDO',
       };
 
-      await expect(usuarioService.crear(usuarioJSON))
-        .rejects.toThrow('Tipo de usuario no válido, posible falla de zod');
+      await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
+        'Tipo de usuario no válido, posible falla de zod'
+      );
 
       expect(usuarioRepositoryMock.save).not.toHaveBeenCalled();
     });
@@ -155,7 +164,7 @@ describe('UsuarioService', () => {
         telefono: '111222333',
         tipo: 'COMPRADOR',
       };
-      usuarioRepositoryMock.save.mockImplementation(usuario => {
+      usuarioRepositoryMock.save.mockImplementation((usuario) => {
         expect(usuario.nombre).toBe(usuarioJSON.nombre);
         expect(usuario.mail).toBe(usuarioJSON.mail);
         expect(usuario.telefono).toBe(usuarioJSON.telefono);
@@ -170,10 +179,10 @@ describe('UsuarioService', () => {
 
     test('maneja tipos de usuario en diferentes casos', async () => {
       const casos = ['ADMIN', 'COMPRADOR', 'VENDEDOR'];
-      
+
       for (const tipo of casos) {
         usuarioRepositoryMock.save.mockResolvedValue({ id: 1 });
-        
+
         const usuarioJSON = {
           nombre: 'Test',
           mail: 'test@test.com',
@@ -189,18 +198,19 @@ describe('UsuarioService', () => {
   describe('Casos edge', () => {
     test('findById con ID undefined', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(undefined);
-      
+
       const result = await usuarioService.findById(undefined);
-      
+
       expect(result).toBeUndefined();
       expect(usuarioRepositoryMock.findById).toHaveBeenCalledWith(undefined);
     });
 
     test('validarUsuarioId con ID null', async () => {
       usuarioRepositoryMock.findById.mockResolvedValue(null);
-      
-      await expect(usuarioService.validarUsuarioId(null))
-        .rejects.toThrow(UsuarioNotFoundError);
+
+      await expect(usuarioService.validarUsuarioId(null)).rejects.toThrow(
+        UsuarioNotFoundError
+      );
     });
 
     test('crear con tipo null lanza error', async () => {
@@ -211,8 +221,9 @@ describe('UsuarioService', () => {
         tipo: null,
       };
 
-      await expect(usuarioService.crear(usuarioJSON))
-        .rejects.toThrow('Tipo de usuario no válido, posible falla de zod');
+      await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
+        'Tipo de usuario no válido, posible falla de zod'
+      );
     });
 
     test('crear con tipo undefined lanza error', async () => {
@@ -223,8 +234,9 @@ describe('UsuarioService', () => {
         tipo: undefined,
       };
 
-      await expect(usuarioService.crear(usuarioJSON))
-        .rejects.toThrow('Tipo de usuario no válido, posible falla de zod');
+      await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
+        'Tipo de usuario no válido, posible falla de zod'
+      );
     });
   });
 });

@@ -1,5 +1,5 @@
-import { notificacionPatchSchema } from '../schemas/notificacionSchema.js';
-import { usuarioPostSchema } from '../schemas/usuarioSchema.js';
+import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
+import { usuarioPostSchema } from '../schemas/zodSchemas/usuarioSchema.js';
 
 export default class UsuarioController {
   constructor(usuarioService, pedidoService, notificacionService) {

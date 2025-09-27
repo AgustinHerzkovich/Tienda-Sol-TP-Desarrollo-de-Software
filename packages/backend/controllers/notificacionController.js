@@ -1,4 +1,4 @@
-import { notificacionPatchSchema } from '../schemas/notificacionSchema.js';
+import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
 
 export default class NotificacionController {
   constructor(notificacionService) {

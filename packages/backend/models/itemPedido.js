@@ -1,4 +1,8 @@
 export default class ItemPedido {
+  producto;
+  cantidad;
+  precioUnitario;
+
   constructor(producto, cantidad) {
     this.producto = producto;
     this.cantidad = cantidad;

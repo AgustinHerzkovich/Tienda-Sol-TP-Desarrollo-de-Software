@@ -1,4 +1,10 @@
 export default class CambioEstadoPedido {
+  fecha;
+  estado;
+  pedido;
+  usuario;
+  motivo;
+
   constructor(estado, pedido, usuario, motivo, fecha = Date.now()) {
     this.fecha = fecha;
     this.estado = estado;

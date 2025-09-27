@@ -1,6 +1,16 @@
 import ProductoOutOfStockError from '../exceptions/productoOutOfStockError.js';
-
 export default class Producto {
+  id;
+  vendedor;
+  titulo;
+  descripcion;
+  categorias;
+  precio;
+  moneda;
+  stock;
+  fotos;
+  activo;
+
   constructor(
     vendedor,
     titulo,

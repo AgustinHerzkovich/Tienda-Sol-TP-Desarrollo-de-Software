@@ -1,6 +1,13 @@
 import NotificacionAlreadyReadError from '../exceptions/notificacionAlreadyReadError.js';
 
 export default class Notificacion {
+  id;
+  usuarioDestino;
+  mensaje;
+  fechaAlta;
+  leida;
+  fechaLeida;
+
   constructor(
     usuarioDestino,
     mensaje,

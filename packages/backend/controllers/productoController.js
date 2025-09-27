@@ -1,4 +1,4 @@
-import { productoPostSchema } from '../schemas/productoSchema.js';
+import { productoPostSchema } from '../schemas/zodSchemas/productoSchema.js';
 
 export default class ProductoController {
   constructor(productoService) {

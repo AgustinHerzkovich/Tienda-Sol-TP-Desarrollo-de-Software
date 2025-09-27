@@ -8,7 +8,7 @@ export default class UsuarioRepository {
 
   async save(usuario) {
     if (usuario.id === undefined) {
-      usuario.id = Crypto.randomUUID(); 
+      usuario.id = Crypto.randomUUID();
       this.usuarios.push(usuario);
     }
     return usuario;

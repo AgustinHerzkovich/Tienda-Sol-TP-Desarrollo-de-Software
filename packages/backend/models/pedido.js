@@ -3,6 +3,16 @@ import _ from 'lodash';
 import { EstadoPedido } from './estadoPedido.js';
 
 export default class Pedido {
+  id;
+  comprador;
+  items;
+  total;
+  moneda;
+  direccionEntrega;
+  estado;
+  fechaCreacion;
+  historialEstados;
+
   constructor(comprador, items, moneda, direccionEntrega) {
     this.comprador = comprador;
     this.items = items; // Asumimos que no va a tener dos itemsPedido para un mismo producto, en ese caso es uno solo con las cantidades sumadas

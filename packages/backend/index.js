@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import routes from './routes/routes.js';
-//import connectDB from './db.js';
 import Server from './server.js';
 import HealthCheckController from './controllers/healthCheckController.js';
 import PedidoRepository from './repositories/pedidoRepository.js';
@@ -18,12 +17,11 @@ import NotificacionRepository from './repositories/notificacionRepository.js';
 import NotificacionService from './services/notificacionService.js';
 import NotificacionController from './controllers/notificacionController.js';
 import { setupSwagger } from './swagger.js';
+import MongoDBClient from './mongoDBClient.js';
 
 dotenv.config();
 
 async function main() {
-  //await connectDB();
-
   const app = express();
   app.use(express.json());
   app.use(
@@ -83,6 +81,9 @@ async function main() {
 
   routes.forEach((route) => server.addRoute(route));
   server.configureRoutes();
+
+  await MongoDBClient.connect(); // Si no se conecta a la DB, no levanta el server
+
   server.launch();
   console.log('');
 }
