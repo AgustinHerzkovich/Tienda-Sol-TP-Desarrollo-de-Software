@@ -1,4 +1,5 @@
 import { PedidoModel } from '../schemas/mongooseSchemas/pedidoSchema.js';
+import Repository from './repository.js';
 
 export default class PedidoRepository extends Repository {
   constructor() {

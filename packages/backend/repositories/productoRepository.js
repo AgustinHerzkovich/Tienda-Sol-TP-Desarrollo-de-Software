@@ -1,4 +1,5 @@
 import { ProductoModel } from '../schemas/mongooseSchemas/productoSchema.js';
+import Repository from './repository.js';
 
 export default class ProductoRepository extends Repository {
   constructor() {
