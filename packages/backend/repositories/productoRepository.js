@@ -1,21 +1,8 @@
 import { ProductoModel } from '../schemas/mongooseSchemas/productoSchema.js';
 
-export default class productoRepository {
+export default class ProductoRepository extends Repository {
   constructor() {
-    this.model = ProductoModel;
-  }
-
-  async create(producto) {
-    const productoGuardado = new this.model(producto);
-    return await productoGuardado.save();
-  }
-
-  async update(id, producto) {
-    return await this.model.findByIdAndUpdate(id, producto, { new: true });
-  }
-
-  async findById(idBuscado) {
-    return await this.model.findById(idBuscado);
+    super(ProductoModel);
   }
 
   async findByVendedorId(vendedorId, filtros = {}, paginacion = {}) {
