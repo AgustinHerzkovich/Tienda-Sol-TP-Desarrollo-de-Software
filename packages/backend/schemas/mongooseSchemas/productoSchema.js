@@ -45,11 +45,11 @@ const productoSchema = new mongoose.Schema(
     },
     fotos: [
       {
-        url: {
           type: String,
           required: true,
+          trim: true,
         },
-      },
+      ,
     ],
     activo: {
       type: Boolean,

@@ -1,7 +1,7 @@
 import { ProductoModel } from '../schemas/mongooseSchemas/productoSchema.js';
 
 export default class productoRepository {
-  constructor(ProductoModel) {
+  constructor() {
     this.model = ProductoModel;
   }
 

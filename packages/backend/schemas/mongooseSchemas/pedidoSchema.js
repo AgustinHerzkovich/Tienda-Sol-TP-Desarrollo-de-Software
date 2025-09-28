@@ -41,7 +41,7 @@ const PedidoSchema = new mongoose.Schema({
   ],
   total: {
     type: Number,
-    required: false,
+    required: true,
   },
   moneda: {
     type: String,
@@ -91,9 +91,10 @@ const PedidoSchema = new mongoose.Schema({
     },
   },
   estado: {
-    type: String,
-    enum: Object.values(EstadoPedido),
-    required: false,
+    valor : {
+          type : String,
+          required : true
+        }
   },
   fechaCreacion: {
     type: Number,
@@ -106,9 +107,14 @@ const PedidoSchema = new mongoose.Schema({
         required: false,
       },
       estado: {
+        valor : {
+          type : String,
+          required : true
+        }
+        /*
         type: String,
-        enum: Object.values(EstadoPedido),
-        required: false,
+        enum: Object.values(EstadoPedido).map((e) => e.valor),
+        required: false,*/
       },
       pedido: {
         type: mongoose.Schema.Types.ObjectId,
@@ -128,8 +134,12 @@ const PedidoSchema = new mongoose.Schema({
   ],
 });
 
+
 PedidoSchema.pre(/^find/, function (next) {
-  this.populate('items', '');
+  this.populate({
+    path: 'items.producto',
+    model: 'Producto',
+  });
   next();
 });
 

@@ -29,7 +29,7 @@ export default class ProductoService {
       throw new Error('No existe el vendedor');
     }
     let producto = new Producto(
-      vendedor,
+      productoJSON.vendedorId,
       productoJSON.titulo,
       productoJSON.descripcion,
       productoJSON.categorias,
@@ -46,12 +46,16 @@ export default class ProductoService {
   }
 
   async findById(id) {
+    return this.toDTO(this.findObjectById(id));
+  }
+  
+  async findObjectById(id) {
     const producto = await this.productoRepository.findById(id);
     if (!producto) {
       throw new NotFoundError(`Producto con id: ${id} no encontrado`);
     }
 
-    return this.toDTO(producto);
+    return producto;
   }
 
   async findByVendedorId(userId, filtros, paginacion) {

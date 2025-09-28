@@ -68,7 +68,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del pedido
       requestBody:
         required: true
@@ -131,7 +131,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del usuario comprador
       responses:
         '200':
@@ -161,7 +161,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del usuario vendedor
         - in: query
           name: titulo
@@ -242,7 +242,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del usuario
         - in: query
           name: read
@@ -305,7 +305,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            pattern: '^[a-fA-F0-9]{24}$'
           description: ID único de la notificación
       requestBody:
         required: true
@@ -346,7 +346,7 @@ components:
       properties:
         compradorId:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID del usuario comprador
         items:
           type: array
@@ -357,9 +357,50 @@ components:
         moneda:
           $ref: '#/components/schemas/Moneda'
         direccionEntrega:
-          type: string
-          description: Dirección de entrega del pedido
-
+          type: object
+          required:
+            - calle
+            - altura
+            - piso
+            - departamento
+            - codigoPostal
+            - ciudad
+            - provincia
+            - pais
+            - lat
+            - lon
+          properties:
+            calle:
+              type: string
+              description: Nombre de la calle
+            altura:
+              type: string
+              description: Altura de la calle
+            piso:
+              type: string
+              description: Piso (si aplica)
+            departamento:
+              type: string
+              description: Departamento (si aplica)
+            codigoPostal:
+              type: string
+              description: Código postal
+            ciudad:
+              type: string
+              description: Ciudad
+            provincia:
+              type: string
+              description: Provincia o estado
+            pais: 
+              type: string
+              description: País
+            lat:
+              type: string
+              description: Latitud geográfica
+            lon:
+              type: string
+              description: Longitud geográfica
+              
     ItemPedidoRequest:
       type: object
       required:
@@ -368,7 +409,7 @@ components:
       properties:
         productoId:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID del producto
         cantidad:
           type: integer
@@ -452,7 +493,7 @@ components:
           description: Si el producto está activo para la venta
         vendedorId:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID del usuario vendedor
 
     NotificacionUpdateRequest:
@@ -470,7 +511,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del usuario
         nombre:
           type: string
@@ -493,7 +534,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del producto
         vendedor:
           $ref: '#/components/schemas/Usuario'
@@ -534,7 +575,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID único del pedido
         comprador:
           $ref: '#/components/schemas/Usuario'
@@ -549,8 +590,49 @@ components:
         moneda:
           $ref: '#/components/schemas/Moneda'
         direccionEntrega:
-          type: string
-          description: Dirección de entrega del pedido
+          type: object
+          required:
+            - calle
+            - altura
+            - piso
+            - departamento
+            - codigoPostal
+            - ciudad
+            - provincia
+            - pais
+            - lat
+            - lon
+          properties:
+            calle:
+              type: string
+              description: Nombre de la calle
+            altura:
+              type: string
+              description: Altura de la calle
+            piso:
+              type: string
+              description: Piso (si aplica)
+            departamento:
+              type: string
+              description: Departamento (si aplica)
+            codigoPostal:
+              type: string
+              description: Código postal
+            ciudad:
+              type: string
+              description: Ciudad
+            provincia:
+              type: string
+              description: Provincia o estado
+            pais: 
+              type: string
+              description: País
+            lat:
+              type: string
+              description: Latitud geográfica
+            lon:
+              type: string
+              description: Longitud geográfica
         estado:
           $ref: '#/components/schemas/EstadoPedido'
         fechaCreacion:
@@ -579,7 +661,7 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          pattern: '^[a-fA-F0-9]{24}$'
           description: ID único de la notificación
         usuarioDestino:
           $ref: '#/components/schemas/Usuario'

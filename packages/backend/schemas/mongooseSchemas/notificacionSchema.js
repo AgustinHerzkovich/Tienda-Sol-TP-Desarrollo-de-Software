@@ -3,7 +3,7 @@ import Notificacion from '../../models/notificacion.js';
 
 const NotificacionSchema = new mongoose.Schema(
   {
-    usuario: {
+    usuarioDestino: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Usuario',
       required: true,

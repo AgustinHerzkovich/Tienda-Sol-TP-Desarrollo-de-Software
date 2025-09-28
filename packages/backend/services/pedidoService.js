@@ -4,6 +4,8 @@ import PedidoOutOfStockError from '../exceptions/PedidoOutOfStockError.js';
 import CancellationError from '../exceptions/cancellationError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
+import NotFoundError from '../exceptions/notFoundError.js';
+import ItemPedido from '../models/itemPedido.js';
 
 export default class PedidoService {
   constructor(
@@ -41,10 +43,12 @@ export default class PedidoService {
 
     // Traer el comprador
     const comprador = await this.getComprador(pedidoJSON.compradorId);
-
+    if(comprador == null){
+      throw new Error("El comprador no existe para este producto!")
+    }
     // Construir el pedido con items reales
     let pedido = new Pedido(
-      comprador,
+      comprador.id,
       itemsCreados,
       pedidoJSON.moneda,
       pedidoJSON.direccionEntrega
@@ -68,7 +72,12 @@ export default class PedidoService {
     // Notificar
     await this.notificacionService.notificarPedido(pedido);
 
+    const items = pedidoJSON.items.map((item) => { new ItemPedido(item.productoId, item.cantidad)});
+    pedido.items = items;
+
     pedido = await this.pedidoRepository.create(pedido);
+    const valorEstadoPedido = pedido.estado.valor;
+    pedido.estado = valorEstadoPedido
     return this.toDTO(pedido);
   }
 
@@ -120,11 +129,12 @@ export default class PedidoService {
   }
 
   async getItem(id, cantidad) {
-    const producto = await this.productoService.findById(id);
+    const producto = await this.productoService.findObjectById(id);
+    console.log('Producto obtenido' + producto + producto.id )
     return new Item(producto, cantidad);
   }
 
-  async getComprador(id) {
+  async getComprador(id)  {
     return await this.usuarioService.findById(id);
   }
 }
