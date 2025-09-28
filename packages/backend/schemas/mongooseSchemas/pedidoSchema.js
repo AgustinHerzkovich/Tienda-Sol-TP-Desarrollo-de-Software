@@ -98,13 +98,13 @@ const PedidoSchema = new mongoose.Schema({
   },
   fechaCreacion: {
     type: Number,
-    required: false,
+    required: true,
   },
   historialEstados: [
     {
       fecha: {
         type: Date,
-        required: false,
+        required: true,
       },
       estado: {
         valor : {
@@ -114,21 +114,21 @@ const PedidoSchema = new mongoose.Schema({
         /*
         type: String,
         enum: Object.values(EstadoPedido).map((e) => e.valor),
-        required: false,*/
+        required: true,*/
       },
       pedido: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Pedido',
-        required: false,
+        required: true,
       },
       usuario: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Usuario',
-        required: false,
+        required: true,
       },
       motivo: {
         type: String,
-        required: false,
+        required: true,
       },
     },
   ],

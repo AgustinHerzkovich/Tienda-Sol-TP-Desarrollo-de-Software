@@ -26,7 +26,7 @@ const UsuarioSchema = new mongoose.Schema(
     },
     fechaAlta: {
       type: Date,
-      require: false,
+      require: true,
     },
   },
   {

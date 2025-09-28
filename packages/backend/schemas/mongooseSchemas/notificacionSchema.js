@@ -15,15 +15,15 @@ const NotificacionSchema = new mongoose.Schema(
     },
     fechaAlta: {
       type: Date,
-      required: false,
+      required: true,
     },
     leida: {
       type: Boolean,
-      required: false,
+      required: true,
     },
     fechaLeida: {
       type: Date,
-      required: false,
+      required: true,
     },
   },
   {
