@@ -4,8 +4,8 @@ import Categoria from '../../../models/categoria.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import { Moneda } from '../../../models/moneda.js';
 import ProductoService from '../../../services/productoService.js';
-import ProductoOutOfStockError from '../../../exceptions/productoOutOfStockError.js';
-import NotFoundError from '../../../exceptions/notFoundError.js';
+import ProductoOutOfStockError from '../../../error/productoOutOfStockError.js';
+import NotFoundError from '../../../error/notFoundError.js';
 import { jest } from '@jest/globals';
 
 describe('Tests unitarios de productoService', () => {

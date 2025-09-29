@@ -1,5 +1,5 @@
 import Producto from '../models/producto.js';
-import NotFoundError from '../exceptions/notFoundError.js';
+import NotFoundError from '../error/notFoundError.js';
 
 export default class ProductoService {
   constructor(productoRepository, usuarioService) {

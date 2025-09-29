@@ -1,7 +1,7 @@
 import Notificacion from '../../../models/notificacion.js';
 import Usuario from '../../../models/usuario.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
-import NotificacionAlreadyReadError from '../../../exceptions/notificacionAlreadyReadError.js';
+import NotificacionAlreadyReadError from '../../../error/notificacionAlreadyReadError.js';
 
 describe('Tests unitarios de notificación', () => {
   let usuario;

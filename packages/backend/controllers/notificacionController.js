@@ -5,7 +5,7 @@ export default class NotificacionController {
     this.notificationService = notificacionService;
   }
 
-  async modificar(req, res) {
+  async modificar(req, res, next) {
     const id = req.params.id;
 
     const resultBody = notificacionPatchSchema.safeParse(req.body);
@@ -22,7 +22,7 @@ export default class NotificacionController {
       );
       res.status(200).json(notificacionModificada);
     } catch (err) {
-      res.status(err.statusCode).json({ error: err.message });
+      next(err);
     }
   }
 }

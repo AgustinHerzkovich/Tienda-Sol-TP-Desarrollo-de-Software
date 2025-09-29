@@ -1,4 +1,4 @@
-import ProductoOutOfStockError from '../exceptions/productoOutOfStockError.js';
+import ProductoOutOfStockError from '../error/productoOutOfStockError.js';
 export default class Producto {
   id;
   vendedor;

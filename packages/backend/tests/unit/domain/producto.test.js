@@ -3,7 +3,7 @@ import Usuario from '../../../models/usuario.js';
 import Categoria from '../../../models/categoria.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import { Moneda } from '../../../models/moneda.js';
-import ProductoOutOfStockError from '../../../exceptions/productoOutOfStockError.js';
+import ProductoOutOfStockError from '../../../error/productoOutOfStockError.js';
 
 describe('Tests unitarios de producto', () => {
   let vendedor;

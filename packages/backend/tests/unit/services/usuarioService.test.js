@@ -1,7 +1,7 @@
 import UsuarioService from '../../../services/usuarioService.js';
 import Usuario from '../../../models/usuario.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
-import NotFoundError from '../../../exceptions/notFoundError.js';
+import NotFoundError from '../../../error/notFoundError.js';
 import { jest } from '@jest/globals';
 
 describe('UsuarioService', () => {

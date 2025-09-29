@@ -5,13 +5,17 @@ export default class ProductoController {
     this.productoService = productoService;
   }
 
-  async crear(req, res) {
+  async crear(req, res, next) {
     const body = req.body;
     const resultBody = productoPostSchema.safeParse(body);
     if (resultBody.error) {
       res.status(400).json(resultBody.error.issues);
     }
-    const producto = await this.productoService.crear(resultBody.data);
+    try {
+      const producto = await this.productoService.crear(resultBody.data);
     res.status(201).json(producto);
+    } catch (err) {
+      next(err);
+    }
   }
 }

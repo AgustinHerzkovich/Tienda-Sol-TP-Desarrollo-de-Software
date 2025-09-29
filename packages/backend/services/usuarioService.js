@@ -1,4 +1,4 @@
-import NotFoundError from '../exceptions/notFoundError.js';
+import NotFoundError from '../error/notFoundError.js';
 import Usuario from '../models/usuario.js';
 import { TipoUsuario } from '../models/tipoUsuario.js';
 

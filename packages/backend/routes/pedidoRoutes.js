@@ -7,12 +7,12 @@ export default function pedidoRoutes(getController) {
   const router = express.Router();
   const pedidoController = getController(PedidoController);
 
-  router.post(pedidoPath, async (req, res) => {
-    await pedidoController.crear(req, res);
+  router.post(pedidoPath, async (req, res, next) => {
+    await pedidoController.crear(req, res, next);
   });
 
-  router.patch(pedidoPath + '/:id', async (req, res) => {
-    await pedidoController.modificarEstado(req, res);
+  router.patch(pedidoPath + '/:id', async (req, res, next) => {
+    await pedidoController.modificarEstado(req, res, next);
   });
 
   return router;

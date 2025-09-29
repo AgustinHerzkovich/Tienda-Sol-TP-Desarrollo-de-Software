@@ -1,4 +1,5 @@
 import express from 'express';
+import {errorHandler} from './middlewares/errorHandler.js';
 
 export default class Server {
   controllers = {};
@@ -36,6 +37,17 @@ export default class Server {
     this.routes.forEach((route) =>
       this.app.use(route(this.getController.bind(this)))
     );
+
+    // Middleware para manejar rutas no encontradas
+    this.app.use((req, res, next) => {
+      res.status(404).json({
+        status: 'fail',
+        message: 'La ruta solicitada no existe',
+      });
+    });
+
+    // Middleware global de manejo de errores
+    this.app.use(errorHandler);
   }
 
   launch() {

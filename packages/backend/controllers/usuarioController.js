@@ -8,7 +8,7 @@ export default class UsuarioController {
     this.notificacionService = notificacionService;
   }
 
-  async pedidos(req, res) {
+  async pedidos(req, res, next) {
     // validar id con db
     const id = req.params.id;
 
@@ -17,12 +17,11 @@ export default class UsuarioController {
       const pedidos = await this.pedidoService.pedidosByUser(id);
       res.status(200).json(pedidos);
     } catch (err) {
-      res.status(err.statusCode).json({ error: err.message });
-      return;
+      next(err);
     }
   }
 
-  async productos(req, res) {
+  async productos(req, res, next) {
     const id = req.params.id;
     // Filtros, paginación y ordenamiento desde query params
     const {
@@ -59,11 +58,11 @@ export default class UsuarioController {
       );
       res.status(200).json(productos);
     } catch (err) {
-      res.status(err.statusCode).json({ error: err.message });
+      next(err);
     }
   }
 
-  async notificaciones(req, res) {
+  async notificaciones(req, res, next) {
     const id = req.params.id;
     const { read } = notificacionPatchSchema.safeParse(req.query);
 
@@ -75,11 +74,11 @@ export default class UsuarioController {
       );
       res.status(200).json(notificaciones);
     } catch (err) {
-      res.status(err.statusCode).json({ error: err.message });
+      next(err);
     }
   }
 
-  async crear(req, res) {
+  async crear(req, res, next) {
     const body = req.body;
     const resultBody = usuarioPostSchema.safeParse(body);
 
@@ -87,7 +86,11 @@ export default class UsuarioController {
       res.status(400).json(resultBody.error.issues);
     }
 
-    const usuario = await this.usuarioService.crear(resultBody.data);
-    res.status(201).json(usuario);
+    try {
+      const usuario = await this.usuarioService.crear(resultBody.data);
+      res.status(201).json(usuario);
+    } catch (err) {
+      next(err);
+    }
   }
 }

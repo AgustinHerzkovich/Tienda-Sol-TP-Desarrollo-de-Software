@@ -1,4 +1,4 @@
-import NotificacionAlreadyReadError from '../exceptions/notificacionAlreadyReadError.js';
+import NotificacionAlreadyReadError from '../error/notificacionAlreadyReadError.js';
 
 export default class Notificacion {
   id;

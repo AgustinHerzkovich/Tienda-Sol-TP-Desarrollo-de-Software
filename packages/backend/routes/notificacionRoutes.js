@@ -8,8 +8,8 @@ export default function notitificacionRoutes(getController) {
   const router = express.Router();
 
   // Marcar la notificación como leída
-  router.patch(pathNotificacion + '/:id', async (req, res) => {
-    await notificacionController.modificar(req, res);
+  router.patch(pathNotificacion + '/:id', async (req, res, next) => {
+    await notificacionController.modificar(req, res, next);
   });
 
   return router;

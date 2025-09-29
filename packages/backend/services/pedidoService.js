@@ -1,10 +1,10 @@
 import Pedido from '../models/pedido.js';
 import Item from '../models/itemPedido.js';
-import PedidoOutOfStockError from '../exceptions/PedidoOutOfStockError.js';
-import CancellationError from '../exceptions/cancellationError.js';
+import PedidoOutOfStockError from '../error/PedidoOutOfStockError.js';
+import CancellationError from '../error/cancellationError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
-import NotFoundError from '../exceptions/notFoundError.js';
+import NotFoundError from '../error/notFoundError.js';
 import ItemPedido from '../models/itemPedido.js';
 
 export default class PedidoService {
