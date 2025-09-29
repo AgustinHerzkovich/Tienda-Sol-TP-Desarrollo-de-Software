@@ -1,5 +1,7 @@
 import Producto from '../models/producto.js';
 import NotFoundError from '../error/notFoundError.js';
+import { TipoUsuario } from '../models/tipoUsuario.js';
+import InvalidUserTypeError from '../error/invalidUserTypeError.js';
 
 export default class ProductoService {
   constructor(productoRepository, usuarioService) {
@@ -28,6 +30,11 @@ export default class ProductoService {
     if (vendedor == undefined) {
       throw new Error('No existe el vendedor');
     }
+
+    if (vendedor.tipo !== TipoUsuario.VENDEDOR) {
+      throw new InvalidUserTypeError('No se puede crear un producto con un usuario que no es de tipo vendedor');
+    }
+
     let producto = new Producto(
       productoJSON.vendedorId,
       productoJSON.titulo,

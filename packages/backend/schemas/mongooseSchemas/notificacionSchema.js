@@ -23,7 +23,7 @@ const NotificacionSchema = new mongoose.Schema(
     },
     fechaLeida: {
       type: Date,
-      required: true,
+      required: false,
     },
   },
   {

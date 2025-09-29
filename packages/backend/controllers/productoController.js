@@ -1,19 +1,12 @@
-import { productoPostSchema } from '../schemas/zodSchemas/productoSchema.js';
-
 export default class ProductoController {
   constructor(productoService) {
     this.productoService = productoService;
   }
 
   async crear(req, res, next) {
-    const body = req.body;
-    const resultBody = productoPostSchema.safeParse(body);
-    if (resultBody.error) {
-      res.status(400).json(resultBody.error.issues);
-    }
     try {
-      const producto = await this.productoService.crear(resultBody.data);
-    res.status(201).json(producto);
+      const producto = await this.productoService.crear(req.validatedData);
+      res.status(201).json(producto);
     } catch (err) {
       next(err);
     }

@@ -6,6 +6,8 @@ import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
 import NotFoundError from '../error/notFoundError.js';
 import ItemPedido from '../models/itemPedido.js';
+import { TipoUsuario } from '../models/tipoUsuario.js';
+import InvalidUserTypeError from '../error/invalidUserTypeError.js';
 
 export default class PedidoService {
   constructor(
@@ -46,6 +48,11 @@ export default class PedidoService {
     if(comprador == null){
       throw new Error("El comprador no existe para este producto!")
     }
+
+    if (comprador.tipo !== TipoUsuario.COMPRADOR) {
+      throw new InvalidUserTypeError('No se puede crear un pedido con un usuario que no es de tipo comprador');
+    }
+
     // Construir el pedido con items reales
     let pedido = new Pedido(
       comprador.id,

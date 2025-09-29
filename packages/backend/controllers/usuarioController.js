@@ -1,5 +1,4 @@
 import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
-import { usuarioPostSchema } from '../schemas/zodSchemas/usuarioSchema.js';
 
 export default class UsuarioController {
   constructor(usuarioService, pedidoService, notificacionService) {
@@ -79,15 +78,8 @@ export default class UsuarioController {
   }
 
   async crear(req, res, next) {
-    const body = req.body;
-    const resultBody = usuarioPostSchema.safeParse(body);
-
-    if (resultBody.error) {
-      res.status(400).json(resultBody.error.issues);
-    }
-
     try {
-      const usuario = await this.usuarioService.crear(resultBody.data);
+      const usuario = await this.usuarioService.crear(req.validatedData);
       res.status(201).json(usuario);
     } catch (err) {
       next(err);
