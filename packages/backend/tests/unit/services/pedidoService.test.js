@@ -109,6 +109,7 @@ describe('Tests unitarios de PedidoService', () => {
 
     mockProductoService = {
       findById: jest.fn(),
+      findObjectById: jest.fn(),
       modificarStock: jest.fn(),
       aumentarVentas: jest.fn(),
     };
@@ -143,7 +144,7 @@ describe('Tests unitarios de PedidoService', () => {
 
       // Configurar mocks
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.findObjectById.mockResolvedValue(producto1);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
       mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
 
@@ -158,16 +159,16 @@ describe('Tests unitarios de PedidoService', () => {
 
       expect(pedidoCreado).toBeDefined();
       expect(pedidoCreado.id).toBe(1); // Verificar que tiene ID
-      expect(pedidoCreado.comprador.id).toBe(comprador.id);
+      expect(pedidoCreado.comprador).toBe(comprador.id);
       expect(pedidoCreado.items).toHaveLength(1);
       expect(pedidoCreado.items[0].cantidad).toBe(2);
       expect(pedidoCreado.moneda).toBe(Moneda.PESO_ARG);
-      expect(pedidoCreado.estado.valor).toBe('PENDIENTE');
+      expect(pedidoCreado.estado).toBe('PENDIENTE');
       expect(pedidoCreado.total).toBe(200); // 100 * 2
 
       // Verificar que se llamaron los métodos correctos
       expect(mockUsuarioService.findById).toHaveBeenCalledWith(comprador.id);
-      expect(mockProductoService.findById).toHaveBeenCalledWith(producto1.id);
+      expect(mockProductoService.findObjectById).toHaveBeenCalledWith(producto1.id);
       expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
         producto1,
         -2
@@ -189,7 +190,7 @@ describe('Tests unitarios de PedidoService', () => {
 
       // Configurar mocks
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById
+      mockProductoService.findObjectById
         .mockResolvedValueOnce(producto1)
         .mockResolvedValueOnce(producto2);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
@@ -230,7 +231,7 @@ describe('Tests unitarios de PedidoService', () => {
 
       // Configurar mocks
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(productoSinStock);
+      mockProductoService.findObjectById.mockResolvedValue(productoSinStock);
 
       await expect(pedidoService.crear(pedidoJSON)).rejects.toThrow(
         PedidoOutOfStockError
@@ -250,7 +251,7 @@ describe('Tests unitarios de PedidoService', () => {
       };
 
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.findObjectById.mockResolvedValue(producto1);
 
       await expect(pedidoService.crear(pedidoJSON)).rejects.toThrow(
         PedidoOutOfStockError
@@ -268,7 +269,7 @@ describe('Tests unitarios de PedidoService', () => {
       };
 
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.findObjectById.mockResolvedValue(producto1);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
       mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
 
@@ -463,7 +464,7 @@ describe('Tests unitarios de PedidoService', () => {
   describe('Métodos auxiliares', () => {
     describe('getItem()', () => {
       test('crea ItemPedido correctamente', async () => {
-        mockProductoService.findById.mockResolvedValue(producto1);
+        mockProductoService.findObjectById.mockResolvedValue(producto1);
 
         const item = await pedidoService.getItem(producto1.id, 3);
 
@@ -474,7 +475,7 @@ describe('Tests unitarios de PedidoService', () => {
       });
 
       test('calcula subtotal correctamente', async () => {
-        mockProductoService.findById.mockResolvedValue(producto2);
+        mockProductoService.findObjectById.mockResolvedValue(producto2);
 
         const item = await pedidoService.getItem(producto2.id, 4);
 
@@ -522,7 +523,7 @@ describe('Tests unitarios de PedidoService', () => {
       };
 
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(productoLimitado);
+      mockProductoService.findObjectById.mockResolvedValue(productoLimitado);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
       mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
 
@@ -559,7 +560,7 @@ describe('Tests unitarios de PedidoService', () => {
         };
 
         mockUsuarioService.findById.mockResolvedValue(comprador);
-        mockProductoService.findById.mockResolvedValue(producto1);
+        mockProductoService.findObjectById.mockResolvedValue(producto1);
         mockProductoService.modificarStock.mockResolvedValue(undefined);
         mockNotificationService.notificarPedido.mockResolvedValue({
           id: i + 1,
@@ -588,7 +589,7 @@ describe('Tests unitarios de PedidoService', () => {
       };
 
       mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockProductoService.findById.mockResolvedValue(producto1);
+      mockProductoService.findObjectById.mockResolvedValue(producto1);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
       mockProductoService.aumentarVentas.mockResolvedValue(undefined);
       mockNotificationService.notificarPedido.mockResolvedValue({ id: 1 });
@@ -619,7 +620,7 @@ describe('Tests unitarios de PedidoService', () => {
       });
 
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
-      expect(pedidoCreado.estado.valor).toBe('PENDIENTE');
+      expect(pedidoCreado.estado).toBe('PENDIENTE');
 
       // 2-5. Modificar estados
       const estados = [

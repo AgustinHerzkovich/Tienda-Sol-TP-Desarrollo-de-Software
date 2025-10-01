@@ -79,7 +79,7 @@ export default class PedidoService {
     // Notificar
     await this.notificacionService.notificarPedido(pedido);
 
-    const items = pedidoJSON.items.map((item) => { new ItemPedido(item.productoId, item.cantidad)});
+    const items = pedidoJSON.items.map((item) => { return new ItemPedido(item.productoId, item.cantidad)}); // Así es como se persisten los items
     pedido.items = items;
 
     pedido = await this.pedidoRepository.create(pedido);
@@ -110,8 +110,6 @@ export default class PedidoService {
       );
     }
     if (nuevoEstado === EstadoPedido.ENTREGADO) {
-      console.log(nuevoEstado + ' Se entro al if de entregado');
-      console.log('items: ' + items + ' q: ' + items.length);
       await Promise.all(
         items.map((itemPedido) =>
           this.productoService.aumentarVentas(
@@ -137,7 +135,6 @@ export default class PedidoService {
 
   async getItem(id, cantidad) {
     const producto = await this.productoService.findObjectById(id);
-    console.log('Producto obtenido' + producto + producto.id )
     return new Item(producto, cantidad);
   }
 

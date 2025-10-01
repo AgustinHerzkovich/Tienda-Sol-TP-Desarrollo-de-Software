@@ -32,7 +32,9 @@ export default class ProductoService {
     }
 
     if (vendedor.tipo !== TipoUsuario.VENDEDOR) {
-      throw new InvalidUserTypeError('No se puede crear un producto con un usuario que no es de tipo vendedor');
+      throw new InvalidUserTypeError(
+        'No se puede crear un producto con un usuario que no es de tipo vendedor'
+      );
     }
 
     let producto = new Producto(
@@ -53,9 +55,10 @@ export default class ProductoService {
   }
 
   async findById(id) {
-    return this.toDTO(this.findObjectById(id));
+    const producto = await this.findObjectById(id);
+    return this.toDTO(producto);
   }
-  
+
   async findObjectById(id) {
     const producto = await this.productoRepository.findById(id);
     if (!producto) {
