@@ -85,42 +85,42 @@ describe('Tests unitarios de factory notificación', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.PENDIENTE
       );
-      expect(mensaje).toBe('Se ha realizado un pedido!');
+      expect(mensaje).toBe('Se ha realizado un pedido! ');
     });
 
     test('Mensaje para estado CONFIRMADO', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.CONFIRMADO
       );
-      expect(mensaje).toBe('Confirmamos tu pedido!!');
+      expect(mensaje).toBe('Confirmamos tu pedido!! ');
     });
 
     test('Mensaje para estado EN_PREPARACION', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.EN_PREPARACION
       );
-      expect(mensaje).toBe('Estamos preparando tu pedido!');
+      expect(mensaje).toBe('Estamos preparando tu pedido! ');
     });
 
     test('Mensaje para estado ENVIADO', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.ENVIADO
       );
-      expect(mensaje).toBe('Enviamos tu pedido!');
+      expect(mensaje).toBe('Enviamos tu pedido! ');
     });
 
     test('Mensaje para estado ENTREGADO', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.ENTREGADO
       );
-      expect(mensaje).toBe('Entregamos tu pedido!');
+      expect(mensaje).toBe('Entregamos tu pedido! ');
     });
 
     test('Mensaje para estado CANCELADO', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.CANCELADO
       );
-      expect(mensaje).toBe('Un comprador canceló un pedido!');
+      expect(mensaje).toBe('Un comprador canceló un pedido! ');
     });
   });
 
