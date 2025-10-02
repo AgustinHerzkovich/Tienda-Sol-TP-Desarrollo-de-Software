@@ -1,0 +1,58 @@
+// Post usuario
+{
+  "nombre": "Nicolás Piacentini"
+  "email": "npiacentini@frba.utn.edu.ar"
+  "telefono": "0987654321"
+  "tipo": "COMPRADOR"
+}
+
+// Post usuario
+{
+  "nombre": "Tadeo Sorrentino"
+  "email": "tsorrentino@frba.utn.edu.ar"
+  "telefono": "1234567890"
+  "tipo": "VENDEDOR"
+}
+
+// Post producto
+{
+  "titulo": "Playstation 2",
+  "descripcion": "pa k kieres saber eso jaja salu2",
+  "categorias": [
+    {
+      "nombre": "Tecnología"
+    }
+  ],
+  "precio": 10,
+  "moneda": "PESO_ARG",
+  "stock": 100,
+  "fotos": [
+    "http://fotos.com"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post pedido
+{
+  "compradorId": "id_comprador",
+  "items": [
+    {
+      "productoId": "id_producto",
+      "cantidad": 3
+    }
+  ],
+  "moneda": "PESO_ARG",
+  "direccionEntrega": {
+    "calle": "juan domingo perón",
+    "altura": "88",
+    "piso": "1",
+    "departamento": "C",
+    "codigoPostal": "1723",
+    "ciudad": "CABA",
+    "provincia": "Buenos Aires",
+    "pais": "Argentina",
+    "lat": "-34.12983",
+    "lon": "-5.19273"
+  }
+}
