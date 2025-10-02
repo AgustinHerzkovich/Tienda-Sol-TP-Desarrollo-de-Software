@@ -131,7 +131,7 @@ describe('Tests unitarios de notificacionService', () => {
     );
 
     expect(mockNotificacionRepository.findByUserId).toHaveBeenCalledWith(
-      usuarioDestino.id
+      usuarioDestino.id, false
     );
     expect(notificaciones.length).toBe(3);
     expect(notificaciones[0].usuarioDestino).toBe(usuarioDestino);
@@ -173,7 +173,8 @@ describe('Tests unitarios de notificacionService', () => {
       true
     );
     expect(mockNotificacionRepository.findByUserId).toHaveBeenCalledWith(
-      usuarioDestino.id
+      usuarioDestino.id,
+      true
     );
     expect(notificacionesLeidas.length).toBe(1);
     expect(notificacionesLeidas[0].leida).toBe(true);
