@@ -1,5 +1,6 @@
 import { PedidoModel } from '../schemas/mongooseSchemas/pedidoSchema.js';
 import Repository from './repository.js';
+import mongoose from 'mongoose';
 
 export default class PedidoRepository extends Repository {
   constructor() {
@@ -7,6 +8,7 @@ export default class PedidoRepository extends Repository {
   }
 
   async findByUserId(usuarioId) {
-    return await this.model.find({ comprador: usuarioId });
+    const objectId = new mongoose.Types.ObjectId(usuarioId);
+    return await this.model.find({ comprador: objectId });
   }
 }

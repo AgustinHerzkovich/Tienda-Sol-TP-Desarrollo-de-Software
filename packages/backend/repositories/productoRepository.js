@@ -1,5 +1,6 @@
 import { ProductoModel } from '../schemas/mongooseSchemas/productoSchema.js';
 import Repository from './repository.js';
+import mongoose from 'mongoose';
 
 export default class ProductoRepository extends Repository {
   constructor() {
@@ -7,8 +8,9 @@ export default class ProductoRepository extends Repository {
   }
 
   async findByVendedorId(vendedorId, filtros = {}, paginacion = {}) {
+    const objectId = new mongoose.Types.ObjectId(vendedorId);
     // Construir el filtro base
-    const query = { 'vendedor.id': vendedorId };
+    const query = { 'vendedor.id': objectId };
 
     // Filtros adicionales
     if (filtros.titulo) {

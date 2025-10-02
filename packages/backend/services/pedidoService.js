@@ -82,14 +82,12 @@ export default class PedidoService {
 
     const pedidoGuardado = await this.pedidoRepository.create(pedido);
 
-    // Restaurar el estado como objeto EstadoPedido después de la persistencia
-    pedido.estado = Object.values(EstadoPedido).find(
-      (e) => e.valor === pedido.estado
-    );
-    pedido.id = pedidoGuardado.id || pedidoGuardado._id;
+    // Crear una copia temporal con estado completo para la notificación
+    const pedidoParaNotificacion =
+      this.crearCopiaParaNotificacion(pedidoGuardado);
 
     // Notificar
-    await this.notificacionService.notificarPedido(pedido);
+    await this.notificacionService.notificarPedido(pedidoParaNotificacion);
 
     return this.toDTO(pedidoGuardado);
   }
@@ -97,9 +95,16 @@ export default class PedidoService {
   async modificar(id, pedidoModificadoJSON) {
     let pedidoAlmacenado = await this.pedidoRepository.findById(id);
     const items = pedidoAlmacenado.items;
-    const estadoActual = pedidoAlmacenado.estado;
-    const estadosIncancelables = [EstadoPedido.ENVIADO, EstadoPedido.ENTREGADO];
-    const nuevoEstado = pedidoModificadoJSON.estado;
+    const estadoActual = pedidoAlmacenado.estado; // string
+    const estadosIncancelables = [
+      EstadoPedido.ENVIADO.valor,
+      EstadoPedido.ENTREGADO.valor,
+    ];
+    const nuevoEstadoString = pedidoModificadoJSON.estado;
+    const nuevoEstado = Object.values(EstadoPedido).find(
+      (e) => e.valor === nuevoEstadoString
+    );
+
     if (nuevoEstado === EstadoPedido.CANCELADO) {
       if (estadosIncancelables.includes(estadoActual)) {
         // No se puede cancelar un pedido si ya fue enviado o entregado
@@ -126,17 +131,19 @@ export default class PedidoService {
       );
     }
 
-    pedidoAlmacenado.estado = pedidoModificadoJSON.estado;
-
-    const pedidoActualizado = await this.pedidoRepository.update(id, pedidoAlmacenado);
-
-    // Restaurar el estado como objeto EstadoPedido después de la persistencia
-    pedidoAlmacenado.estado = Object.values(EstadoPedido).find(
-      (e) => e.valor === pedidoActualizado.estado
+    // Actualizar el estado como string en la base de datos
+    pedidoAlmacenado.estado = nuevoEstadoString;
+    const pedidoActualizado = await this.pedidoRepository.update(
+      id,
+      pedidoAlmacenado
     );
 
+    // Crear una copia temporal con estado completo para la notificación
+    const pedidoParaNotificacion =
+      this.crearCopiaParaNotificacion(pedidoAlmacenado);
+
     // Notificar
-    await this.notificacionService.notificarPedido(pedidoAlmacenado);
+    await this.notificacionService.notificarPedido(pedidoParaNotificacion);
 
     return this.toDTO(pedidoActualizado);
   }
@@ -153,5 +160,31 @@ export default class PedidoService {
 
   async getComprador(id) {
     return await this.usuarioService.findById(id);
+  }
+
+  // Helper para crear una copia temporal con estado completo para notificaciones
+  crearCopiaParaNotificacion(pedidoMongoose) {
+    const estadoString = pedidoMongoose.estado;
+    const estadoCompleto = Object.values(EstadoPedido).find(
+      (e) => e.valor === estadoString
+    );
+
+    // Crear una copia simple del pedido con el estado completo
+    return {
+      id: pedidoMongoose.id || pedidoMongoose._id,
+      comprador: pedidoMongoose.comprador,
+      items: pedidoMongoose.items,
+      total: pedidoMongoose.total,
+      moneda: pedidoMongoose.moneda,
+      direccionEntrega: pedidoMongoose.direccionEntrega,
+      estado: estadoCompleto,
+      fechaCreacion: pedidoMongoose.fechaCreacion,
+      getVendedor: function () {
+        return this.items[0]?.producto?.vendedor;
+      },
+      getProductos: function () {
+        return this.items.map((item) => item.producto);
+      },
+    };
   }
 }

@@ -29,5 +29,5 @@ export const pedidoPostSchema = z.object({
 });
 
 export const pedidoPatchSchema = z.object({
-  estado: z.enum(Object.values(EstadoPedido)),
+  estado: z.enum(Object.values(EstadoPedido).map((e) => e.valor)),
 });
