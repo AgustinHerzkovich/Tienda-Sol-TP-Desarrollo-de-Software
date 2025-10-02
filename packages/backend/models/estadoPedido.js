@@ -2,7 +2,7 @@ export const EstadoPedido = Object.freeze({
   // ENUM en javascript
   PENDIENTE: {
     valor: 'PENDIENTE',
-    mensaje: 'Se ha realizado un pedido!',
+    mensaje: 'Se ha realizado un pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
       mensaje: `Pedido Id: ${pedido.id} - Comprador: ${pedido.comprador} - Productos: ${pedido.getProductos()} - Total: ${pedido.total} - Direccion de entrega: ${pedido.direccionEntrega}`,
@@ -10,7 +10,7 @@ export const EstadoPedido = Object.freeze({
   },
   CONFIRMADO: {
     valor: 'CONFIRMADO',
-    mensaje: 'Confirmamos tu pedido!!',
+    mensaje: 'Confirmamos tu pedido!! ',
     notificacion: (pedido) => ({
       destinatario: pedido.comprador,
       mensaje: `Pedido Id: ${pedido.id}`,
@@ -18,7 +18,7 @@ export const EstadoPedido = Object.freeze({
   },
   EN_PREPARACION: {
     valor: 'EN_PREPARACION',
-    mensaje: 'Estamos preparando tu pedido!',
+    mensaje: 'Estamos preparando tu pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.comprador,
       mensaje: `Pedido Id: ${pedido.id}`,
@@ -26,7 +26,7 @@ export const EstadoPedido = Object.freeze({
   },
   ENVIADO: {
     valor: 'ENVIADO',
-    mensaje: 'Enviamos tu pedido!',
+    mensaje: 'Enviamos tu pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.comprador,
       mensaje: `Pedido Id: ${pedido.id}`,
@@ -34,7 +34,7 @@ export const EstadoPedido = Object.freeze({
   },
   ENTREGADO: {
     valor: 'ENTREGADO',
-    mensaje: 'Entregamos tu pedido!',
+    mensaje: 'Entregamos tu pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.comprador,
       mensaje: `Pedido Id: ${pedido.id}`,
@@ -42,7 +42,7 @@ export const EstadoPedido = Object.freeze({
   },
   CANCELADO: {
     valor: 'CANCELADO',
-    mensaje: 'Un comprador canceló un pedido!',
+    mensaje: 'Un comprador canceló un pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
       mensaje: `Pedido Id: ${pedido.id}`,

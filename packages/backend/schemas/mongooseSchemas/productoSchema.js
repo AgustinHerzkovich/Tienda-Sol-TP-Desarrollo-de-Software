@@ -26,6 +26,7 @@ const productoSchema = new mongoose.Schema(
           required: true,
           trim: true,
         },
+        _id: false,  // Desactivar la generación automática de _id
       },
     ],
     precio: {

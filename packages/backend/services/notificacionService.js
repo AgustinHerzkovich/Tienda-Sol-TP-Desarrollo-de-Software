@@ -21,12 +21,8 @@ export default class NotificacionService {
     return this.toDTO(notificacion);
   }
 
-  async findByUsuarioId(usuarioId, leido) {
-    let notificacionesDeUsuario =
-      await this.notificacionRepository.findByUserId(usuarioId);
-    notificacionesDeUsuario = notificacionesDeUsuario.filter(
-      (noti) => noti.leida === leido
-    );
+  async findByUsuarioId(usuarioId, leida) {
+    let notificacionesDeUsuario = await this.notificacionRepository.findByUserId(usuarioId, leida);
     return notificacionesDeUsuario.map((noti) => this.toDTO(noti));
   }
 

@@ -3,10 +3,10 @@ export default class ItemPedido {
   cantidad;
   precioUnitario;
 
-  constructor(producto, cantidad) {
+  constructor(producto, cantidad, precioUnitario = producto.precio) {
     this.producto = producto;
     this.cantidad = cantidad;
-    this.precioUnitario = producto.precio;
+    this.precioUnitario = precioUnitario;
   }
 
   subtotal() {

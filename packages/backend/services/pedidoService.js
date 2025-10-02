@@ -45,12 +45,14 @@ export default class PedidoService {
 
     // Traer el comprador
     const comprador = await this.getComprador(pedidoJSON.compradorId);
-    if(comprador == null){
-      throw new Error("El comprador no existe para este producto!")
+    if (comprador == null) {
+      throw new Error('El comprador no existe para este producto!');
     }
 
     if (comprador.tipo !== TipoUsuario.COMPRADOR) {
-      throw new InvalidUserTypeError('No se puede crear un pedido con un usuario que no es de tipo comprador');
+      throw new InvalidUserTypeError(
+        'No se puede crear un pedido con un usuario que no es de tipo comprador'
+      );
     }
 
     // Construir el pedido con items reales
@@ -76,16 +78,20 @@ export default class PedidoService {
       )
     );
 
+    pedido.estado = pedido.estado.valor; // Guardar solo el valor string del estado
+
+    const pedidoGuardado = await this.pedidoRepository.create(pedido);
+
+    // Restaurar el estado como objeto EstadoPedido después de la persistencia
+    pedido.estado = Object.values(EstadoPedido).find(
+      (e) => e.valor === pedido.estado
+    );
+    pedido.id = pedidoGuardado.id || pedidoGuardado._id;
+
     // Notificar
     await this.notificacionService.notificarPedido(pedido);
 
-    const items = pedidoJSON.items.map((item) => { return new ItemPedido(item.productoId, item.cantidad)}); // Así es como se persisten los items
-    pedido.items = items;
-
-    pedido = await this.pedidoRepository.create(pedido);
-    const valorEstadoPedido = pedido.estado.valor;
-    pedido.estado = valorEstadoPedido
-    return this.toDTO(pedido);
+    return this.toDTO(pedidoGuardado);
   }
 
   async modificar(id, pedidoModificadoJSON) {
@@ -122,10 +128,17 @@ export default class PedidoService {
 
     pedidoAlmacenado.estado = pedidoModificadoJSON.estado;
 
-    await this.notificacionService.notificarPedido(pedidoAlmacenado);
-    pedidoAlmacenado = await this.pedidoRepository.update(id, pedidoAlmacenado);
+    const pedidoActualizado = await this.pedidoRepository.update(id, pedidoAlmacenado);
 
-    return this.toDTO(pedidoAlmacenado);
+    // Restaurar el estado como objeto EstadoPedido después de la persistencia
+    pedidoAlmacenado.estado = Object.values(EstadoPedido).find(
+      (e) => e.valor === pedidoActualizado.estado
+    );
+
+    // Notificar
+    await this.notificacionService.notificarPedido(pedidoAlmacenado);
+
+    return this.toDTO(pedidoActualizado);
   }
 
   async pedidosByUser(usuarioId) {
@@ -138,7 +151,7 @@ export default class PedidoService {
     return new Item(producto, cantidad);
   }
 
-  async getComprador(id)  {
+  async getComprador(id) {
     return await this.usuarioService.findById(id);
   }
 }

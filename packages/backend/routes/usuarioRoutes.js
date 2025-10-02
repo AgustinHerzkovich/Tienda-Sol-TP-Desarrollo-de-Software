@@ -2,6 +2,7 @@ import express from 'express';
 import UsuarioController from '../controllers/usuarioController.js';
 import { validateSchema } from '../middlewares/validateSchema.js';
 import { usuarioPostSchema } from '../schemas/zodSchemas/usuarioSchema.js';
+import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
 
 const usuarioPath = '/usuarios';
 
@@ -19,7 +20,7 @@ export default function usuarioRoutes(getController) {
     await usuarioController.productos(req, res, next);
   });
 
-  router.get(usuarioPath + '/:id/notificaciones', async (req, res, next) => {
+  router.get(usuarioPath + '/:id/notificaciones', validateSchema(notificacionPatchSchema, 'query'), async (req, res, next) => {
     await usuarioController.notificaciones(req, res, next);
   });
 

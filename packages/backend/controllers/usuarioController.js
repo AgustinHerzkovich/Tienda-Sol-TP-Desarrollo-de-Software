@@ -63,7 +63,7 @@ export default class UsuarioController {
 
   async notificaciones(req, res, next) {
     const id = req.params.id;
-    const { read } = notificacionPatchSchema.safeParse(req.query);
+    const { read } = req.validatedData;
 
     try {
       await this.usuarioService.findById(id);
