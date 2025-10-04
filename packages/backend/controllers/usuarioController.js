@@ -1,10 +1,11 @@
 import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
 
 export default class UsuarioController {
-  constructor(usuarioService, pedidoService, notificacionService) {
+  constructor(usuarioService, pedidoService, notificacionService, productoService) {
     this.usuarioService = usuarioService;
     this.pedidoService = pedidoService;
     this.notificacionService = notificacionService;
+    this.productoService = productoService;
   }
 
   async pedidos(req, res, next) {

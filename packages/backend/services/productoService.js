@@ -69,12 +69,17 @@ export default class ProductoService {
   }
 
   async findByVendedorId(userId, filtros, paginacion) {
-    const productos = await this.productoRepository.findByVendedorId(
+    const resultado = await this.productoRepository.findByVendedorId(
       userId,
       filtros,
       paginacion
     );
-    return productos.map((producto) => this.toDTO(producto));
+    
+    // El repository retorna { productos: [...], pagination: {...} }
+    return {
+      productos: resultado.productos.map((producto) => this.toDTO(producto)),
+      pagination: resultado.pagination
+    };
   }
 
   async modificarStock(producto, cantidad) {
