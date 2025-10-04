@@ -131,7 +131,8 @@ describe('Tests unitarios de notificacionService', () => {
     );
 
     expect(mockNotificacionRepository.findByUserId).toHaveBeenCalledWith(
-      usuarioDestino.id, false
+      usuarioDestino.id,
+      false
     );
     expect(notificaciones.length).toBe(3);
     expect(notificaciones[0].usuarioDestino).toBe(usuarioDestino);

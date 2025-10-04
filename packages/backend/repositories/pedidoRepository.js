@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 export default class PedidoRepository extends Repository {
   constructor() {
-    super(PedidoModel)
+    super(PedidoModel);
   }
 
   async findByUserId(usuarioId) {

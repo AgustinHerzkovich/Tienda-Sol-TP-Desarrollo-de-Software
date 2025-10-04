@@ -37,7 +37,7 @@ const PedidoSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
-      _id: false
+      _id: false,
     },
   ],
   total: {
@@ -125,11 +125,10 @@ const PedidoSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      _id: false
+      _id: false,
     },
   ],
 });
-
 
 PedidoSchema.pre(/^find/, function (next) {
   this.populate({

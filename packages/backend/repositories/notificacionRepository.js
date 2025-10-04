@@ -4,14 +4,14 @@ import mongoose from 'mongoose';
 
 export default class NotificacionRepository extends Repository {
   constructor() {
-    super(NotificacionModel)
+    super(NotificacionModel);
   }
 
   async findByUserId(idBuscado, leida) {
     const objectId = new mongoose.Types.ObjectId(idBuscado);
     return await this.model.find({
       usuarioDestino: objectId,
-      leida: leida
+      leida: leida,
     });
   }
 }

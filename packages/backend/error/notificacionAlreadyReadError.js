@@ -1,4 +1,4 @@
-import AppError from "./appError.js";
+import AppError from './appError.js';
 
 export default class NotificacionAlreadyReadError extends AppError {
   constructor(notificacionId) {

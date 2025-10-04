@@ -20,13 +20,21 @@ export default function usuarioRoutes(getController) {
     await usuarioController.productos(req, res, next);
   });
 
-  router.get(usuarioPath + '/:id/notificaciones', validateSchema(notificacionPatchSchema, 'query'), async (req, res, next) => {
-    await usuarioController.notificaciones(req, res, next);
-  });
+  router.get(
+    usuarioPath + '/:id/notificaciones',
+    validateSchema(notificacionPatchSchema, 'query'),
+    async (req, res, next) => {
+      await usuarioController.notificaciones(req, res, next);
+    }
+  );
 
-  router.post(usuarioPath, validateSchema(usuarioPostSchema, 'body'), async (req, res, next) => {
-    await usuarioController.crear(req, res, next);
-  });
+  router.post(
+    usuarioPath,
+    validateSchema(usuarioPostSchema, 'body'),
+    async (req, res, next) => {
+      await usuarioController.crear(req, res, next);
+    }
+  );
 
   return router;
 }

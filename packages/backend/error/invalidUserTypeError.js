@@ -1,7 +1,7 @@
-import AppError from "./appError.js";
+import AppError from './appError.js';
 
-export default class InvalidUserTypeError extends AppError { 
-    constructor(message) {
-        super(message, 400);
-    }
+export default class InvalidUserTypeError extends AppError {
+  constructor(message) {
+    super(message, 400);
+  }
 }

@@ -168,7 +168,9 @@ describe('Tests unitarios de PedidoService', () => {
 
       // Verificar que se llamaron los métodos correctos
       expect(mockUsuarioService.findById).toHaveBeenCalledWith(comprador.id);
-      expect(mockProductoService.findObjectById).toHaveBeenCalledWith(producto1.id);
+      expect(mockProductoService.findObjectById).toHaveBeenCalledWith(
+        producto1.id
+      );
       expect(mockProductoService.modificarStock).toHaveBeenCalledWith(
         producto1,
         -2

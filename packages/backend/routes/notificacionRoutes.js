@@ -10,9 +10,13 @@ export default function notitificacionRoutes(getController) {
   const router = express.Router();
 
   // Marcar la notificación como leída
-  router.patch(pathNotificacion + '/:id', validateSchema(notificacionPatchSchema, 'body'), async (req, res, next) => {
-    await notificacionController.modificar(req, res, next);
-  });
+  router.patch(
+    pathNotificacion + '/:id',
+    validateSchema(notificacionPatchSchema, 'body'),
+    async (req, res, next) => {
+      await notificacionController.modificar(req, res, next);
+    }
+  );
 
   return router;
 }

@@ -10,7 +10,7 @@ export default class ProductoRepository extends Repository {
   async findByVendedorId(vendedorId, filtros = {}, paginacion = {}) {
     const objectId = new mongoose.Types.ObjectId(vendedorId);
     // Construir el filtro base
-    const query = { 'vendedor': objectId };
+    const query = { vendedor: objectId };
 
     // Filtros adicionales
     if (filtros.titulo) {

@@ -74,11 +74,11 @@ export default class ProductoService {
       filtros,
       paginacion
     );
-    
+
     // El repository retorna { productos: [...], pagination: {...} }
     return {
       productos: resultado.productos.map((producto) => this.toDTO(producto)),
-      pagination: resultado.pagination
+      pagination: resultado.pagination,
     };
   }
 

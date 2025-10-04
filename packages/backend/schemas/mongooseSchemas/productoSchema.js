@@ -26,7 +26,7 @@ const productoSchema = new mongoose.Schema(
           required: true,
           trim: true,
         },
-        _id: false,  // Desactivar la generación automática de _id
+        _id: false, // Desactivar la generación automática de _id
       },
     ],
     precio: {
@@ -46,10 +46,10 @@ const productoSchema = new mongoose.Schema(
     },
     fotos: [
       {
-          type: String,
-          required: true,
-          trim: true,
-        },
+        type: String,
+        required: true,
+        trim: true,
+      },
       ,
     ],
     activo: {
