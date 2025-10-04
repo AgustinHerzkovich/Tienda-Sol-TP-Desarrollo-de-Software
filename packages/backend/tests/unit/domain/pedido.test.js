@@ -159,7 +159,7 @@ describe('Tests unitarios de pedido', () => {
       expect(pedidoSinStock.validarStock()).toBe(false);
     });
 
-    test('Pedido vacío tiene stock válido', () => {
+    test('Pedido vacío tiene stock', () => {
       const pedidoVacio = new Pedido(
         comprador,
         [],

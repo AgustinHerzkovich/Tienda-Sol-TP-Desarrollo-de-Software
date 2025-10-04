@@ -80,10 +80,10 @@ describe('Tests unitarios de itemPedido', () => {
     });
 
     test('Subtotal con cantidades grandes', () => {
-      const producto = crearProducto(100, 1000);
-      const itemPedido = new ItemPedido(producto, 500);
+      const producto = crearProducto(10000000000000000000000, 100000000000000);
+      const itemPedido = new ItemPedido(producto, 50000000000);
 
-      expect(itemPedido.subtotal()).toBe(50000);
+      expect(itemPedido.subtotal()).toBe(500000000000000000000000000000000);
     });
   });
 
@@ -125,11 +125,11 @@ describe('Tests unitarios de itemPedido', () => {
   });
 
   describe('Casos edge', () => {
-    test('ItemPedido funciona con producto muy caro', () => {
-      const producto = crearProducto(1000000, 1);
-      const itemPedido = new ItemPedido(producto, 1);
+    test('Hay stock si se pide 0 cuando hay 0', () => {
+      const producto = crearProducto(100, 0);
+      const itemPedido = new ItemPedido(producto, 0);
 
-      expect(itemPedido.subtotal()).toBe(1000000);
+      expect(itemPedido.subtotal()).toBe(0);
       expect(itemPedido.tieneStock()).toBe(true);
     });
 

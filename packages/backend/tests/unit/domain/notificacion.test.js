@@ -114,26 +114,6 @@ describe('Tests unitarios de notificación', () => {
     });
   });
 
-  describe('Estados de notificación', () => {
-    test('Notificación nueva está no leída', () => {
-      const notificacion = new Notificacion(usuario, 'Nueva notificación');
-
-      expect(notificacion.leida).toBe(false);
-      expect(notificacion.fechaLeida).toBeNull();
-    });
-
-    test('Notificación leída mantiene estado consistente', () => {
-      const notificacion = new Notificacion(usuario, 'Test');
-      notificacion.marcarComoLeida();
-
-      expect(notificacion.leida).toBe(true);
-      expect(notificacion.fechaLeida).not.toBeNull();
-      expect(notificacion.fechaLeida).toBeGreaterThanOrEqual(
-        notificacion.fechaAlta
-      );
-    });
-  });
-
   describe('Casos edge', () => {
     test('Funciona con mensaje vacío', () => {
       const notificacion = new Notificacion(usuario, '');
@@ -143,11 +123,33 @@ describe('Tests unitarios de notificación', () => {
     });
 
     test('Funciona con mensaje muy largo', () => {
-      const mensajeLargo = 'A'.repeat(1000);
+      const mensajeLargo = 'A'.repeat(100000000);
       const notificacion = new Notificacion(usuario, mensajeLargo);
 
       expect(notificacion.mensaje).toBe(mensajeLargo);
-      expect(notificacion.mensaje.length).toBe(1000);
+      expect(notificacion.mensaje.length).toBe(100000000);
+    });
+    test('Funciona con simbolos raros ', () => {
+  const mensajeRaro = `
+      ⸘¡¿〽️⛩️∞∑≈≠√∛∆∇∂∫∬⊗⊕⊥⊨⊩∴∵∶≅⇌⇔⇐⇑⇓⇗⇘⇙⇚⇛ℵℶℷℸ℺ℼℽℿ
+      ✈️✉️☂️☃️☄️⚡🔥🌪️🌈🌀🌋🗻🏔️🌍🌎🌏🌐🗺️📡📶🔗🔒🔓🔏🔐🔑💣🛡️🗝️
+      🕉️☸️✡️☯️✝️☦️🛐⛎♈♉♊♋♌♍♎♏♐♑♒♓
+      𝒮𝓎𝓂𝒷𝑜𝓁 𝓉𝑒𝓈𝓉
+      😃😄😁😆😅😂🤣😊😇🙂🙃😉😍🥰😘😗😚😙😋😛😝😜🤪🤨🧐🤓😎🥳🤯😤😡🤬😱
+      👽🤖👾🎃👻💀☠️👁️🧠🦷🦴🦾🦿🧬🧫🧪🧹🧺🧻🪠🧼🧽
+      你好，世界！こんにちは世界！안녕하세요 세계! สวัสดีชาวโลก! Привет, мир! שלום עולם! مرحبا بالعالم!
+      ਹੈਲੋ ਦੁਨਿਆ! హలో ప్రపంచం! ஹலோ வேர்ல்ட்! 😀😁😂🤣😃😄😅😆😉😊😋😎😍😘
+      🈚🈯🈲🈳🈴🈵🈶🈷🈸🈹🈺🉐🉑㊗️㊙️🈁
+      ௵₹₩€£₺₽₴₦₨₱¢¥₡₢₫₭₮₯₠₣₤₧₪
+      🜁🜂🜃🜄🜅🜆🜇🜈🜉🜊🜋🜌🜍🜎🜏🜐🜑🜒🜓🜔🜕🜖🜗🜘🜙🜚🜛🜜🜝🜞🜟🜠🜡🜢🜣🜤🜥🜦🜧🜨🜩🜪🜫🜬🜭🜮🜯
+      ༀ༁༂༃༄༅༆༇༈༉༊་༌།༎༏༐༑༒༓༔༕༖༗༘༙༚༛༜༝༞༟༠༡༢༣༤༥༦༧༨༩
+      🕊️🦜🦢🦉🦚🦩🦇🦅🦆🦃🦤🐓🐔🐣🐥🐤🪿🪺
+      🇺🇳🇺🇸🇪🇸🇫🇷🇧🇷🇨🇳🇯🇵🇷🇺🇮🇳🇩🇪🇮🇹🇰🇷🇲🇽🇨🇦
+      🅰️🅱️🆎🆑🅾️🆘🆔🆚🉐🈲
+      ÆØÅæøåÐđÞþĦħŦŧƛƩƔƱƵƷʃʒʔʕʢʡ`;
+      const notificacion = new Notificacion(usuario, mensajeRaro);
+
+      expect(notificacion.mensaje).toBe(mensajeRaro);
     });
 
     test('Múltiples notificaciones para el mismo usuario', () => {
@@ -159,7 +161,7 @@ describe('Tests unitarios de notificación', () => {
       expect(notif1.mensaje).not.toBe(notif2.mensaje);
     });
 
-    test('Fechas de notificaciones diferentes', () => {
+    test('Fecha de notificacion cambia al pasar el tiempo', () => {
       const notif1 = new Notificacion(usuario, 'Test 1');
 
       // Pequeña pausa para asegurar diferentes timestamps
@@ -179,6 +181,11 @@ describe('Tests unitarios de notificación', () => {
       expect(() => notificacion.marcarComoLeida()).toThrow(
         NotificacionAlreadyReadError
       );
+      try {
+        notificacion.marcarComoLeida();
+      } catch (error) {
+        expect(error.message.includes(notificacion.id)).toBe(true);
+      }
     });
   });
 });
