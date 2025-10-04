@@ -1,0 +1,248 @@
+// Post usuario
+{
+  "nombre": "Nicolás Piacentini",
+  "email": "npiacentini@frba.utn.edu.ar",
+  "telefono": "0987654321",
+  "tipo": "COMPRADOR"
+}
+
+// Post usuario
+{
+  "nombre": "Tadeo Sorrentino",
+  "email": "tsorrentino@frba.utn.edu.ar",
+  "telefono": "1234567890",
+  "tipo": "VENDEDOR"
+}
+
+// Post producto
+{
+  "titulo": "Playstation 2",
+  "descripcion": "pa k kieres saber eso jaja salu2",
+  "categorias": [
+    {
+      "nombre": "Tecnología"
+    }
+  ],
+  "precio": 10,
+  "moneda": "PESO_ARG",
+  "stock": 100,
+  "fotos": [
+    "http://fotos.com"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 2
+{
+  "titulo": "iPhone 12 Pro",
+  "descripcion": "Smartphone Apple con pantalla Super Retina XDR y chip A14 Bionic",
+  "categorias": [
+    {
+      "nombre": "Tecnología"
+    }
+  ],
+  "precio": 150000,
+  "moneda": "PESO_ARG",
+  "stock": 25,
+  "fotos": [
+    "http://fotos.com/iphone12.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 3
+{
+  "titulo": "Notebook Gamer Asus ROG",
+  "descripcion": "Laptop para gaming con GTX 3060, 16GB RAM y SSD 512GB",
+  "categorias": [
+    {
+      "nombre": "Computación"
+    }
+  ],
+  "precio": 450000,
+  "moneda": "PESO_ARG",
+  "stock": 15,
+  "fotos": [
+    "http://fotos.com/asus-rog.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 4
+{
+  "titulo": "Auriculares Sony WH-1000XM4",
+  "descripcion": "Auriculares inalámbricos con cancelación de ruido activa",
+  "categorias": [
+    {
+      "nombre": "Audio"
+    }
+  ],
+  "precio": 85000,
+  "moneda": "PESO_ARG",
+  "stock": 40,
+  "fotos": [
+    "http://fotos.com/sony-headphones.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 5
+{
+  "titulo": "Cafetera Nespresso",
+  "descripcion": "Máquina de café automática con sistema de cápsulas",
+  "categorias": [
+    {
+      "nombre": "Electrodomésticos"
+    }
+  ],
+  "precio": 65000,
+  "moneda": "PESO_ARG",
+  "stock": 30,
+  "fotos": [
+    "http://fotos.com/nespresso.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 6
+{
+  "titulo": "Zapatillas Nike Air Max 270",
+  "descripcion": "Calzado deportivo con tecnología Air Max para máximo confort",
+  "categorias": [
+    {
+      "nombre": "Deportes"
+    }
+  ],
+  "precio": 45000,
+  "moneda": "PESO_ARG",
+  "stock": 60,
+  "fotos": [
+    "http://fotos.com/nike-airmax.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 7
+{
+  "titulo": "Smart TV Samsung 55 pulgadas",
+  "descripcion": "Televisor LED 4K con sistema operativo Tizen y HDR",
+  "categorias": [
+    {
+      "nombre": "Electrodomésticos"
+    }
+  ],
+  "precio": 280000,
+  "moneda": "PESO_ARG",
+  "stock": 20,
+  "fotos": [
+    "http://fotos.com/samsung-tv.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 8
+{
+  "titulo": "Libro: 1984 de George Orwell",
+  "descripcion": "Novela distópica clásica sobre totalitarismo y vigilancia",
+  "categorias": [
+    {
+      "nombre": "Libros"
+    }
+  ],
+  "precio": 3500,
+  "moneda": "PESO_ARG",
+  "stock": 150,
+  "fotos": [
+    "http://fotos.com/1984-book.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 9
+{
+  "titulo": "Bicicleta de Montaña Trek",
+  "descripcion": "Mountain bike con suspensión delantera y 21 velocidades",
+  "categorias": [
+    {
+      "nombre": "Deportes"
+    }
+  ],
+  "precio": 180000,
+  "moneda": "PESO_ARG",
+  "stock": 12,
+  "fotos": [
+    "http://fotos.com/trek-bike.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 10
+{
+  "titulo": "Perfume Hugo Boss The Scent",
+  "descripcion": "Fragancia masculina con notas de jengibre y cuero",
+  "categorias": [
+    {
+      "nombre": "Perfumería"
+    }
+  ],
+  "precio": 25000,
+  "moneda": "PESO_ARG",
+  "stock": 80,
+  "fotos": [
+    "http://fotos.com/hugo-boss.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post producto 11
+{
+  "titulo": "Microondas LG 25L",
+  "descripcion": "Horno microondas con grill y función descongelar automática",
+  "categorias": [
+    {
+      "nombre": "Electrodomésticos"
+    }
+  ],
+  "precio": 55000,
+  "moneda": "PESO_ARG",
+  "stock": 35,
+  "fotos": [
+    "http://fotos.com/lg-microwave.jpg"
+  ],
+  "activo": true,
+  "vendedorId": "id_vendedor"
+}
+
+// Post pedido
+{
+  "compradorId": "id_comprador",
+  "items": [
+    {
+      "productoId": "id_producto",
+      "cantidad": 3
+    }
+  ],
+  "moneda": "PESO_ARG",
+  "direccionEntrega": {
+    "calle": "juan domingo perón",
+    "altura": "88",
+    "piso": "1",
+    "departamento": "C",
+    "codigoPostal": "1723",
+    "ciudad": "CABA",
+    "provincia": "Buenos Aires",
+    "pais": "Argentina",
+    "lat": "-34.12983",
+    "lon": "-5.19273"
+  }
+}

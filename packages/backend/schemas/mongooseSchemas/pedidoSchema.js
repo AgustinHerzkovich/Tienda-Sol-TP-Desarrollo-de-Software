@@ -37,6 +37,7 @@ const PedidoSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
+      _id: false
     },
   ],
   total: {
@@ -109,10 +110,6 @@ const PedidoSchema = new mongoose.Schema({
           type: String,
           required: true,
         },
-        /*
-        type: String,
-        enum: Object.values(EstadoPedido).map((e) => e.valor),
-        required: true,*/
       },
       pedido: {
         type: mongoose.Schema.Types.ObjectId,
@@ -128,6 +125,7 @@ const PedidoSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      _id: false
     },
   ],
 });
