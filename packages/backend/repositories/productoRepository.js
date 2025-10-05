@@ -42,7 +42,7 @@ export default class ProductoRepository extends Repository {
     // Ordenamiento
     let sortOptions = {};
     if (filtros.sort === 'ventas') {
-      sortOptions.cantidadVendida = filtros.order === 'desc' ? -1 : 1;
+      sortOptions.cantidadVentas = filtros.order === 'desc' ? -1 : 1;
     } else if (filtros.sort === 'precio') {
       sortOptions.precio = filtros.order === 'desc' ? -1 : 1;
     } else {
