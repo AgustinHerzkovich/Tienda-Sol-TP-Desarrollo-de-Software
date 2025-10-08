@@ -1,4 +1,15 @@
-export class DireccionEntrega {
+export default class DireccionEntrega {
+  calle;
+  altura;
+  piso;
+  departamento;
+  codigoPostal;
+  ciudad;
+  provincia;
+  pais;
+  lat;
+  lon;
+
   constructor(
     calle,
     altura,

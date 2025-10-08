@@ -1,0 +1,756 @@
+openapi: 3.0.0
+info:
+  title: Tienda Sol - Plataforma de Comercio Electrónico
+  version: 1.0.0
+  description: API para una plataforma de comercio electrónico que permite gestionar usuarios, productos, pedidos y notificaciones
+servers:
+  - url: http://localhost:8000
+    description: Servidor de desarrollo local
+paths:
+  # Health Check
+  /health:
+    get:
+      summary: Verificar estado del servicio
+      description: Endpoint para verificar que el servicio esté funcionando correctamente
+      tags:
+        - Health Check
+      responses:
+        '200':
+          description: Servicio funcionando correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  # Pedidos
+  /pedidos:
+    post:
+      summary: Crear un nuevo pedido
+      description: Crea un pedido con los productos especificados para un comprador
+      tags:
+        - Pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoCreateRequest'
+      responses:
+        '201':
+          description: Pedido creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '400':
+          description: Error en los datos del pedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pedidos/{id}:
+    patch:
+      summary: Modificar estado de un pedido
+      description: Actualiza el estado de un pedido existente
+      tags:
+        - Pedidos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del pedido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoUpdateRequest'
+      responses:
+        '200':
+          description: Estado del pedido actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '400':
+          description: Error en los datos enviados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Pedido no encontrado
+
+  # Usuarios
+  /usuarios:
+    post:
+      summary: Crear un nuevo usuario
+      description: Registra un nuevo usuario en el sistema
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioCreateRequest'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Error en los datos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}/pedidos:
+    get:
+      summary: Obtener pedidos de un usuario
+      description: Lista todos los pedidos realizados por un comprador específico
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario comprador
+      responses:
+        '200':
+          description: Lista de pedidos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}/productos:
+    get:
+      summary: Obtener productos de un vendedor
+      description: Lista los productos de un vendedor con filtros, paginación y ordenamiento
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario vendedor
+        - in: query
+          name: titulo
+          schema:
+            type: string
+          description: Filtrar por título del producto
+        - in: query
+          name: categoria
+          schema:
+            type: string
+          description: Filtrar por categoría
+        - in: query
+          name: descripcion
+          schema:
+            type: string
+          description: Filtrar por descripción
+        - in: query
+          name: minPrecio
+          schema:
+            type: number
+          description: Precio mínimo
+        - in: query
+          name: maxPrecio
+          schema:
+            type: number
+          description: Precio máximo
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Número de página
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Cantidad de elementos por página
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [precio, ventas]
+            default: precio
+          description: Campo para ordenar
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+          description: Orden ascendente o descendente
+      responses:
+        '200':
+          description: Lista de productos del vendedor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}/notificaciones:
+    get:
+      summary: Obtener notificaciones de un usuario
+      description: Lista las notificaciones de un usuario, con filtro opcional por estado de lectura
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario
+        - in: query
+          name: read
+          schema:
+            type: boolean
+          description: Filtrar por notificaciones leídas (true) o no leídas (false)
+      responses:
+        '200':
+          description: Lista de notificaciones del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notificacion'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Productos
+  /productos:
+    post:
+      summary: Crear un nuevo producto
+      description: Registra un nuevo producto en el sistema
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoCreateRequest'
+      responses:
+        '201':
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Error en los datos del producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Notificaciones
+  /notificaciones/{id}:
+    patch:
+      summary: Marcar notificación como leída
+      description: Actualiza el estado de lectura de una notificación
+      tags:
+        - Notificaciones
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único de la notificación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificacionUpdateRequest'
+      responses:
+        '200':
+          description: Notificación actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+        '400':
+          description: Error en los datos enviados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Notificación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    # Esquemas de request
+    PedidoCreateRequest:
+      type: object
+      required:
+        - compradorId
+        - items
+        - moneda
+        - direccionEntrega
+      properties:
+        compradorId:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID del usuario comprador
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ItemPedidoRequest'
+          description: Lista de productos y cantidades
+        moneda:
+          $ref: '#/components/schemas/Moneda'
+        direccionEntrega:
+          type: object
+          required:
+            - calle
+            - altura
+            - piso
+            - departamento
+            - codigoPostal
+            - ciudad
+            - provincia
+            - pais
+            - lat
+            - lon
+          properties:
+            calle:
+              type: string
+              description: Nombre de la calle
+            altura:
+              type: string
+              description: Altura de la calle
+            piso:
+              type: string
+              description: Piso (si aplica)
+            departamento:
+              type: string
+              description: Departamento (si aplica)
+            codigoPostal:
+              type: string
+              description: Código postal
+            ciudad:
+              type: string
+              description: Ciudad
+            provincia:
+              type: string
+              description: Provincia o estado
+            pais:
+              type: string
+              description: País
+            lat:
+              type: string
+              description: Latitud geográfica
+            lon:
+              type: string
+              description: Longitud geográfica
+
+    ItemPedidoRequest:
+      type: object
+      required:
+        - productoId
+        - cantidad
+      properties:
+        productoId:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID del producto
+        cantidad:
+          type: integer
+          minimum: 1
+          description: Cantidad del producto
+
+    PedidoUpdateRequest:
+      type: object
+      required:
+        - estado
+      properties:
+        estado:
+          $ref: '#/components/schemas/EstadoPedido'
+
+    UsuarioCreateRequest:
+      type: object
+      required:
+        - nombre
+        - email
+        - telefono
+        - tipo
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          description: Nombre completo del usuario
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario
+        telefono:
+          type: string
+          minLength: 1
+          description: Número de teléfono del usuario
+        tipo:
+          $ref: '#/components/schemas/TipoUsuario'
+
+    ProductoCreateRequest:
+      type: object
+      required:
+        - titulo
+        - descripcion
+        - categorias
+        - precio
+        - moneda
+        - stock
+        - activo
+        - vendedorId
+      properties:
+        titulo:
+          type: string
+          minLength: 1
+          description: Título del producto
+        descripcion:
+          type: string
+          minLength: 1
+          description: Descripción detallada del producto
+        categorias:
+          type: array
+          items:
+            $ref: '#/components/schemas/Categoria'
+          description: Categorías del producto
+        precio:
+          type: number
+          minimum: 0.01
+          description: Precio del producto
+        moneda:
+          $ref: '#/components/schemas/Moneda'
+        stock:
+          type: integer
+          minimum: 0
+          description: Cantidad disponible en stock
+        fotos:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: URLs de las fotos del producto
+        activo:
+          type: boolean
+          description: Si el producto está activo para la venta
+        vendedorId:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID del usuario vendedor
+
+    NotificacionUpdateRequest:
+      type: object
+      required:
+        - read
+      properties:
+        read:
+          type: boolean
+          description: Estado de lectura de la notificación
+
+    # Esquemas de entidades
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario
+        nombre:
+          type: string
+          description: Nombre completo del usuario
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario
+        telefono:
+          type: string
+          description: Número de teléfono del usuario
+        tipo:
+          $ref: '#/components/schemas/TipoUsuario'
+        fechaAlta:
+          type: integer
+          description: Timestamp de creación del usuario
+
+    Producto:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID único del producto
+        vendedor:
+          $ref: '#/components/schemas/Usuario'
+        titulo:
+          type: string
+          description: Título del producto
+        descripcion:
+          type: string
+          description: Descripción detallada del producto
+        categorias:
+          type: array
+          items:
+            $ref: '#/components/schemas/Categoria'
+          description: Categorías del producto
+        precio:
+          type: number
+          description: Precio del producto
+        moneda:
+          $ref: '#/components/schemas/Moneda'
+        stock:
+          type: integer
+          description: Cantidad disponible en stock
+        fotos:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: URLs de las fotos del producto
+        activo:
+          type: boolean
+          description: Si el producto está activo para la venta
+        cantidadVentas:
+          type: integer
+          description: Cantidad total de ventas del producto
+
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID único del pedido
+        comprador:
+          $ref: '#/components/schemas/Usuario'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
+          description: Lista de productos y cantidades
+        total:
+          type: number
+          description: Total calculado del pedido
+        moneda:
+          $ref: '#/components/schemas/Moneda'
+        direccionEntrega:
+          type: object
+          required:
+            - calle
+            - altura
+            - piso
+            - departamento
+            - codigoPostal
+            - ciudad
+            - provincia
+            - pais
+            - lat
+            - lon
+          properties:
+            calle:
+              type: string
+              description: Nombre de la calle
+            altura:
+              type: string
+              description: Altura de la calle
+            piso:
+              type: string
+              description: Piso (si aplica)
+            departamento:
+              type: string
+              description: Departamento (si aplica)
+            codigoPostal:
+              type: string
+              description: Código postal
+            ciudad:
+              type: string
+              description: Ciudad
+            provincia:
+              type: string
+              description: Provincia o estado
+            pais:
+              type: string
+              description: País
+            lat:
+              type: string
+              description: Latitud geográfica
+            lon:
+              type: string
+              description: Longitud geográfica
+        estado:
+          $ref: '#/components/schemas/EstadoPedido'
+        fechaCreacion:
+          type: integer
+          description: Timestamp de creación del pedido
+        historialEstados:
+          type: array
+          items:
+            $ref: '#/components/schemas/CambioEstadoPedido'
+          description: Historial de cambios de estado
+
+    ItemPedido:
+      type: object
+      properties:
+        producto:
+          $ref: '#/components/schemas/Producto'
+        cantidad:
+          type: integer
+          description: Cantidad del producto en el pedido
+        precioUnitario:
+          type: number
+          description: Precio unitario al momento de crear el pedido
+
+    Notificacion:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID único de la notificación
+        usuarioDestino:
+          $ref: '#/components/schemas/Usuario'
+        mensaje:
+          type: string
+          description: Contenido de la notificación
+        fechaAlta:
+          type: integer
+          description: Timestamp de creación de la notificación
+        leida:
+          type: boolean
+          description: Si la notificación ha sido leída
+        fechaLeida:
+          type: integer
+          nullable: true
+          description: Timestamp de lectura de la notificación
+
+    Categoria:
+      type: object
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la categoría
+
+    CambioEstadoPedido:
+      type: object
+      properties:
+        fecha:
+          type: integer
+          description: Timestamp del cambio de estado
+        estado:
+          $ref: '#/components/schemas/EstadoPedido'
+        pedido:
+          $ref: '#/components/schemas/Pedido'
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+        motivo:
+          type: string
+          description: Motivo del cambio de estado
+
+    # Enums
+    EstadoPedido:
+      type: string
+      enum:
+        - PENDIENTE
+        - CONFIRMADO
+        - EN_PREPARACION
+        - ENVIADO
+        - ENTREGADO
+        - CANCELADO
+      description: Estado actual del pedido
+
+    TipoUsuario:
+      type: string
+      enum:
+        - COMPRADOR
+        - VENDEDOR
+        - ADMIN
+      description: Tipo de usuario en el sistema
+
+    Moneda:
+      type: string
+      enum:
+        - PESO_ARG
+        - DOLAR_USA
+        - REAL
+      description: Moneda utilizada para precios
+
+    # Esquemas de error
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensaje de error
+        details:
+          type: array
+          items:
+            type: object
+          description: Detalles adicionales del error (para errores de validación)
+
+tags:
+  - name: Health Check
+    description: Verificación del estado del servicio
+  - name: Pedidos
+    description: Gestión de pedidos
+  - name: Usuarios
+    description: Gestión de usuarios y consultas relacionadas
+  - name: Productos
+    description: Gestión de productos
+  - name: Notificaciones
+    description: Gestión de notificaciones

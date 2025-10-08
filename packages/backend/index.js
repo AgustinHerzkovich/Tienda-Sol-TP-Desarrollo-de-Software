@@ -1,36 +1,92 @@
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import routes from './routes/routes.js';
+import Server from './server.js';
+import HealthCheckController from './controllers/healthCheckController.js';
+import PedidoRepository from './repositories/pedidoRepository.js';
+import PedidoService from './services/pedidoService.js';
+import PedidoController from './controllers/pedidoController.js';
+import ProductoRepository from './repositories/productoRepository.js';
+import ProductoService from './services/productoService.js';
+import ProductoController from './controllers/productoController.js';
+import UsuarioRepository from './repositories/usuarioRepository.js';
+import UsuarioService from './services/usuarioService.js';
+import UsuarioController from './controllers/usuarioController.js';
+import NotificacionRepository from './repositories/notificacionRepository.js';
+import NotificacionService from './services/notificacionService.js';
+import NotificacionController from './controllers/notificacionController.js';
+import { setupSwagger } from './swagger.js';
+import MongoDBClient from './mongoDBClient.js';
 
-const app = express();
-app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-      : true,
-  }),
-);
+dotenv.config();
 
-app.get("/health", async (req, res) => {
-  let dbStatus = "unknown";
-  /*try {
-    // Simula chequeo de DB, reemplaza con tu lógica real
-    // await db.ping();
-    dbStatus = "ok";
-  } catch (e) {
-    dbStatus = "error";
-  }*/
-  dbStatus = "disconnected"; 
-  res.json({
-    status: "ok",
-    db: dbStatus,
-    version: process.env.npm_package_version,
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
-});
+async function main() {
+  const app = express();
+  app.use(express.json());
+  app.use(
+    cors({
+      origin: process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+        : true,
+    })
+  );
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Backend escuchando en puerto ${process.env.SERVER_PORT}`);
-});
+  // Configuramos el puerto con el .env
+  const port = process.env.SERVER_PORT || 3000;
+
+  // Configuramos swagger
+  setupSwagger(app);
+
+  // Se envía al server el puerto
+  const server = new Server(app, port);
+
+  // Acá se instancian los controllers, services y repositories
+  const healthCheckController = new HealthCheckController();
+
+  const usuarioRepository = new UsuarioRepository();
+  const productoRepository = new ProductoRepository();
+  const notificacionRepository = new NotificacionRepository();
+  const pedidoRepository = new PedidoRepository();
+
+  const usuarioService = new UsuarioService(usuarioRepository);
+  const productoService = new ProductoService(
+    productoRepository,
+    usuarioService
+  );
+  const notificacionService = new NotificacionService(notificacionRepository);
+  const pedidoService = new PedidoService(
+    pedidoRepository,
+    productoService,
+    usuarioService,
+    notificacionService
+  );
+
+  const usuarioController = new UsuarioController(
+    usuarioService,
+    pedidoService,
+    notificacionService,
+    productoService
+  );
+  const productoController = new ProductoController(productoService);
+  const notificacionController = new NotificacionController(
+    notificacionService
+  );
+  const pedidoController = new PedidoController(pedidoService);
+
+  server.addController(HealthCheckController, healthCheckController);
+  server.addController(ProductoController, productoController);
+  server.addController(UsuarioController, usuarioController);
+  server.addController(NotificacionController, notificacionController);
+  server.addController(PedidoController, pedidoController);
+
+  routes.forEach((route) => server.addRoute(route));
+  server.configureRoutes();
+
+  await MongoDBClient.connect(); // Si no se conecta a la DB, no levanta el server
+
+  server.launch();
+  console.log('');
+}
+
+main().catch((err) => console.error('Error al iniciar la app: ', err));

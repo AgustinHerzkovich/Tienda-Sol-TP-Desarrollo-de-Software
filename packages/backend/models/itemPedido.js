@@ -1,7 +1,9 @@
-import { Producto } from './producto.js';
+export default class ItemPedido {
+  producto;
+  cantidad;
+  precioUnitario;
 
-export class ItemPedido {
-  constructor(producto, cantidad, precioUnitario) {
+  constructor(producto, cantidad, precioUnitario = producto.precio) {
     this.producto = producto;
     this.cantidad = cantidad;
     this.precioUnitario = precioUnitario;

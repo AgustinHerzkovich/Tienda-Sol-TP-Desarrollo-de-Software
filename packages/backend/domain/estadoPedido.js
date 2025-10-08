@@ -1,9 +1,0 @@
-export const EstadoPedido = Object.freeze({
-  // ENUM en javascript
-  PENDIENTE: 'PENDIENTE',
-  CONFIRMADO: 'CONFIRMADO',
-  EN_PREPARACION: 'EN_PREPARACION',
-  ENVIADO: 'ENVIADO',
-  ENTREGADO: 'ENTREGADO',
-  CANCELADO: 'CANCELADO',
-});

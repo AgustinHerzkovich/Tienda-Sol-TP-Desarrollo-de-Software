@@ -1,8 +1,10 @@
-import { EstadoPedido } from './estadoPedido.js';
-import { Pedido } from './pedido.js';
-import { Usuario } from './usuario.js';
+export default class CambioEstadoPedido {
+  fecha;
+  estado;
+  pedido;
+  usuario;
+  motivo;
 
-export class CambioEstadoPedido {
   constructor(estado, pedido, usuario, motivo, fecha = Date.now()) {
     this.fecha = fecha;
     this.estado = estado;

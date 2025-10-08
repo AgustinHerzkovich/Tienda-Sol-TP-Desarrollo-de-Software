@@ -1,10 +1,17 @@
-import { Usuario } from './usuario.js';
-import { Categoria } from './categoria.js';
-import { Moneda } from './moneda.js';
+import ProductoOutOfStockError from '../error/productoOutOfStockError.js';
+export default class Producto {
+  id;
+  vendedor;
+  titulo;
+  descripcion;
+  categorias;
+  precio;
+  moneda;
+  stock;
+  fotos;
+  activo;
 
-export class Producto {
   constructor(
-    id,
     vendedor,
     titulo,
     descripcion,
@@ -13,9 +20,8 @@ export class Producto {
     moneda,
     stock,
     fotos,
-    activa
+    activo
   ) {
-    this.id = id;
     this.vendedor = vendedor;
     this.titulo = titulo;
     this.descripcion = descripcion;
@@ -24,7 +30,8 @@ export class Producto {
     this.moneda = moneda;
     this.stock = stock;
     this.fotos = fotos;
-    this.activa = activa;
+    this.activo = activo;
+    this.cantidadVentas = 0;
   }
 
   estaDisponible(cantidad) {
@@ -32,10 +39,17 @@ export class Producto {
   }
 
   reducirStock(cantidad) {
+    if (!this.estaDisponible(cantidad)) {
+      throw new ProductoOutOfStockError(this.id, cantidad); // TODO: Crear error custom
+    }
     this.stock -= cantidad;
   }
 
   aumentarStock(cantidad) {
     this.stock += cantidad;
+  }
+
+  aumentarVentas(cantidad) {
+    this.cantidadVentas += cantidad;
   }
 }
