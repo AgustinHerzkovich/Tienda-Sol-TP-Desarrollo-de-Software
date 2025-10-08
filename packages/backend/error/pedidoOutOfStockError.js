@@ -1,9 +1,13 @@
 import AppError from './appError.js';
 
 export default class PedidoOutOfStockError extends AppError {
-  constructor(idPedido, cantidad) {
+  constructor(itemsSinStock) {
+    const itemsAsString = itemsSinStock
+      .map((item) => item.producto.id + ' - ' + item.producto.titulo + ' - ' + item.cantidad)
+      .join(' | ');
+
     super(
-      `No hay stock suficiente para crear el Pedido con id ${idPedido}, cantidad necesaria: ${cantidad}`,
+      `No hay stock suficiente para crear el Pedido. Items sin stock: ${itemsAsString}`,
       400
     );
   }

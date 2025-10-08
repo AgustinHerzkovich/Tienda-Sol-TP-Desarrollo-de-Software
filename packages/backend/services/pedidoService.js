@@ -64,8 +64,7 @@ export default class PedidoService {
     );
     // Validar stock
     if (!pedido.validarStock()) {
-      const cantidad = _.sumBy(pedido.items, (item) => item.cantidad);
-      throw new PedidoOutOfStockError(pedido.id, cantidad);
+      throw new PedidoOutOfStockError(pedido.itemsSinStock());
     }
 
     // Actualizar stock de cada producto

@@ -43,6 +43,10 @@ export default class Pedido {
   validarStock() {
     return this.items.every((itemPedido) => itemPedido.tieneStock());
   }
+  //item List
+  itemsSinStock(){
+    return this.items.filter((item) => !item.tieneStock());
+  }
 
   getVendedor() {
     return _.first(this.items).producto.vendedor; // Asumimos que todos los items de un pedido son del mismo vendedor
