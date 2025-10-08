@@ -3,7 +3,17 @@ import AppError from './appError.js';
 export default class PedidoOutOfStockError extends AppError {
   constructor(itemsSinStock) {
     const itemsAsString = itemsSinStock
-      .map((item) => 'id: ' + item.producto.id + ' - nombre: ' + item.producto.titulo + ' - solicitado: ' + item.cantidad + ' - disponible: ' + item.producto.stock)
+      .map(
+        (item) =>
+          'id: ' +
+          item.producto.id +
+          ' - nombre: ' +
+          item.producto.titulo +
+          ' - solicitado: ' +
+          item.cantidad +
+          ' - disponible: ' +
+          item.producto.stock
+      )
       .join(' || ');
 
     super(

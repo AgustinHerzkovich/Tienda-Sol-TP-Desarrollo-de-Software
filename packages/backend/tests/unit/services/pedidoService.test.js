@@ -3,7 +3,7 @@ import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import ItemPedido from '../../../models/itemPedido.js';
 import { Moneda } from '../../../models/moneda.js';
 import { EstadoPedido } from '../../../models/estadoPedido.js';
-import PedidoOutOfStockError from '../../../error/pedidoOutOfStockError.js'
+import PedidoOutOfStockError from '../../../error/pedidoOutOfStockError.js';
 import CancellationError from '../../../error/cancellationError.js';
 import Usuario from '../../../models/usuario.js';
 import Producto from '../../../models/producto.js';

@@ -43,8 +43,9 @@ export default class Pedido {
   validarStock() {
     return this.items.every((itemPedido) => itemPedido.tieneStock());
   }
+
   //item List
-  itemsSinStock(){
+  itemsSinStock() {
     return this.items.filter((item) => !item.tieneStock());
   }
 

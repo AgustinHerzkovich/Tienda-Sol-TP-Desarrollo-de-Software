@@ -112,7 +112,9 @@ describe('Tests unitarios de productoService', () => {
       mockUsuarioService.findById.mockRejectedValue(
         new NotFoundError('Usuario con id: 1 no encontrado')
       );
-      await expect(productoService.crear(productoJSON)).rejects.toThrow(NotFoundError);
+      await expect(productoService.crear(productoJSON)).rejects.toThrow(
+        NotFoundError
+      );
 
       expect(mockUsuarioService.findById).toHaveBeenCalledWith(1);
       expect(mockProductoRepository.create).not.toHaveBeenCalled();

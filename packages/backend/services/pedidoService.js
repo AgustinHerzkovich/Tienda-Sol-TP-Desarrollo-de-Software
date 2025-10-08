@@ -1,6 +1,6 @@
 import Pedido from '../models/pedido.js';
 import Item from '../models/itemPedido.js';
-import PedidoOutOfStockError from '../error/pedidoOutOfStockError.js'
+import PedidoOutOfStockError from '../error/pedidoOutOfStockError.js';
 import CancellationError from '../error/cancellationError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
