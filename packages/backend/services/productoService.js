@@ -27,9 +27,6 @@ export default class ProductoService {
     const vendedor = await this.usuarioService.findById(
       productoJSON.vendedorId
     );
-    if (vendedor == undefined) {
-      throw new Error('No existe el vendedor');
-    }
 
     if (vendedor.tipo !== TipoUsuario.VENDEDOR) {
       throw new InvalidUserTypeError(
