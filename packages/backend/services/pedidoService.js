@@ -43,7 +43,7 @@ export default class PedidoService {
 
     // Traer el comprador
     const comprador = await this.getComprador(pedidoJSON.compradorId);
-    if (comprador == null) {
+    if (comprador == null) {// deberia estar en el getComprador
       throw new Error('El comprador no existe para este producto!');
     }
 
