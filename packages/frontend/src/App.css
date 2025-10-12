@@ -36,3 +36,52 @@
     transform: rotate(360deg);
   }
 }
+
+
+.error {
+  opacity: 0;
+  color: red;
+  font-weight: bold;
+  font-size: 2.5em;
+  background-color: black;
+  border: 3px solid red;
+  padding: 10px;
+  text-transform: uppercase;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  box-shadow: 0 0 10px red, 0 0 20px crimson;
+  text-align: center;
+  animation: shake 0.3s infinite steps(20), aparecer 2s forwards 3s;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-20px); }
+  50% { transform: translateX(20px); }
+  75% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
+}
+@keyframes aparecer {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes colorRainbow {
+  0% { background-color: black; color: red; }
+  25% { background-color: red; color: white; }
+  50% { background-color: white; color: black; }
+  75% { background-color: yellow; color: blue; }
+  100% { background-color: black; color: red; }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(270deg); }
+  100% { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 3s steps(40) infinite;
+}
+.rainbow {
+  animation: colorRainbow 0.5s infinite;
+}

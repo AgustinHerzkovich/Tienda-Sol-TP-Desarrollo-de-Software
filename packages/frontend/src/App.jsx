@@ -1,0 +1,46 @@
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import Home from './components/home/Home';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import ProductDetailPage from './components/productos/ProductoDetailPage';
+export default function App() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:8000/health')
+      .then((response) => response.json())
+      .then((data) => setMessage(data.status))
+      .catch((error) => console.error('Error cargando health.', error));
+  }, []);
+
+  if (!message) {
+    return (
+      <div className='error'>
+        <p>NO ANDA EL SERVIDOR</p>
+        <p>Pero hey, al menos tenés esto mientras esperás...</p>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+      </div>
+    )
+  }
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="productos/:id" element={<ProductDetailPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
