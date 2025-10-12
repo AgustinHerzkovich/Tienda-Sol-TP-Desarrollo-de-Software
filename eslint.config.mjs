@@ -7,7 +7,7 @@ export default defineConfig([
   {
     files: ['packages/backend/tests/**/*.{js,mjs,cjs,jsx}'],
     plugins: { js },
-    extends: ['js/recommended'],
+    extends: ['js/recommended', 'plugin:react/recommended', 'plugin:react/jsx-runtime'],
     languageOptions: {
       globals: {
         ...globals.node,
