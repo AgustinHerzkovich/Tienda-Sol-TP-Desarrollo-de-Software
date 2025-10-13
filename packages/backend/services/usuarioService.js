@@ -27,6 +27,13 @@ export default class UsuarioService {
   }
 
   async crear(usuarioJSON) {
+    const usuarioExistente = await this.usuarioRepository.findByEmail(
+      usuarioJSON.email
+    );
+    if (usuarioExistente) {
+      throw new UserAlreadyExists(usuarioJSON.email);
+    }
+    
     let tipoUsuario;
     switch (usuarioJSON.tipo) {
       case 'COMPRADOR':
