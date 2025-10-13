@@ -4,6 +4,7 @@ import Home from './components/home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import ProductDetailPage from './components/productos/ProductoDetailPage';
+import LoginPage from './components/auth/LoginPage';
 export default function App() {
   const [message, setMessage] = useState('');
 
@@ -35,6 +36,7 @@ export default function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="productos/:id" element={<ProductDetailPage />} />

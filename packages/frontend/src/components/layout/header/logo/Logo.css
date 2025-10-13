@@ -29,12 +29,14 @@
 .logo-icon {
     width: 28px;
     height: 28px;
+    user-select: none;
 }
 
 .logo-text {
     display: flex;
     flex-direction: column;
     line-height: 1;
+    user-select: none;
 }
 
 .logo-title {

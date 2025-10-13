@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import { mockProductos } from "../../mock/productos";
+import { productos } from "../../mock/productos";
 import { useState } from "react";
 import './ProductoDetailPage.css';
 
 export default function ProductDetailPage() {
     const { id } = useParams();
-    const producto = mockProductos.find(p => p.id === parseInt(id));
+    const producto = productos.find(p => p.id === parseInt(id));
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     if (!producto) {

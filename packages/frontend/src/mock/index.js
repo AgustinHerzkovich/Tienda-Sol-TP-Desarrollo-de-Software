@@ -1,7 +1,7 @@
 // Re-exportar todos los mocks para facilitar el uso
 export { mockUsuarios, getUsuarioById, getUsuariosByTipo } from './usuarios.js';
 export {
-  mockProductos,
+  productos,
   getProductoById,
   getProductosByCategoria,
   getProductosByVendedor,

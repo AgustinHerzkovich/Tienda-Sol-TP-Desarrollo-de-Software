@@ -20,7 +20,7 @@
 .producto-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
+    border-color: var(--primary-purple);
 }
 
 .producto-image {
@@ -101,7 +101,7 @@
 
 .ver-detalles {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-purple);
     color: white;
     padding: 12px 24px;
     border-radius: 25px;
@@ -111,13 +111,13 @@
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: none;
 }
 
 .ver-detalles:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background: #1a1a2e;
+    box-shadow: none;
 }
 
 .link-no-style {
@@ -278,9 +278,9 @@
 }
 
 .glow {
-  box-shadow: 0 0 8px 4px #553773;
+  box-shadow: 0 0 8px 4px #000000;
   transition: box-shadow 0.3s ease;
 }
 .glow:hover {
-  box-shadow: 0 0 20px 10px #533c6b;
+  box-shadow: 0 0 20px 10px #000000;
 }

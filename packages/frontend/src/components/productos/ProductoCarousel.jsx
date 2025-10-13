@@ -1,27 +1,27 @@
 import React, { useState } from "react";
 import "./ProductoCarousel.css";
 import CarouselItem from "../productoItem/CarouselItem.jsx";
-import { mockProductos } from "../../mock/productos.js";
+import { productos } from "../../mock/productos.js";
 
 export default function ProductoCarousel() {
   const [index, setIndex] = useState(0);
   const visible = 3;
 
   const siguiente = () => {
-    if (index < mockProductos.length - visible) setIndex(index + 1);
+    if (index < productos.length - visible) setIndex(index + 1);
   };
 
   const anterior = () => {
     if (index > 0) setIndex(index - 1);
   };
 
-  if (!Array.isArray(mockProductos) || mockProductos.length === 0) {
+  if (!Array.isArray(productos) || productos.length === 0) {
     return <p className="carousel-empty">No hay productos disponibles</p>;
   }
 
   return (
     <div className="carousel-container">
-      <h2 className="carousel-title">Ofertas para el fin de semana</h2>
+      <h2 className="carousel-title">Ofertas de fin de semana</h2>
 
       <div className="carousel-wrapper">
         <div className="carousel-viewport">
@@ -29,7 +29,7 @@ export default function ProductoCarousel() {
           style={{
               transform: `translateX(-${index * (100 / visible)}%)`,
             }}>
-            {mockProductos.map((producto) => (
+            {productos.map((producto) => (
               <CarouselItem producto={producto} key={producto.id}/> 
             ))}
           </div>
@@ -47,9 +47,9 @@ export default function ProductoCarousel() {
 
         <button
           onClick={siguiente}
-          disabled={index >= mockProductos.length - visible}
+          disabled={index >= productos.length - visible}
           className={`carousel-btn right-btn ${
-            index >= mockProductos.length - visible ? "disabled" : ""
+            index >= productos.length - visible ? "disabled" : ""
           }`}
         >
           ▶

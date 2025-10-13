@@ -1,4 +1,4 @@
-export const mockProductos = [
+export const productos = [
   {
     id: 1,
     titulo: 'PlayStation 5',
@@ -192,11 +192,11 @@ export const mockProductos = [
 ];
 
 export const getProductoById = (id) => {
-  return mockProductos.find((producto) => producto.id === id);
+  return productos.find((producto) => producto.id === id);
 };
 
 export const getProductosByCategoria = (categoria) => {
-  return mockProductos.filter((producto) =>
+  return productos.filter((producto) =>
     producto.categorias.some((cat) =>
       cat.nombre.toLowerCase().includes(categoria.toLowerCase())
     )
@@ -204,11 +204,11 @@ export const getProductosByCategoria = (categoria) => {
 };
 
 export const getProductosByVendedor = (vendedorId) => {
-  return mockProductos.filter((producto) => producto.vendedorId === vendedorId);
+  return productos.filter((producto) => producto.vendedorId === vendedorId);
 };
 
 export const getProductosActivos = () => {
-  return mockProductos.filter(
+  return productos.filter(
     (producto) => producto.activo && producto.stock > 0
   );
 };

@@ -15,8 +15,7 @@
 
 /* GALLERY SECTION */
 .producto-gallery {
-    position: sticky;
-    top: 100px;
+    position: static;
 }
 
 .main-image-container {
@@ -101,9 +100,9 @@
 }
 
 .thumbnail.active {
-    border-color: #667eea;
+    border-color: var(--primary-purple);
     opacity: 1;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(34, 34, 59, 0.3);
 }
 
 /* PRODUCT INFO SECTION */
@@ -131,7 +130,7 @@
 }
 
 .category-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-purple);
     color: white;
     padding: 6px 16px;
     border-radius: 20px;
@@ -229,14 +228,14 @@
 }
 
 .btn-comprar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-purple);
     color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(34, 34, 59, 0.4);
 }
 
 .btn-comprar:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 8px 25px rgba(34, 34, 59, 0.6);
 }
 
 .btn-comprar:disabled {
