@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { use, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 export default function LoginPage() {
+    const navigate = useNavigate();
+    
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -19,6 +21,9 @@ export default function LoginPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // TODO: Lógica de login
+        if (formData.password.length > 3) {
+            navigate('/');
+        }
         console.log('Login attempt with:', formData);
     };
 
