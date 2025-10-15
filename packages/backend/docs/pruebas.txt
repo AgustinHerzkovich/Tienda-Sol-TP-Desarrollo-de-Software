@@ -17,11 +17,11 @@
 // Post producto 1
 {
   "titulo": "Playstation 2",
-  "descripcion": "pa k kieres saber eso jaja salu2",
+  "descripcion": "Consola de videojuegos nostálgica",
   "categorias": [
     { "nombre": "Tecnología" }
   ],
-  "precio": 10,
+  "precio": 250000,
   "moneda": "PESO_ARG",
   "stock": 100,
   "fotos": [
