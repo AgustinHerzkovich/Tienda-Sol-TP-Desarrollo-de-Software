@@ -2,11 +2,13 @@ import { useParams } from "react-router-dom";
 import { productos } from "../../mock/productos";
 import { useState } from "react";
 import './ProductoDetailPage.css';
+import { useAddToCart } from "../../context/CartContext";
 
 export default function ProductDetailPage() {
     const { id } = useParams();
     const producto = productos.find(p => p.id === parseInt(id));
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const addToCart = useAddToCart();
 
     if (!producto) {
         return <div className='producto-detail-container'>
@@ -31,6 +33,11 @@ export default function ProductDetailPage() {
 
     const goToImage = (index) => {
         setCurrentImageIndex(index);
+    };
+
+    const handleAddToCart = () => {
+        console.log('ProductoDetailPage: Intentando añadir al carrito:', producto.titulo);
+        addToCart(producto);
     };
     
     return (
@@ -121,7 +128,7 @@ export default function ProductDetailPage() {
                         >
                             {producto.stock > 0 ? 'Comprar ahora' : 'Sin stock'}
                         </button>
-                        <button className="btn-carrito">
+                        <button className="btn-carrito" onClick={handleAddToCart}>
                             Agregar al carrito
                         </button>
                     </div>

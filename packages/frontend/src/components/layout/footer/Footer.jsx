@@ -79,7 +79,6 @@ export default function Footer() {
                             <li><button className="footer-link">Sobre Nosotros</button></li>
                             <li><button className="footer-link">Términos y Condiciones</button></li>
                             <li><button className="footer-link">Política de Privacidad</button></li>
-                            <li><button className="footer-link">Política de Devoluciones</button></li>
                             <li><button className="footer-link">Preguntas Frecuentes</button></li>
                             <li><button className="footer-link">Centro de Ayuda</button></li>
                         </ul>

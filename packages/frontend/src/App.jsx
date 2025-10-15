@@ -5,6 +5,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import ProductDetailPage from './components/productos/ProductoDetailPage';
 import LoginPage from './components/auth/LoginPage';
+import CartPage from './components/cartPage/CartPage';
+import { CartProvider } from './context/CartContext';
+import { SessionProvider } from './context/SessionContext';
+
 export default function App() {
   const [message, setMessage] = useState('');
 
@@ -34,15 +38,20 @@ export default function App() {
   }
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="productos/:id" element={<ProductDetailPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <SessionProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="productos/:id" element={<ProductDetailPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
+      </SessionProvider>
     </div>
   );
 }

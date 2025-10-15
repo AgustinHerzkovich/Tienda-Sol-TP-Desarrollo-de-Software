@@ -94,9 +94,24 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.ver-detalles-container {
+/* CONTENEDOR DE BOTONES */
+.botones-container {
+    display: flex;
+    gap: 12px;
     margin-top: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.ver-detalles-container {
+    flex: 1;
     text-align: center;
+}
+
+.añadir-carrito-container {
+    flex: 1;
+    text-align: right;
+    padding-left: 2px;
 }
 
 .ver-detalles {
@@ -259,6 +274,30 @@
 .link-no-style:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* BOTÓN AÑADIR AL CARRITO */
+.añadir-carrito {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    color: #22223b;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.añadir-carrito:hover {
+    color: white;
+    background: #22223b;
+    transform: translateY(-2px);
 }
 
 /* Mejora para dispositivos táctiles */

@@ -3,7 +3,6 @@
     height: 48px;
     background-color: var(--primary-purple);
     background-size: 600% 600%;
-    animation: gradientShift 10s ease infinite;
     display: flex;
     align-items: center;
     justify-content: space-between;

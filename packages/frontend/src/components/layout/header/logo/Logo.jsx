@@ -3,7 +3,7 @@ import './Logo.css';
 
 export default function Logo() {
     const navigate = useNavigate();
-
+    
     const handleLogoClick = () => {
         navigate('/');
     };

@@ -1,10 +1,12 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import { useSession } from '../../context/SessionContext';
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    
+    const { isLoggedIn, login } = useSession();
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -20,11 +22,19 @@ export default function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // TODO: Lógica de login
-        if (formData.password.length > 3) {
+        
+        // Validación básica
+        if (formData.email && formData.password.length > 3) {
+            console.log('Login exitoso con:', formData);
+            
+            // Hacer login directamente
+            login({ email: formData.email, password: formData.password });
+            
+            // Navegar de vuelta a home
             navigate('/');
+        } else {
+            alert('Por favor ingresa un email válido y una contraseña de al menos 4 caracteres');
         }
-        console.log('Login attempt with:', formData);
     };
 
     const handleGoogleLogin = () => {
