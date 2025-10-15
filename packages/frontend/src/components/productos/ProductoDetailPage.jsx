@@ -1,14 +1,45 @@
-import { useParams } from "react-router-dom";
-import { productos } from "../../mock/productos";
-import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import './ProductoDetailPage.css';
 import { useAddToCart } from "../../context/CartContext";
+import { useCurrency } from "../../context/CurrencyContext";
+import axios from "axios";
 
 export default function ProductDetailPage() {
     const { id } = useParams();
-    const producto = productos.find(p => p.id === parseInt(id));
+    const [producto, setProducto] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const addToCart = useAddToCart();
+    const navigate = useNavigate();
+    const { obtenerSimboloMoneda, obtenerNombreMoneda, formatearPrecio } = useCurrency();
+
+    const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
+    const productoEndpoint = `http://localhost:${backendPort}/productos/${id}`;
+
+    useEffect(() => {
+        const fetchProducto = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(productoEndpoint);
+                setProducto(response.data);
+            } catch (error) {
+                setProducto(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducto();
+    }, [productoEndpoint]);
+
+    if (loading) {
+        return <div className='producto-detail-container'>
+            <div className='producto-header'>
+                <h1>Cargando...</h1>
+            </div>
+        </div>;
+    }
 
     if (!producto) {
         return <div className='producto-detail-container'>
@@ -39,6 +70,11 @@ export default function ProductDetailPage() {
         console.log('ProductoDetailPage: Intentando añadir al carrito:', producto.titulo);
         addToCart(producto);
     };
+
+    const handleBuyNow = () => {
+        addToCart(producto);
+        navigate('/cart');
+    }
     
     return (
         <div className="producto-detail-container">
@@ -107,9 +143,9 @@ export default function ProductDetailPage() {
 
                     <div className="producto-price-container">
                         <div className="producto-precio">
-                            ${producto.precio?.toLocaleString('es-AR')}
+                            {formatearPrecio(producto.precio, producto.moneda)}
                         </div>
-                        <div className="price-currency">{producto.moneda === 'PESO_ARG' ? 'Pesos Argentinos' : producto.moneda}</div>
+                        <div className="price-currency">{obtenerNombreMoneda(producto.moneda)}</div>
                         <div className="price-details">Impuestos incluidos • Envío gratis</div>
                     </div>
 
@@ -125,6 +161,7 @@ export default function ProductDetailPage() {
                         <button 
                             className="btn-comprar" 
                             disabled={producto.stock === 0}
+                            onClick={handleBuyNow}
                         >
                             {producto.stock > 0 ? 'Comprar ahora' : 'Sin stock'}
                         </button>

@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
 import "../../index.css"
 import { useAddToCart } from "../../context/CartContext";
+import { useCurrency } from "../../context/CurrencyContext";
 
 const CarouselItem = ({producto}) => {
   const addToCart = useAddToCart();
+  const { formatearPrecio } = useCurrency();
 
   const handleAddToCart = () => {
     console.log('CarouselItem: Intentando añadir al carrito:', producto.titulo);
@@ -26,7 +28,7 @@ const CarouselItem = ({producto}) => {
           <div className="producto-details">
             <span className="producto-cantidadVentas">{producto.cantidadVentas}</span>
             <span className="producto-price">
-               Precio: ${producto.precio.toLocaleString("es-AR")}
+               Precio: {formatearPrecio(producto.precio, producto.moneda)}
             </span>
           </div>
           <div className="botones-container">

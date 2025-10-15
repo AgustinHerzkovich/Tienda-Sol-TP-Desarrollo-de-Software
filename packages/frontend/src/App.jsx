@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Home from './components/home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -8,6 +8,7 @@ import LoginPage from './components/auth/LoginPage';
 import CartPage from './components/cartPage/CartPage';
 import { CartProvider } from './context/CartContext';
 import { SessionProvider } from './context/SessionContext';
+import { CurrencyProvider } from './context/CurrencyContext';
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -39,19 +40,21 @@ export default function App() {
   return (
     <div className="App">
       <SessionProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="productos/:id" element={<ProductDetailPage />} />
-              </Route>
+        <CurrencyProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="productos/:id" element={<ProductDetailPage />} />
+                </Route>
             </Routes>
           </BrowserRouter>
         </CartProvider>
-      </SessionProvider>
+      </CurrencyProvider>
+    </SessionProvider>
     </div>
   );
 }
