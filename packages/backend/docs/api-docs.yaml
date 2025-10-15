@@ -149,87 +149,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /usuarios/{id}/productos:
-    get:
-      summary: Obtener productos de un vendedor
-      description: Lista los productos de un vendedor con filtros, paginación y ordenamiento
-      tags:
-        - Usuarios
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-            pattern: '^[a-f0-9]{24}$'
-          description: ID único del usuario vendedor
-        - in: query
-          name: titulo
-          schema:
-            type: string
-          description: Filtrar por título del producto
-        - in: query
-          name: categoria
-          schema:
-            type: string
-          description: Filtrar por categoría
-        - in: query
-          name: descripcion
-          schema:
-            type: string
-          description: Filtrar por descripción
-        - in: query
-          name: minPrecio
-          schema:
-            type: number
-          description: Precio mínimo
-        - in: query
-          name: maxPrecio
-          schema:
-            type: number
-          description: Precio máximo
-        - in: query
-          name: page
-          schema:
-            type: integer
-            default: 1
-          description: Número de página
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 10
-          description: Cantidad de elementos por página
-        - in: query
-          name: sort
-          schema:
-            type: string
-            enum: [precio, ventas]
-            default: precio
-          description: Campo para ordenar
-        - in: query
-          name: order
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: asc
-          description: Orden ascendente o descendente
-      responses:
-        '200':
-          description: Lista de productos del vendedor
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Producto'
-        '404':
-          description: Usuario no encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
   /usuarios/{id}/notificaciones:
     get:
       summary: Obtener notificaciones de un usuario
@@ -267,6 +186,84 @@ paths:
 
   # Productos
   /productos:
+    get:
+      summary: Obtener productos
+      description: Lista todos los productos con filtros opcionales, paginación y ordenamiento
+      tags:
+        - Productos
+      parameters:
+        - in: query
+          name: titulo
+          schema:
+            type: string
+          description: Filtrar por título del producto
+        - in: query
+          name: categoria
+          schema:
+            type: string
+          description: Filtrar por categoría
+        - in: query
+          name: descripcion
+          schema:
+            type: string
+          description: Filtrar por descripción
+        - in: query
+          name: minPrecio
+          schema:
+            type: number
+          description: Precio mínimo
+        - in: query
+          name: maxPrecio
+          schema:
+            type: number
+          description: Precio máximo
+        - in: query
+          name: vendedorId
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: Filtrar por ID del vendedor
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Número de página
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Cantidad de elementos por página
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [precio, ventas]
+            default: precio
+          description: Campo para ordenar
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+          description: Orden ascendente o descendente
+      responses:
+        '200':
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        '400':
+          description: Error en los parámetros de consulta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Crear un nuevo producto
       description: Registra un nuevo producto en el sistema
@@ -287,6 +284,34 @@ paths:
                 $ref: '#/components/schemas/Producto'
         '400':
           description: Error en los datos del producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /productos/{id}:
+    get:
+      summary: Obtener producto por ID
+      description: Obtiene los detalles de un producto específico por su ID
+      tags:
+        - Productos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del producto
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          description: Producto no encontrado
           content:
             application/json:
               schema:

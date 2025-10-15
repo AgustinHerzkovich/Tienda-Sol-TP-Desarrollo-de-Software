@@ -65,9 +65,8 @@ export default class ProductoService {
     return producto;
   }
 
-  async findByVendedorId(userId, filtros, paginacion) {
-    const resultado = await this.productoRepository.findByVendedorId(
-      userId,
+  async findAll(filtros, paginacion) {
+    const resultado = await this.productoRepository.findAll(
       filtros,
       paginacion
     );

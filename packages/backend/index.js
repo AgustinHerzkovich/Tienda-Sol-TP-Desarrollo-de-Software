@@ -65,8 +65,7 @@ async function main() {
   const usuarioController = new UsuarioController(
     usuarioService,
     pedidoService,
-    notificacionService,
-    productoService
+    notificacionService
   );
   const productoController = new ProductoController(productoService);
   const notificacionController = new NotificacionController(

@@ -15,11 +15,6 @@ export default function usuarioRoutes(getController) {
     await usuarioController.pedidos(req, res, next);
   });
 
-  router.get(usuarioPath + '/:id/productos', async (req, res, next) => {
-    // Vendedores
-    await usuarioController.productos(req, res, next);
-  });
-
   router.get(
     usuarioPath + '/:id/notificaciones',
     validateSchema(notificacionPatchSchema, 'query'),

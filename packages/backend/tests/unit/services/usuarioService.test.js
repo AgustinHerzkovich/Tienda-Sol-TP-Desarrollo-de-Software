@@ -12,6 +12,7 @@ describe('UsuarioService', () => {
     usuarioRepositoryMock = {
       findById: jest.fn(),
       create: jest.fn(),
+      findByEmail: jest.fn(),
     };
     usuarioService = new UsuarioService(usuarioRepositoryMock);
     jest.clearAllMocks();
@@ -47,10 +48,14 @@ describe('UsuarioService', () => {
         tipo: 'ADMIN',
       };
       const usuarioGuardado = { id: 10, ...usuarioJSON };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
       usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'maria@mail.com'
+      );
       expect(usuarioRepositoryMock.create).toHaveBeenCalledTimes(1);
       expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
@@ -66,10 +71,14 @@ describe('UsuarioService', () => {
         tipo: 'COMPRADOR',
       };
       const usuarioGuardado = { id: 20, ...usuarioJSON };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
       usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'juan@mail.com'
+      );
       expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
       );
@@ -84,10 +93,14 @@ describe('UsuarioService', () => {
         tipo: 'VENDEDOR',
       };
       const usuarioGuardado = { id: 30, ...usuarioJSON };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
       usuarioRepositoryMock.create.mockResolvedValue(usuarioGuardado);
 
       const result = await usuarioService.crear(usuarioJSON);
 
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'carlos@mail.com'
+      );
       expect(usuarioRepositoryMock.create).toHaveBeenCalledWith(
         expect.any(Usuario)
       );
@@ -101,11 +114,15 @@ describe('UsuarioService', () => {
         telefono: '123',
         tipo: 'TIPO_INVALIDO',
       };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
 
       await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
         'Tipo de usuario no válido, posible falla de zod'
       );
 
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'test@mail.com'
+      );
       expect(usuarioRepositoryMock.create).not.toHaveBeenCalled();
     });
 
@@ -116,6 +133,7 @@ describe('UsuarioService', () => {
         telefono: '111222333',
         tipo: 'COMPRADOR',
       };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
       usuarioRepositoryMock.create.mockImplementation((usuario) => {
         expect(usuario.nombre).toBe(usuarioJSON.nombre);
         expect(usuario.email).toBe(usuarioJSON.email);
@@ -126,6 +144,9 @@ describe('UsuarioService', () => {
 
       await usuarioService.crear(usuarioJSON);
 
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'ana@mail.com'
+      );
       expect(usuarioRepositoryMock.create).toHaveBeenCalledTimes(1);
     });
 
@@ -133,6 +154,7 @@ describe('UsuarioService', () => {
       const casos = ['ADMIN', 'COMPRADOR', 'VENDEDOR'];
 
       for (const tipo of casos) {
+        usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
         usuarioRepositoryMock.create.mockResolvedValue({ id: 1 });
 
         const usuarioJSON = {
@@ -161,6 +183,7 @@ describe('UsuarioService', () => {
         telefono: '123',
         tipo: null,
       };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
 
       await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
         'Tipo de usuario no válido, posible falla de zod'
@@ -174,6 +197,7 @@ describe('UsuarioService', () => {
         telefono: '123',
         tipo: undefined,
       };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null); // Usuario no existe
 
       await expect(usuarioService.crear(usuarioJSON)).rejects.toThrow(
         'Tipo de usuario no válido, posible falla de zod'
