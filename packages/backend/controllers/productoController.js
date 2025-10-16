@@ -30,7 +30,8 @@ export default class ProductoController {
       descripcion,
       minPrecio,
       maxPrecio,
-      vendedorId, // Nuevo filtro para vendedor
+      vendedorId,
+      search,
       page = 1,
       limit = 10,
       sort = 'precio', // campo de ordenamiento (precio, ventas)
@@ -43,7 +44,8 @@ export default class ProductoController {
       descripcion,
       minPrecio,
       maxPrecio,
-      vendedorId, // Incluir vendedorId en filtros
+      vendedorId,
+      search,
       sort,
       order,
     };

@@ -17,6 +17,14 @@ export default class ProductoRepository extends Repository {
       query.vendedor = objectId;
     }
 
+    if (filtros.search) {
+      query.$or = [
+        { titulo: { $regex: filtros.search, $options: 'i' } },
+        { descripcion: { $regex: filtros.search, $options: 'i' } },
+        { 'categorias.nombre': { $regex: filtros.search, $options: 'i' } },
+      ];
+    }
+
     // Filtros adicionales
     if (filtros.titulo) {
       query.titulo = { $regex: filtros.titulo, $options: 'i' };

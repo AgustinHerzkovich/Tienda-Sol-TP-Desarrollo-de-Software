@@ -33,7 +33,7 @@ export default class UsuarioService {
     if (usuarioExistente) {
       throw new UserAlreadyExists(usuarioJSON.email);
     }
-    
+
     let tipoUsuario;
     switch (usuarioJSON.tipo) {
       case 'COMPRADOR':

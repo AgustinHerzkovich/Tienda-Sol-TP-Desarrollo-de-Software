@@ -63,6 +63,11 @@ const productoSchema = new mongoose.Schema(
   }
 );
 
+productoSchema.pre(/^find/, function (next) {
+  this.populate('vendedor', 'nombre email');
+  next();
+});
+
 productoSchema.loadClass(Producto);
 
 export const ProductoModel = mongoose.model('Producto', productoSchema);

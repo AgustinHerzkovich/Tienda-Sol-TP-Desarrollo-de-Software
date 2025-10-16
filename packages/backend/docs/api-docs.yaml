@@ -193,10 +193,16 @@ paths:
         - Productos
       parameters:
         - in: query
+          name: search
+          schema:
+            type: string
+          description: Búsqueda de texto libre en título, descripción y categorías (búsqueda global con OR)
+          example: 'laptop intel'
+        - in: query
           name: titulo
           schema:
             type: string
-          description: Filtrar por título del producto
+          description: Filtrar por título del producto (búsqueda exacta/parcial)
         - in: query
           name: categoria
           schema:
