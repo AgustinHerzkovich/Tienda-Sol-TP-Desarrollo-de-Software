@@ -12,7 +12,22 @@ export const useSession = () => {
 };
 
 export const SessionProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUserState] = useState(() => {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+
+  const setUser = (user) => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      setUserState(user);
+    } else {
+      localStorage.removeItem('user');
+      setUserState(null);
+    }
+  };
+
   const usuariosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios`;
 
   const login = async (userData) => {
