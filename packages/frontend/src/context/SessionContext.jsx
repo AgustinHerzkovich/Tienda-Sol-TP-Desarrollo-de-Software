@@ -87,12 +87,17 @@ export const SessionProvider = ({ children }) => {
     return loggedIn;
   };
 
+  const isSeller = () => {
+    return user?.tipo === 'VENDEDOR';
+  }
+
   const value = {
     user,
     login,
     logout,
     register,
     isLoggedIn,
+    isSeller,
   };
 
   return (
