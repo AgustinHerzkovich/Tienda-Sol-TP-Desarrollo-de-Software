@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import ProductDetailPage from './components/productos/ProductoDetailPage';
 import LoginPage from './components/auth/LoginPage';
+import RegisterPage from './components/auth/RegisterPage';
+import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
 import CartPage from './components/cartPage/CartPage';
 import { CartProvider } from './context/CartContext';
 import { SessionProvider } from './context/SessionContext';
@@ -15,7 +17,7 @@ export default function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8000/health')
+    fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/health`)
       .then((response) => response.json())
       .then((data) => setMessage(data.status))
       .catch((error) => console.error('Error cargando health.', error));
@@ -46,9 +48,11 @@ export default function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/cart" element={<CartPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Home />} />
+                  <Route path="/cart" element={<CartPage />} />
                   <Route path="productos/:id" element={<ProductDetailPage />} />
                   <Route path="productos" element={<SearchResultsPage />} />
                 </Route>

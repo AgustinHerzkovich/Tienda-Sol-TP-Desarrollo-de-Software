@@ -20,7 +20,7 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validación básica
@@ -28,10 +28,12 @@ export default function LoginPage() {
       console.log('Login exitoso con:', formData);
 
       // Hacer login directamente
-      login({ email: formData.email, password: formData.password });
+      const success = await login({ email: formData.email, password: formData.password });
 
-      // Navegar de vuelta a home
-      navigate('/');
+      if (success) {
+        // Navegar de vuelta a home
+        navigate('/');
+      }
     } else {
       alert(
         'Por favor ingresa un email válido y una contraseña de al menos 4 caracteres'

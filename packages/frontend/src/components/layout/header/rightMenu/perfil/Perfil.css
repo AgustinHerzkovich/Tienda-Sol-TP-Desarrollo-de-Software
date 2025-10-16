@@ -95,6 +95,15 @@
   transform: rotate(45deg);
 }
 
+.perfil-name{
+  display: block;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  border-bottom: 1px solid #e2e8f0;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .perfil-dropdown {

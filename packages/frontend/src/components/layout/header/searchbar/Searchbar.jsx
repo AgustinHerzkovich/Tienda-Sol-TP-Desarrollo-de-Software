@@ -10,7 +10,6 @@ export default function Searchbar() {
     e.preventDefault();
     if (e.key && e.key !== 'Enter') return;
     navigate(`/productos?query=${searchTerm}`);
-    console.log('Buscando:', searchTerm);
   };
 
   const handleInputChange = (e) => {

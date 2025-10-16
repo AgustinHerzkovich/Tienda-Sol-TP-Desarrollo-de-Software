@@ -7,7 +7,7 @@ import { useSession } from '../../../../../context/SessionContext';
 export default function Perfil() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const { logout } = useSession();
+  const { logout, user } = useSession();
 
   const handlePerfilClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -46,6 +46,7 @@ export default function Perfil() {
 
       {isMenuOpen && (
         <div className="perfil-dropdown">
+          <span className="perfil-name">{user?.nombre}</span>
           <button className="dropdown-item" onClick={handleCerrarSesion}>
             <FaSignOutAlt />
             <span>Cerrar Sesión</span>

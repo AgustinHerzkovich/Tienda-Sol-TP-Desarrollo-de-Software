@@ -28,15 +28,6 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .error {
   opacity: 0;
   color: red;
@@ -76,50 +67,4 @@
   to {
     opacity: 1;
   }
-}
-
-@keyframes colorRainbow {
-  0% {
-    background-color: black;
-    color: red;
-  }
-  25% {
-    background-color: red;
-    color: white;
-  }
-  50% {
-    background-color: white;
-    color: black;
-  }
-  75% {
-    background-color: yellow;
-    color: blue;
-  }
-  100% {
-    background-color: black;
-    color: red;
-  }
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(90deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  75% {
-    transform: rotate(270deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.spin {
-  animation: spin 3s steps(40) infinite;
-}
-.rainbow {
-  animation: colorRainbow 0.5s infinite;
 }
