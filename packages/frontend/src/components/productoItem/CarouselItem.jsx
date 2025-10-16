@@ -1,11 +1,11 @@
-import "./CarouselItem.css";
-import { Link } from "react-router-dom";   
-import { FaCartPlus } from "react-icons/fa";
-import "../../index.css"
-import { useAddToCart } from "../../context/CartContext";
-import { useCurrency } from "../../context/CurrencyContext";
+import './CarouselItem.css';
+import { Link } from 'react-router-dom';
+import { FaCartPlus } from 'react-icons/fa';
+import '../../index.css';
+import { useAddToCart } from '../../context/CartContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
-const CarouselItem = ({producto}) => {
+const CarouselItem = ({ producto }) => {
   const addToCart = useAddToCart();
   const { formatearPrecio } = useCurrency();
 
@@ -26,15 +26,22 @@ const CarouselItem = ({producto}) => {
           <h3 className="producto-title">{producto.titulo}</h3>
           <p className="producto-description">{producto.descripcion}</p>
           <div className="producto-details">
-            <span className="producto-cantidadVentas">{producto.cantidadVentas}</span>
+            <span className="producto-cantidadVentas">
+              {producto.cantidadVentas}
+            </span>
             <span className="producto-price">
-               Precio: {formatearPrecio(producto.precio, producto.moneda)}
+              Precio: {formatearPrecio(producto.precio, producto.moneda)}
             </span>
           </div>
           <div className="botones-container">
             <div className="ver-detalles-container">
               <span className="ver-detalles">
-                <Link to={`/productos/${producto.id}`} className="link-no-style">Ver Detalles</Link>
+                <Link
+                  to={`/productos/${producto.id}`}
+                  className="link-no-style"
+                >
+                  Ver Detalles
+                </Link>
               </span>
             </div>
             <div className="añadir-carrito-container">
@@ -46,7 +53,7 @@ const CarouselItem = ({producto}) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CarouselItem
+export default CarouselItem;

@@ -9,6 +9,7 @@ import CartPage from './components/cartPage/CartPage';
 import { CartProvider } from './context/CartContext';
 import { SessionProvider } from './context/SessionContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+import SearchResultsPage from './components/productos/SearchResultsPage';
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -22,7 +23,7 @@ export default function App() {
 
   if (!message) {
     return (
-      <div className='error'>
+      <div className="error">
         <p>NO ANDA EL SERVIDOR</p>
         <p>Pero hey, al menos tenés esto mientras esperás...</p>
         <iframe
@@ -35,7 +36,7 @@ export default function App() {
           allowFullScreen
         ></iframe>
       </div>
-    )
+    );
   }
   return (
     <div className="App">
@@ -49,12 +50,13 @@ export default function App() {
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Home />} />
                   <Route path="productos/:id" element={<ProductDetailPage />} />
+                  <Route path="productos" element={<SearchResultsPage />} />
                 </Route>
-            </Routes>
-          </BrowserRouter>
-        </CartProvider>
-      </CurrencyProvider>
-    </SessionProvider>
+              </Routes>
+            </BrowserRouter>
+          </CartProvider>
+        </CurrencyProvider>
+      </SessionProvider>
     </div>
   );
 }

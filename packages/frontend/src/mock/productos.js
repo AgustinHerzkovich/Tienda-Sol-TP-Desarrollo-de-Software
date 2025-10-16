@@ -208,9 +208,7 @@ export const getProductosByVendedor = (vendedorId) => {
 };
 
 export const getProductosActivos = () => {
-  return productos.filter(
-    (producto) => producto.activo && producto.stock > 0
-  );
+  return productos.filter((producto) => producto.activo && producto.stock > 0);
 };
 
 export const formatPrice = (precio, moneda = 'PESO_ARG') => {

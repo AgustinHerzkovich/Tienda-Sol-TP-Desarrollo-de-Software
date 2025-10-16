@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import "./ProductoCarousel.css";
-import CarouselItem from "../productoItem/CarouselItem.jsx";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import './ProductoCarousel.css';
+import CarouselItem from '../productoItem/CarouselItem.jsx';
+import axios from 'axios';
 
 export default function ProductoCarousel() {
   const [index, setIndex] = useState(0);
@@ -18,8 +18,8 @@ export default function ProductoCarousel() {
           params: {
             limit: 10,
             sort: 'precio',
-            order: 'asc'
-          }
+            order: 'asc',
+          },
         });
         // El backend retorna { productos: [...], pagination: {...} }
         setProductos(response.data.productos || []);
@@ -55,12 +55,14 @@ export default function ProductoCarousel() {
 
       <div className="carousel-wrapper">
         <div className="carousel-viewport">
-          <div className="carousel-track"
-          style={{
+          <div
+            className="carousel-track"
+            style={{
               transform: `translateX(-${index * (100 / visible)}%)`,
-            }}>
+            }}
+          >
             {productos.map((producto) => (
-              <CarouselItem producto={producto} key={producto.id}/> 
+              <CarouselItem producto={producto} key={producto.id} />
             ))}
           </div>
         </div>
@@ -68,9 +70,7 @@ export default function ProductoCarousel() {
         <button
           onClick={anterior}
           disabled={index === 0}
-          className={`carousel-btn left-btn ${
-            index === 0 ? "disabled" : ""
-          }`}
+          className={`carousel-btn left-btn ${index === 0 ? 'disabled' : ''}`}
         >
           ◀
         </button>
@@ -79,7 +79,7 @@ export default function ProductoCarousel() {
           onClick={siguiente}
           disabled={index >= productos.length - visible}
           className={`carousel-btn right-btn ${
-            index >= productos.length - visible ? "disabled" : ""
+            index >= productos.length - visible ? 'disabled' : ''
           }`}
         >
           ▶

@@ -1,25 +1,32 @@
 .header {
-    width: auto;
-    height: 48px;
-    background-color: var(--primary-purple);
-    background-size: 600% 600%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    color: var(--secondary-white);
-    position: relative;
+  width: auto;
+  height: 48px;
+  background-color: var(--primary-purple);
+  background-size: 600% 600%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  color: var(--secondary-white);
+  position: relative;
+  flex-direction: row;
 }
 @media (max-width: 900px) {
-    .navbar .search-form {
+  .navbar .search-form {
     width: 50%;
     max-width: 300px;
-    }
+  }
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
