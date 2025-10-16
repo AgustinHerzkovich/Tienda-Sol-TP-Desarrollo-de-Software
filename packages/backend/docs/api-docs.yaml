@@ -95,8 +95,11 @@ paths:
   # Usuarios
   /usuarios:
     get:
-      summary: Obtener usuarios
-      description: Lista todos los usuarios del sistema, con opción de filtrar por email y contraseña
+      summary: Obtener usuarios o login
+      description: |
+        Sin parámetros: Lista todos los usuarios del sistema.
+        Con email y password: Valida las credenciales y devuelve el usuario específico (login).
+        **IMPORTANTE**: Si se proporciona email, el password es obligatorio.
       tags:
         - Usuarios
       parameters:
@@ -106,17 +109,19 @@ paths:
           schema:
             type: string
             format: email
-          description: Correo electrónico del usuario a buscar (opcional). Si se proporciona, devuelve solo ese usuario
+          description: Correo electrónico del usuario. Si se proporciona, el password es obligatorio
+          example: 'usuario@ejemplo.com'
         - in: query
           name: password
           required: false
           schema: 
             type: string
             format: password
-          description: Contraseña del usuario a buscar (opcional). Si se proporciona junto con el email, devuelve solo ese usuario si la contraseña coincide
+          description: Contraseña del usuario. Obligatorio si se proporciona email
+          example: 'miPassword123'
       responses:
         '200':
-          description: Lista de usuarios o usuario específico
+          description: Lista de usuarios (sin parámetros) o usuario específico (con email y password)
           content:
             application/json:
               schema:
@@ -124,19 +129,33 @@ paths:
                   - type: array
                     items:
                       $ref: '#/components/schemas/Usuario'
+                    description: Array de usuarios cuando no se proporcionan parámetros
                   - $ref: '#/components/schemas/Usuario'
+                    description: Usuario específico cuando se valida email y password
         '400':
-          description: Formato de email inválido
+          description: Email proporcionado sin password, o formato inválido
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              example:
+                message: 'La contraseña es obligatoria cuando se proporciona un email'
+        '401':
+          description: Contraseña incorrecta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Contraseña incorrecta'
         '404':
           description: Usuario con el email especificado no encontrado
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              example:
+                message: 'Usuario con email: usuario@ejemplo.com no encontrado'
     post:
       summary: Crear un nuevo usuario
       description: Registra un nuevo usuario en el sistema

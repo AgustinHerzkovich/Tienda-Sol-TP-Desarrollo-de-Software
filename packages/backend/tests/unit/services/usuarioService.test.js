@@ -2,6 +2,7 @@ import UsuarioService from '../../../services/usuarioService.js';
 import Usuario from '../../../models/usuario.js';
 import { TipoUsuario } from '../../../models/tipoUsuario.js';
 import NotFoundError from '../../../error/notFoundError.js';
+import bcrypt from 'bcrypt';
 import { jest } from '@jest/globals';
 
 describe('UsuarioService', () => {
@@ -67,19 +68,35 @@ describe('UsuarioService', () => {
       expect(usuarioRepositoryMock.findByEmail).not.toHaveBeenCalled();
     });
 
-    test('devuelve un usuario específico cuando se proporciona email', async () => {
+    test('lanza error cuando se proporciona email sin password', async () => {
+      await expect(usuarioService.find('juan@mail.com', null)).rejects.toThrow(
+        'La contraseña es obligatoria cuando se proporciona un email'
+      );
+      await expect(usuarioService.find('juan@mail.com', '')).rejects.toThrow(
+        'La contraseña es obligatoria cuando se proporciona un email'
+      );
+    });
+
+    test('devuelve un usuario específico cuando se proporciona email y password correcta', async () => {
       const usuario = {
         nombre: 'juan',
         email: 'juan@mail.com',
         telefono: '35',
         tipo: TipoUsuario.COMPRADOR,
         id: 1,
+        password: await bcrypt.hash('password123', 10),
       };
       usuarioRepositoryMock.findByEmail.mockResolvedValue(usuario);
 
-      const result = await usuarioService.find('juan@mail.com');
+      const result = await usuarioService.find('juan@mail.com', 'password123');
 
-      expect(result).toEqual(usuario);
+      expect(result).toEqual({
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        telefono: usuario.telefono,
+        tipo: usuario.tipo,
+      });
       expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
         'juan@mail.com'
       );
@@ -89,9 +106,9 @@ describe('UsuarioService', () => {
     test('tira error cuando el usuario con email no existe', async () => {
       usuarioRepositoryMock.findByEmail.mockResolvedValue(null);
 
-      await expect(usuarioService.find('noexiste@mail.com')).rejects.toThrow(
-        NotFoundError
-      );
+      await expect(
+        usuarioService.find('noexiste@mail.com', 'password123')
+      ).rejects.toThrow(NotFoundError);
       expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
         'noexiste@mail.com'
       );
@@ -100,9 +117,25 @@ describe('UsuarioService', () => {
     test('tira error con mensaje específico cuando el usuario con email no existe', async () => {
       usuarioRepositoryMock.findByEmail.mockResolvedValue(null);
 
-      await expect(usuarioService.find('test@test.com')).rejects.toThrow(
-        'Usuario con email: test@test.com no encontrado'
-      );
+      await expect(
+        usuarioService.find('test@test.com', 'password123')
+      ).rejects.toThrow('Usuario con email: test@test.com no encontrado');
+    });
+
+    test('tira error cuando la password es incorrecta', async () => {
+      const usuario = {
+        nombre: 'juan',
+        email: 'juan@mail.com',
+        telefono: '35',
+        tipo: TipoUsuario.COMPRADOR,
+        id: 1,
+        password: await bcrypt.hash('password123', 10),
+      };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(usuario);
+
+      await expect(
+        usuarioService.find('juan@mail.com', 'wrongpassword')
+      ).rejects.toThrow('Contraseña incorrecta');
     });
 
     test('devuelve array vacío cuando no hay usuarios', async () => {
