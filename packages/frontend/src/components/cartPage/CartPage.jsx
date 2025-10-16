@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes } from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
@@ -245,8 +245,8 @@ export default function CartPage() {
 
       {/* Modal de dirección de entrega */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay">
+          <div className="modal-content">
             <div className="modal-header">
               <h2>Dirección de Entrega</h2>
               <button
