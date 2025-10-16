@@ -94,6 +94,42 @@ paths:
 
   # Usuarios
   /usuarios:
+    get:
+      summary: Obtener usuarios
+      description: Lista todos los usuarios del sistema, con opción de filtrar por email
+      tags:
+        - Usuarios
+      parameters:
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+            format: email
+          description: Correo electrónico del usuario a buscar (opcional). Si se proporciona, devuelve solo ese usuario
+      responses:
+        '200':
+          description: Lista de usuarios o usuario específico
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Usuario'
+                  - $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Formato de email inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Usuario con el email especificado no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Crear un nuevo usuario
       description: Registra un nuevo usuario en el sistema
@@ -197,7 +233,6 @@ paths:
           schema:
             type: string
           description: Búsqueda de texto libre en título, descripción y categorías (búsqueda global con OR)
-          example: 'laptop intel'
         - in: query
           name: titulo
           schema:

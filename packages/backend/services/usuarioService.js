@@ -26,6 +26,19 @@ export default class UsuarioService {
     return this.toDTO(usuario);
   }
 
+  async find(email = null) {
+    if (email && email.trim() !== '') {
+      const usuario = await this.usuarioRepository.findByEmail(email);
+      if (!usuario) {
+        throw new NotFoundError(`Usuario con email: ${email} no encontrado`);
+      }
+      return this.toDTO(usuario);
+    }
+
+    const usuarios = await this.usuarioRepository.find();
+    return usuarios.map((usuario) => this.toDTO(usuario));
+  }
+
   async crear(usuarioJSON) {
     const usuarioExistente = await this.usuarioRepository.findByEmail(
       usuarioJSON.email

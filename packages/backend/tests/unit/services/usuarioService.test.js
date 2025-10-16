@@ -13,6 +13,7 @@ describe('UsuarioService', () => {
       findById: jest.fn(),
       create: jest.fn(),
       findByEmail: jest.fn(),
+      find: jest.fn(),
     };
     usuarioService = new UsuarioService(usuarioRepositoryMock);
     jest.clearAllMocks();
@@ -36,6 +37,81 @@ describe('UsuarioService', () => {
 
     test('tira error cuando el usuario no existe', async () => {
       await expect(usuarioService.findById(999)).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('find', () => {
+    test('devuelve todos los usuarios cuando no se proporciona email', async () => {
+      const usuarios = [
+        {
+          nombre: 'juan',
+          email: 'juan@mail.com',
+          telefono: '35',
+          tipo: TipoUsuario.COMPRADOR,
+          id: 1,
+        },
+        {
+          nombre: 'maria',
+          email: 'maria@mail.com',
+          telefono: '36',
+          tipo: TipoUsuario.VENDEDOR,
+          id: 2,
+        },
+      ];
+      usuarioRepositoryMock.find.mockResolvedValue(usuarios);
+
+      const result = await usuarioService.find();
+
+      expect(result).toEqual(usuarios);
+      expect(usuarioRepositoryMock.find).toHaveBeenCalled();
+      expect(usuarioRepositoryMock.findByEmail).not.toHaveBeenCalled();
+    });
+
+    test('devuelve un usuario específico cuando se proporciona email', async () => {
+      const usuario = {
+        nombre: 'juan',
+        email: 'juan@mail.com',
+        telefono: '35',
+        tipo: TipoUsuario.COMPRADOR,
+        id: 1,
+      };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(usuario);
+
+      const result = await usuarioService.find('juan@mail.com');
+
+      expect(result).toEqual(usuario);
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'juan@mail.com'
+      );
+      expect(usuarioRepositoryMock.find).not.toHaveBeenCalled();
+    });
+
+    test('tira error cuando el usuario con email no existe', async () => {
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null);
+
+      await expect(usuarioService.find('noexiste@mail.com')).rejects.toThrow(
+        NotFoundError
+      );
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'noexiste@mail.com'
+      );
+    });
+
+    test('tira error con mensaje específico cuando el usuario con email no existe', async () => {
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(null);
+
+      await expect(usuarioService.find('test@test.com')).rejects.toThrow(
+        'Usuario con email: test@test.com no encontrado'
+      );
+    });
+
+    test('devuelve array vacío cuando no hay usuarios', async () => {
+      usuarioRepositoryMock.find.mockResolvedValue([]);
+
+      const result = await usuarioService.find();
+
+      expect(result).toEqual([]);
+      expect(usuarioRepositoryMock.find).toHaveBeenCalled();
     });
   });
 

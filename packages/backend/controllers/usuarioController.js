@@ -42,4 +42,15 @@ export default class UsuarioController {
       next(err);
     }
   }
+
+  async obtener(req, res, next) {
+    const { email } = req.query;
+  
+    try {
+      const usuarios = await this.usuarioService.find(email);
+      res.status(200).json(usuarios);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
