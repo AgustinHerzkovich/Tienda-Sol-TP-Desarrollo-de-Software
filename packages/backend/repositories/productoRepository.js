@@ -7,6 +7,10 @@ export default class ProductoRepository extends Repository {
     super(ProductoModel);
   }
 
+  #normalizarTexto(text) {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
   async findAll(filtros = {}, paginacion = {}) {
     // Construir el filtro base (sin filtro fijo de vendedor)
     const query = {};
@@ -19,17 +23,17 @@ export default class ProductoRepository extends Repository {
 
     // Filtros adicionales
     if (filtros.titulo) {
-      query.titulo = { $regex: filtros.titulo, $options: 'i' };
+      query.titulo = { $regex: this.#normalizarTexto(filtros.titulo), $options: 'i' };
     }
 
     if (filtros.categoria) {
       query.categorias = {
-        $elemMatch: { nombre: { $regex: filtros.categoria, $options: 'i' } },
+        $elemMatch: { nombre: { $regex: this.#normalizarTexto(filtros.categoria), $options: 'i' } },
       };
     }
 
     if (filtros.descripcion) {
-      query.descripcion = { $regex: filtros.descripcion, $options: 'i' };
+      query.descripcion = { $regex: this.#normalizarTexto(filtros.descripcion), $options: 'i' };
     }
 
     // Rango de precios
