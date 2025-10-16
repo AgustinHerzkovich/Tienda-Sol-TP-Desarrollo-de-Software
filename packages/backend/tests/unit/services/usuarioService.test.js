@@ -68,12 +68,28 @@ describe('UsuarioService', () => {
       expect(usuarioRepositoryMock.findByEmail).not.toHaveBeenCalled();
     });
 
-    test('lanza error cuando se proporciona email sin password', async () => {
-      await expect(usuarioService.find('juan@mail.com', null)).rejects.toThrow(
-        'La contraseña es obligatoria cuando se proporciona un email'
-      );
-      await expect(usuarioService.find('juan@mail.com', '')).rejects.toThrow(
-        'La contraseña es obligatoria cuando se proporciona un email'
+    test('devuelve un usuario cuando se proporciona solo email (sin password)', async () => {
+      const usuario = {
+        nombre: 'juan',
+        email: 'juan@mail.com',
+        telefono: '35',
+        tipo: TipoUsuario.COMPRADOR,
+        id: 1,
+        password: await bcrypt.hash('password123', 10),
+      };
+      usuarioRepositoryMock.findByEmail.mockResolvedValue(usuario);
+
+      const result = await usuarioService.find('juan@mail.com', null);
+
+      expect(result).toEqual({
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        telefono: usuario.telefono,
+        tipo: usuario.tipo,
+      });
+      expect(usuarioRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        'juan@mail.com'
       );
     });
 

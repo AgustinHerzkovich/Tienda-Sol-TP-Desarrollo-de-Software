@@ -95,11 +95,11 @@ paths:
   # Usuarios
   /usuarios:
     get:
-      summary: Obtener usuarios o login
+      summary: Obtener usuarios, buscar por email o login
       description: |
-        Sin parámetros: Lista todos los usuarios del sistema.
-        Con email y password: Valida las credenciales y devuelve el usuario específico (login).
-        **IMPORTANTE**: Si se proporciona email, el password es obligatorio.
+        - Sin parámetros: Lista todos los usuarios del sistema.
+        - Con email (sin password): Devuelve el usuario específico sin validar contraseña (útil para recuperación de contraseña).
+        - Con email y password: Valida las credenciales y devuelve el usuario específico (login).
       tags:
         - Usuarios
       parameters:
@@ -109,19 +109,17 @@ paths:
           schema:
             type: string
             format: email
-          description: Correo electrónico del usuario. Si se proporciona, el password es obligatorio
-          example: 'usuario@ejemplo.com'
+          description: Correo electrónico del usuario
         - in: query
           name: password
           required: false
           schema: 
             type: string
             format: password
-          description: Contraseña del usuario. Obligatorio si se proporciona email
-          example: 'miPassword123'
+          description: Contraseña del usuario. Opcional - si se omite, solo busca por email sin validar contraseña
       responses:
         '200':
-          description: Lista de usuarios (sin parámetros) o usuario específico (con email y password)
+          description: Lista de usuarios (sin parámetros) o usuario específico (con email)
           content:
             application/json:
               schema:
@@ -131,17 +129,15 @@ paths:
                       $ref: '#/components/schemas/Usuario'
                     description: Array de usuarios cuando no se proporcionan parámetros
                   - $ref: '#/components/schemas/Usuario'
-                    description: Usuario específico cuando se valida email y password
+                    description: Usuario específico cuando se proporciona email
         '400':
-          description: Email proporcionado sin password, o formato inválido
+          description: Formato inválido
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                message: 'La contraseña es obligatoria cuando se proporciona un email'
         '401':
-          description: Contraseña incorrecta
+          description: Contraseña incorrecta (cuando se proporciona email y password)
           content:
             application/json:
               schema:

@@ -37,22 +37,19 @@ export default class UsuarioService {
       return usuarios.map((usuario) => this.toDTO(usuario));
     }
 
-    // Si se envía email, el password es obligatorio
-    if (!password || password.trim() === '') {
-      throw new PasswordRequiredError(
-        'La contraseña es obligatoria cuando se proporciona un email'
-      );
-    }
-
     // Buscar usuario por email
     const usuario = await this.usuarioRepository.findByEmail(email);
     if (!usuario) {
       throw new NotFoundError(`Usuario con email: ${email} no encontrado`);
     }
 
-    // Verificar contraseña
-    if (!(await bcrypt.compare(password, usuario.password))) {
-      throw new IncorrectPasswordError('Contraseña incorrecta');
+    // Si se proporciona password, verificarla (para login)
+    // Si no se proporciona password, solo devolver el usuario (para recuperación de contraseña)
+    if (password && password.trim() !== '') {
+      // Verificar contraseña
+      if (!(await bcrypt.compare(password, usuario.password))) {
+        throw new IncorrectPasswordError('Contraseña incorrecta');
+      }
     }
 
     return this.toDTO(usuario);
