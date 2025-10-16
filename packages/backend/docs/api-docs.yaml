@@ -246,6 +246,95 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /usuarios/{id}:
+    patch:
+      summary: Actualizar datos de un usuario
+      description: Permite actualizar nombre, teléfono y/o contraseña de un usuario existente. Todos los campos son opcionales.
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  minLength: 1
+                  description: Nombre completo del usuario
+                  example: 'Juan Pérez Actualizado'
+                telefono:
+                  type: string
+                  minLength: 1
+                  description: Número de teléfono del usuario
+                  example: '1234567890'
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 64
+                  description: |
+                    Nueva contraseña del usuario. Debe cumplir:
+                    - Mínimo 8 caracteres
+                    - Al menos una letra minúscula
+                    - Al menos una letra mayúscula
+                    - Al menos un número
+                    - Al menos un carácter especial (@$!%*?&_.-)
+                  example: 'NuevaPass123!'
+              description: Al menos uno de los campos debe ser proporcionado
+            examples:
+              actualizarNombre:
+                summary: Actualizar solo nombre
+                value:
+                  nombre: 'Juan Pérez Actualizado'
+              actualizarPassword:
+                summary: Actualizar solo contraseña
+                value:
+                  password: 'NuevaPass123!'
+              actualizarVarios:
+                summary: Actualizar nombre y teléfono
+                value:
+                  nombre: 'Juan Pérez'
+                  telefono: '9876543210'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Datos de actualización inválidos o formato incorrecto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                passwordDebil:
+                  summary: Contraseña no cumple requisitos
+                  value:
+                    message: 'La contraseña debe tener al menos 8 caracteres'
+                emailEnUso:
+                  summary: Email ya existe (si se permite actualizar email en futuro)
+                  value:
+                    message: 'El email ya está en uso por otro usuario'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Usuario con id: 507f1f77bcf86cd799439011 no encontrado'
+
   # Productos
   /productos:
     get:

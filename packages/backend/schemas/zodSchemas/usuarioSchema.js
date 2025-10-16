@@ -15,3 +15,20 @@ export const usuarioPostSchema = z.object({
   telefono: z.string().min(1),
   tipo: z.enum(Object.values(TipoUsuario)),
 });
+
+export const usuarioPatchSchema = z.object({
+  nombre: z.string().min(1).optional(),
+  telefono: z.string().min(1).optional(),
+  password: z
+    .string()
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .max(64, 'La contraseña no puede superar los 64 caracteres')
+    .regex(/[a-z]/, 'Debe contener al menos una letra minúscula')
+    .regex(/[A-Z]/, 'Debe contener al menos una letra mayúscula')
+    .regex(/\d/, 'Debe contener al menos un número')
+    .regex(
+      /[@$!%*?&_.-]/,
+      'Debe contener al menos un carácter especial (@$!%*?&_.-)'
+    )
+    .optional(),
+});

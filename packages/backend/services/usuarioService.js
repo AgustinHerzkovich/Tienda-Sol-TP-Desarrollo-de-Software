@@ -90,4 +90,54 @@ export default class UsuarioService {
     usuario = await this.usuarioRepository.create(usuario);
     return this.toDTO(usuario);
   }
+
+  async actualizar(usuarioId, usuarioJSON) {
+    let usuario = await this.usuarioRepository.findById(usuarioId);
+    if (!usuario) {
+      throw new NotFoundError(`Usuario con id: ${usuarioId} no encontrado`);
+    }
+
+    const actualizaciones = {};
+
+    if (usuarioJSON.nombre !== undefined) {
+      actualizaciones.nombre = usuarioJSON.nombre;
+    }
+    if (usuarioJSON.email !== undefined) {
+      // Verificar si el nuevo email ya está en uso por otro usuario
+      const usuarioExistente = await this.usuarioRepository.findByEmail(
+        usuarioJSON.email
+      );
+      if (usuarioExistente && usuarioExistente._id.toString() !== usuarioId) {
+        throw new UserAlreadyExists(usuarioJSON.email);
+      }
+      actualizaciones.email = usuarioJSON.email;
+    }
+    if (usuarioJSON.telefono !== undefined) {
+      actualizaciones.telefono = usuarioJSON.telefono;
+    }
+    if (usuarioJSON.tipo !== undefined) {
+      let tipoUsuario;
+      switch (usuarioJSON.tipo) {
+        case 'COMPRADOR':
+          tipoUsuario = TipoUsuario.COMPRADOR;
+          break;
+        case 'ADMIN':
+          tipoUsuario = TipoUsuario.ADMIN;
+          break;
+        case 'VENDEDOR':
+          tipoUsuario = TipoUsuario.VENDEDOR;
+          break;
+        default:
+          throw new Error('Tipo de usuario no válido, posible falla de zod');
+      }
+      actualizaciones.tipo = tipoUsuario;
+    }
+    if (usuarioJSON.password !== undefined) {
+      // Hashear la nueva contraseña antes de guardarla
+      actualizaciones.password = await bcrypt.hash(usuarioJSON.password, 10);
+    }
+
+    usuario = await this.usuarioRepository.update(usuarioId, actualizaciones);
+    return this.toDTO(usuario);
+  }
 }

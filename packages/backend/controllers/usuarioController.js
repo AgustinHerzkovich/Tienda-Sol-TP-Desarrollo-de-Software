@@ -53,4 +53,18 @@ export default class UsuarioController {
       next(err);
     }
   }
+
+  async actualizar(req, res, next) {
+    const usuarioId = req.params.id;
+    const usuarioData = req.validatedData;
+    try {
+      const usuarioActualizado = await this.usuarioService.actualizar(
+        usuarioId,
+        usuarioData
+      );
+      res.status(200).json(usuarioActualizado);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
