@@ -44,10 +44,10 @@ export default class UsuarioController {
   }
 
   async obtener(req, res, next) {
-    const { email } = req.query;
-  
+    const { email, password } = req.query;
+
     try {
-      const usuarios = await this.usuarioService.find(email);
+      const usuarios = await this.usuarioService.find(email, password);
       res.status(200).json(usuarios);
     } catch (err) {
       next(err);

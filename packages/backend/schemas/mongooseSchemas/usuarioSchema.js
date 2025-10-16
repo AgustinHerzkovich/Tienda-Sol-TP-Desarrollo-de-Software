@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Usuario from '../../models/usuario.js';
 import { TipoUsuario } from '../../models/tipoUsuario.js';
+import bcrypt from 'bcrypt';
 
 const UsuarioSchema = new mongoose.Schema(
   {
@@ -13,6 +14,11 @@ const UsuarioSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 8,
     },
     telefono: {
       type: String,
@@ -34,6 +40,18 @@ const UsuarioSchema = new mongoose.Schema(
     collection: 'usuarios',
   }
 );
+
+UsuarioSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next(); 
+
+  try {
+    const salt = await bcrypt.genSalt(10) // Genera un salt aleatorio
+    this.password = await bcrypt.hash(this.password, salt); // Hashea la contraseña con el salt
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 UsuarioSchema.loadClass(Usuario);
 

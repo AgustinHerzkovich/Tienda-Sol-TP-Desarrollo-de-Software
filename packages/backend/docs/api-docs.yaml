@@ -96,7 +96,7 @@ paths:
   /usuarios:
     get:
       summary: Obtener usuarios
-      description: Lista todos los usuarios del sistema, con opción de filtrar por email
+      description: Lista todos los usuarios del sistema, con opción de filtrar por email y contraseña
       tags:
         - Usuarios
       parameters:
@@ -107,6 +107,13 @@ paths:
             type: string
             format: email
           description: Correo electrónico del usuario a buscar (opcional). Si se proporciona, devuelve solo ese usuario
+        - in: query
+          name: password
+          required: false
+          schema: 
+            type: string
+            format: password
+          description: Contraseña del usuario a buscar (opcional). Si se proporciona junto con el email, devuelve solo ese usuario si la contraseña coincide
       responses:
         '200':
           description: Lista de usuarios o usuario específico

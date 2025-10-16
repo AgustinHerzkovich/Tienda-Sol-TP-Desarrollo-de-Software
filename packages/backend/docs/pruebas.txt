@@ -2,6 +2,7 @@
 {
   "nombre": "Nicolás Piacentini",
   "email": "npiacentini@frba.utn.edu.ar",
+  "password": "Hola.1234",
   "telefono": "0987654321",
   "tipo": "COMPRADOR"
 }
@@ -10,6 +11,7 @@
 {
   "nombre": "Tadeo Sorrentino",
   "email": "tsorrentino@frba.utn.edu.ar",
+  "password": "HolaComoTeVa-0000",
   "telefono": "1234567890",
   "tipo": "VENDEDOR"
 }
@@ -28,7 +30,7 @@
     "https://i.blogs.es/cab2b2/ps2/1200_900.jpeg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 2
@@ -47,7 +49,7 @@
     "https://es.digitaltrends.com/wp-content/uploads/2020/11/iphone-12-pro-max-feat.jpg?resize=1200%2C720&p=1"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 3
@@ -64,7 +66,7 @@
     "https://http2.mlstatic.com/D_NQ_NP_897791-MLA79951292116_102024-O.webp"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 4
@@ -82,7 +84,7 @@
     "https://m.media-amazon.com/images/I/61CUQUFutpL._AC_SL1460_.jpg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 5
@@ -99,7 +101,7 @@
     "https://static.hendel.com/media/catalog/product/cache/b866fd8d147dcce474dc8744e477ca66/4/3/43217_1-min.jpg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 6
@@ -116,7 +118,7 @@
     "https://newsport.vtexassets.com/arquivos/ids/19043983-800-auto?v=638532874107730000&width=800&height=auto&aspect=true"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 7
@@ -134,7 +136,7 @@
     "https://images.bidcom.com.ar/resize?src=https://static.bidcom.com.ar/publicacionesML/productos/TVLED058/1200x900-TVLED058-4.jpg&h=400&q=100"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 8
@@ -151,7 +153,7 @@
     "https://images.cdn1.buscalibre.com/fit-in/360x360/ab/54/ab54a82815e061d7fc8f22bcd22f2605.jpg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 9
@@ -168,7 +170,7 @@
     "https://biciup.com.ar/wp-content/uploads/2021/12/Trek-Marlin-5-roja.jpg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 10
@@ -185,7 +187,7 @@
     "https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//h/u/hugo-boss-boss-the-scent-eau-de-toilette-50ml_1.jpg"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post producto 11
@@ -203,7 +205,7 @@
     "https://http2.mlstatic.com/D_NQ_NP_869540-MLA52417168338_112022-O.webp"
   ],
   "activo": true,
-  "vendedorId": "id_vendedor"
+  "vendedorId": "68f153322097c72e9b7195e3"
 }
 
 // Post pedido
