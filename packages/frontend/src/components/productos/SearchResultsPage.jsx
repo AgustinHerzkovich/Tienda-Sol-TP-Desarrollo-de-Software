@@ -167,7 +167,13 @@ export default function SearchResultsPage() {
     return (
       <div className="search-results-container">
         <div className="loading-spinner">
-          <h2>Cargando resultados...</h2>
+          <h2>Cargando resultados
+            <span className="puntitos-container">
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+            </span>
+          </h2>
         </div>
       </div>
     );

@@ -37,8 +37,14 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="producto-detail-container">
-        <div className="producto-header">
-          <h1>Cargando...</h1>
+        <div className="loading-spinner">
+          <h2>Cargando resultados
+            <span className="puntitos-container">
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+            </span>
+          </h2>
         </div>
       </div>
     );

@@ -4,6 +4,8 @@ import './CartPage.css';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import axios from 'axios';
+import { useSession } from '../../context/SessionContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
@@ -11,6 +13,8 @@ export default function CartPage() {
     useCurrency();
   const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
   const pedidosEndpoint = `http://localhost:${backendPort}/pedidos`;
+  const { user } = useSession();
+  const navigate = useNavigate();
 
   // Calcular total con conversión automática
   const {
@@ -33,7 +37,7 @@ export default function CartPage() {
     lat: '',
     lon: '',
   });
-
+  
   // Función para manejar cambios en el formulario de dirección
   const handleDireccionChange = (e) => {
     const { name, value } = e.target;
@@ -52,12 +56,15 @@ export default function CartPage() {
     setShowModal(true);
   };
 
+  const handleContinuarCompra = () => {
+    navigate('/productos');
+  }
+
   // Confirmar compra con dirección
   const handleConfirmarCompra = async (e) => {
     e.preventDefault();
 
-    // TODO: obtener el ID del usuario logueado desde el contexto de sesión
-    const compradorId = '68ddba1db7f97f2b83438913'; // TEMPORAL - Cambiar por ID real del usuario logueado
+    const compradorId = user.id;
 
     // Convertir los items del carrito al formato que espera el backend
     const items = cartItems.map((item) => ({
@@ -73,14 +80,15 @@ export default function CartPage() {
       items,
       moneda,
       direccionEntrega,
+      desglosePorMoneda,
     };
 
-    console.log('💰 Moneda predominante:', moneda);
+
     console.log('📊 Desglose por moneda:', desglosePorMoneda);
     console.log('💵 Total convertido:', total);
 
+    
     try {
-      const response = await axios.post(pedidosEndpoint, pedidoData);
 
       alert('Compra realizada con éxito. ¡Gracias por tu compra!');
       setShowModal(false);
@@ -119,7 +127,7 @@ export default function CartPage() {
           <p>¡Explora nuestros productos y encuentra algo que te guste!</p>
           <button
             className="continue-shopping"
-            onClick={() => window.history.back()}
+            onClick={handleContinuarCompra}
           >
             Continuar Comprando
           </button>
@@ -234,7 +242,7 @@ export default function CartPage() {
             </button>
 
             <button
-              onClick={() => window.history.back()}
+              onClick={handleContinuarCompra}
               className="continue-shopping-btn"
             >
               Continuar Comprando

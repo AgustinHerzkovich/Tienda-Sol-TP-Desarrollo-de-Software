@@ -3,11 +3,14 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import { LuUserRound } from 'react-icons/lu';
 import './Perfil.css';
 import { useSession } from '../../../../../context/SessionContext';
+import { FiPackage } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 export default function Perfil() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const { logout, user } = useSession();
+  const navigate = useNavigate();
 
   const handlePerfilClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,6 +21,10 @@ export default function Perfil() {
     setIsMenuOpen(false);
     logout(); // Usa la función del SessionContext
   };
+
+  const handlePedidos = () => {
+    navigate('/pedidos');
+  }
 
   // Cerrar menú al hacer click fuera
   useEffect(() => {
@@ -47,6 +54,10 @@ export default function Perfil() {
       {isMenuOpen && (
         <div className="perfil-dropdown">
           <span className="perfil-name">{user?.nombre}</span>
+          <button className='dropdown-item' onClick={handlePedidos}>
+              <FiPackage />
+              <span>Mis Pedidos</span>
+            </button>
           <button className="dropdown-item" onClick={handleCerrarSesion}>
             <FaSignOutAlt />
             <span>Cerrar Sesión</span>

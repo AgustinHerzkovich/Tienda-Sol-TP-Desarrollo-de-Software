@@ -42,7 +42,19 @@ export default function ProductoCarousel() {
   };
 
   if (loading) {
-    return <p className="carousel-empty">Cargando productos...</p>;
+    return (
+      <div className="carousel-empty">
+        <div className="loading-spinner">
+          <h2>Cargando resultados
+            <span className="puntitos-container">
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+              <span className="punto">.</span>
+            </span>
+          </h2>
+        </div>
+      </div>
+    );
   }
 
   if (!Array.isArray(productos) || productos.length === 0) {

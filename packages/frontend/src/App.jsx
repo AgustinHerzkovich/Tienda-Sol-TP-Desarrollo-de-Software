@@ -12,6 +12,7 @@ import { CartProvider } from './context/CartContext';
 import { SessionProvider } from './context/SessionContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import SearchResultsPage from './components/productos/SearchResultsPage';
+import PedidosPage from './components/pedidos/PedidosPage';
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -55,6 +56,7 @@ export default function App() {
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="productos/:id" element={<ProductDetailPage />} />
                   <Route path="productos" element={<SearchResultsPage />} />
+                  <Route path="pedidos" element={<PedidosPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>
