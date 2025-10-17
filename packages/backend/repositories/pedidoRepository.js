@@ -14,6 +14,27 @@ export default class PedidoRepository extends Repository {
 
   async findByVendedorId(usuarioId) {
     const objectId = new mongoose.Types.ObjectId(usuarioId);
-    return await this.model.find({ 'items.vendedor': objectId });
+    const pedidos = await this.model.aggregate([
+      { $unwind: '$items' }, // Desarma el array de items
+      {
+        $lookup: {
+          from: 'productos', // nombre de la colección
+          localField: 'items.producto',
+          foreignField: '_id',
+          as: 'producto',
+        },
+      },
+      { $unwind: '$producto' },
+      { $match: { 'producto.vendedor': objectId } },
+      {
+        $group: {
+          _id: '$_id',
+          pedido: { $first: '$$ROOT' },
+        },
+      },
+      { $replaceRoot: { newRoot: '$pedido' } },
+    ]);
+
+    return pedidos;
   }
 }
