@@ -83,12 +83,8 @@ export default function CartPage() {
       desglosePorMoneda,
     };
 
-
-    console.log('📊 Desglose por moneda:', desglosePorMoneda);
-    console.log('💵 Total convertido:', total);
-
-    
     try {
+      const response = await axios.post(pedidosEndpoint, pedidoData);
 
       alert('Compra realizada con éxito. ¡Gracias por tu compra!');
       setShowModal(false);
