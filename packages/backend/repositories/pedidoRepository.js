@@ -14,11 +14,12 @@ export default class PedidoRepository extends Repository {
 
   async findByVendedorId(usuarioId) {
     const objectId = new mongoose.Types.ObjectId(usuarioId);
+
     const pedidos = await this.model.aggregate([
-      { $unwind: '$items' }, // Desarma el array de items
+      { $unwind: '$items' },
       {
         $lookup: {
-          from: 'productos', // nombre de la colección
+          from: 'productos',
           localField: 'items.producto',
           foreignField: '_id',
           as: 'producto',
@@ -35,6 +36,9 @@ export default class PedidoRepository extends Repository {
       { $replaceRoot: { newRoot: '$pedido' } },
     ]);
 
-    return pedidos;
+    return await PedidoModel.populate(pedidos, {
+      path: 'items.producto',
+      populate: { path: 'vendedor', select: 'nombre email' },
+    });
   }
 }
