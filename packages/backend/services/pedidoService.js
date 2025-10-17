@@ -147,7 +147,13 @@ export default class PedidoService {
   }
 
   async pedidosByUser(usuarioId) {
-    const pedidos = await this.pedidoRepository.findByUserId(usuarioId);
+    const usuario = await this.usuarioService.findById(usuarioId);
+    let pedidos;
+    if (usuario.tipo === TipoUsuario.COMPRADOR) {
+      pedidos = await this.pedidoRepository.findByCompradorId(usuarioId);
+    } else {
+      pedidos = await this.pedidoRepository.findByVendedorId(usuarioId);
+    }
     return pedidos.map((pedido) => this.toDTO(pedido));
   }
 

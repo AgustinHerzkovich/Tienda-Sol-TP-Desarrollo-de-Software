@@ -104,6 +104,8 @@ describe('Tests unitarios de PedidoService', () => {
       create: jest.fn(),
       findById: jest.fn(),
       findByUserId: jest.fn(),
+      findByCompradorId: jest.fn(),
+      findByVendedorId: jest.fn(),
       update: jest.fn(),
     };
 
@@ -420,7 +422,7 @@ describe('Tests unitarios de PedidoService', () => {
   });
 
   describe('pedidosByUser()', () => {
-    test('devuelve todos los pedidos de un usuario', async () => {
+    test('devuelve todos los pedidos de un comprador', async () => {
       const pedido1 = new Pedido(
         comprador,
         [new ItemPedido(producto1, 1)],
@@ -436,14 +438,19 @@ describe('Tests unitarios de PedidoService', () => {
       pedido1.id = 1;
       pedido2.id = 2;
 
-      mockPedidoRepository.findByUserId.mockResolvedValue([pedido1, pedido2]);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockPedidoRepository.findByCompradorId.mockResolvedValue([
+        pedido1,
+        pedido2,
+      ]);
 
       const pedidos = await pedidoService.pedidosByUser(comprador.id);
 
       expect(pedidos).toBeDefined();
       expect(Array.isArray(pedidos)).toBe(true);
       expect(pedidos).toHaveLength(2);
-      expect(mockPedidoRepository.findByUserId).toHaveBeenCalledWith(
+      expect(mockUsuarioService.findById).toHaveBeenCalledWith(comprador.id);
+      expect(mockPedidoRepository.findByCompradorId).toHaveBeenCalledWith(
         comprador.id
       );
 
@@ -452,8 +459,32 @@ describe('Tests unitarios de PedidoService', () => {
       });
     });
 
-    test('devuelve array vacío para usuario sin pedidos', async () => {
-      mockPedidoRepository.findByUserId.mockResolvedValue([]);
+    test('devuelve todos los pedidos de un vendedor', async () => {
+      const pedido1 = new Pedido(
+        comprador,
+        [new ItemPedido(producto1, 1)],
+        Moneda.PESO_ARG,
+        direccionEntrega
+      );
+      pedido1.id = 1;
+
+      mockUsuarioService.findById.mockResolvedValue(vendedor);
+      mockPedidoRepository.findByVendedorId.mockResolvedValue([pedido1]);
+
+      const pedidos = await pedidoService.pedidosByUser(vendedor.id);
+
+      expect(pedidos).toBeDefined();
+      expect(Array.isArray(pedidos)).toBe(true);
+      expect(pedidos).toHaveLength(1);
+      expect(mockUsuarioService.findById).toHaveBeenCalledWith(vendedor.id);
+      expect(mockPedidoRepository.findByVendedorId).toHaveBeenCalledWith(
+        vendedor.id
+      );
+    });
+
+    test('devuelve array vacío para comprador sin pedidos', async () => {
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockPedidoRepository.findByCompradorId.mockResolvedValue([]);
 
       const pedidos = await pedidoService.pedidosByUser(999);
 
@@ -641,6 +672,9 @@ describe('Tests unitarios de PedidoService', () => {
       }
 
       // 6. Verificar consulta
+      mockUsuarioService.findById.mockResolvedValue(comprador);
+      mockPedidoRepository.findByCompradorId.mockResolvedValue([pedidoCreado]);
+
       const pedidosUsuario = await pedidoService.pedidosByUser(comprador.id);
       expect(pedidosUsuario).toHaveLength(1);
       expect(pedidosUsuario[0].id).toBe(pedidoCreado.id);

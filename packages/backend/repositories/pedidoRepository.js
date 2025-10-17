@@ -7,8 +7,13 @@ export default class PedidoRepository extends Repository {
     super(PedidoModel);
   }
 
-  async findByUserId(usuarioId) {
+  async findByCompradorId(usuarioId) {
     const objectId = new mongoose.Types.ObjectId(usuarioId);
     return await this.model.find({ comprador: objectId });
+  }
+
+  async findByVendedorId(usuarioId) {
+    const objectId = new mongoose.Types.ObjectId(usuarioId);
+    return await this.model.find({ 'items.vendedor': objectId });
   }
 }
