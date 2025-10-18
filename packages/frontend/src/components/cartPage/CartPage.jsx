@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes } from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
@@ -6,7 +6,10 @@ import { useCurrency } from '../../context/CurrencyContext';
 import axios from 'axios';
 import { useSession } from '../../context/SessionContext';
 import { useNavigate } from 'react-router-dom';
-import {useEffect} from 'react'
+import EmptyState from '../common/EmptyState';
+import PageHeader from '../common/PageHeader';
+import Button from '../common/Button';
+import { useToast } from '../common/Toast';
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
   const { obtenerSimboloMoneda, calcularTotal, formatearPrecio } =
@@ -15,13 +18,15 @@ export default function CartPage() {
   const pedidosEndpoint = `http://localhost:${backendPort}/pedidos`;
   const { user } = useSession();
   const navigate = useNavigate();
-    useEffect(() => {
+  const { showToast } = useToast();
+  
+  useEffect(() => {
     const shouldRedirect = user==null;
     if (shouldRedirect) {
-      alert("Te deslogueaste. Volveras al menu principal. ")
+      showToast("Sesión cerrada. Redirigiendo al inicio.", 'info');
       navigate('/');
     }
-  }, [user]);
+  }, [user, navigate, showToast]);
   // Calcular total con conversión automática
   const {
     total,
@@ -56,7 +61,7 @@ export default function CartPage() {
   // Abrir modal de dirección
   const handleProcederAlPago = () => {
     if (cartItems.length === 0) {
-      alert('Tu carrito está vacío');
+      showToast('Tu carrito está vacío', 'error');
       return;
     }
     setShowModal(true);
@@ -90,9 +95,9 @@ export default function CartPage() {
     };
 
     try {
-      const response = await axios.post(pedidosEndpoint, pedidoData);
+      await axios.post(pedidosEndpoint, pedidoData);
 
-      alert('Compra realizada con éxito. ¡Gracias por tu compra!');
+      showToast('¡Compra realizada con éxito! Gracias por tu compra', 'success');
       setShowModal(false);
       clearCart();
       // Resetear formulario
@@ -108,46 +113,39 @@ export default function CartPage() {
         lat: '',
         lon: '',
       });
+      
+      // Redirigir a pedidos después de 1 segundo
+      setTimeout(() => navigate('/pedidos'), 1000);
     } catch (error) {
-      alert(
-        `Hubo un error al procesar tu compra: ${error.response?.data?.message || error.message}`
+      showToast(
+        `Error al procesar tu compra: ${error.response?.data?.message || error.message}`,
+        'error'
       );
     }
   };
 
   if (cartItems.length === 0) {
     return (
-      <div className="cart-page">
-        <div className="cart-header">
-          <h1>
-            <FaShoppingCart /> Mi Carrito
-          </h1>
-        </div>
-        <div className="empty-cart">
-          <FaShoppingCart className="empty-icon" />
-          <h2>Tu carrito está vacío</h2>
-          <p>¡Explora nuestros productos y encuentra algo que te guste!</p>
-          <button
-            className="continue-shopping"
-            onClick={handleContinuarCompra}
-          >
+      <EmptyState
+        icon={FaShoppingCart}
+        title="Tu carrito está vacío"
+        message="¡Explora nuestros productos y encuentra algo que te guste!"
+        actionButton={
+          <Button variant="primary" onClick={handleContinuarCompra}>
             Continuar Comprando
-          </button>
-        </div>
-      </div>
+          </Button>
+        }
+      />
     );
   }
 
   return (
     <div className="cart-page">
-      <div className="cart-header">
-        <h1>
-          <FaShoppingCart /> Mi Carrito
-        </h1>
-        <span className="item-count">
-          {cartItems.length} producto{cartItems.length !== 1 ? 's' : ''}
-        </span>
-      </div>
+      <PageHeader
+        icon={FaShoppingCart}
+        title="Mi Carrito"
+        badge={`${cartItems.length} producto${cartItems.length !== 1 ? 's' : ''}`}
+      />
 
       <div className="cart-content">
         <div className="cart-items">
@@ -255,13 +253,14 @@ export default function CartPage() {
 
       {/* Modal de dirección de entrega */}
       {showModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-direccion">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Dirección de Entrega</h2>
+              <h2 id="modal-title-direccion">Dirección de Entrega</h2>
               <button
                 className="modal-close"
                 onClick={() => setShowModal(false)}
+                aria-label="Cerrar modal"
               >
                 <FaTimes />
               </button>

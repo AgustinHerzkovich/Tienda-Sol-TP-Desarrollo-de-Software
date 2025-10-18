@@ -1,10 +1,14 @@
-import './ForgotPasswordPage.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AuthFormContainer from '../common/AuthFormContainer';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
+import { useToast } from '../common/Toast';
 
 export default function ForgotPasswordPage() {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const usuariosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios`;
 
     const [formData, setFormData] = useState({
@@ -26,17 +30,17 @@ export default function ForgotPasswordPage() {
 
         // Validación básica
         if (!formData.email) {
-            alert('Por favor ingresa tu email');
+            showToast('Por favor ingresa tu email', 'error');
             return;
         }
 
         if (formData.newPassword.length < 8) {
-            alert('La contraseña debe tener al menos 8 caracteres');
+            showToast('La contraseña debe tener al menos 8 caracteres', 'error');
             return;
         }
 
         if (formData.newPassword !== formData.confirmPassword) {
-            alert('Las contraseñas no coinciden');
+            showToast('Las contraseñas no coinciden', 'error');
             return;
         }
 
@@ -58,86 +62,73 @@ export default function ForgotPasswordPage() {
                 password: formData.newPassword
             });
 
-            alert('¡Contraseña actualizada exitosamente!');
+            showToast('¡Contraseña actualizada exitosamente!', 'success');
             navigate('/login');
         } catch (error) {
             console.error('Error al cambiar contraseña:', error);
             
             if (error.response?.status === 404) {
-                alert('No se encontró un usuario con ese email');
+                showToast('No se encontró un usuario con ese email', 'error');
             } else if (error.response?.status === 401) {
-                alert('Email no encontrado en el sistema');
+                showToast('Email no encontrado en el sistema', 'error');
             } else if (error.response?.status === 400) {
                 const mensaje = error.response?.data?.message || 'La contraseña no cumple con los requisitos de seguridad';
-                alert(mensaje);
+                showToast(mensaje, 'error');
             } else {
-                alert('Error al cambiar la contraseña. Por favor, intenta de nuevo.');
+                showToast('Error al cambiar la contraseña. Por favor, intenta de nuevo.', 'error');
             }
         }
     };
 
     return (
-        <div className="forgot-password-page">
-            <div className="forgot-password-page-container">
-                <div className="forgot-password-header">
-                    <h1>Recuperar Contraseña</h1>
-                    <p>Ingresa tu email y tu nueva contraseña</p>
-                </div>
+        <AuthFormContainer title="Recuperar Contraseña" onSubmit={handleSubmit}>
+            <p style={{ textAlign: 'center', color: '#666', marginBottom: '20px' }}>
+                Ingresa tu email y tu nueva contraseña
+            </p>
 
-                <form className="forgot-password-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">Correo Electrónico</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Ingresa tu email"
-                            required
-                        />
-                    </div>
+            <FormInput
+                label="Correo Electrónico"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Ingresa tu email"
+                required
+                autoComplete="email"
+            />
 
-                    <div className="form-group">
-                        <label htmlFor="newPassword">Nueva Contraseña</label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            name="newPassword"
-                            value={formData.newPassword}
-                            onChange={handleInputChange}
-                            placeholder="Ingresa tu nueva contraseña"
-                            required
-                        />
-                    </div>
+            <FormInput
+                label="Nueva Contraseña"
+                type="password"
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleInputChange}
+                placeholder="Ingresa tu nueva contraseña"
+                required
+                autoComplete="new-password"
+            />
 
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="Confirma tu nueva contraseña"
-                            required
-                        />
-                    </div>
+            <FormInput
+                label="Confirmar Contraseña"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Confirma tu nueva contraseña"
+                required
+                autoComplete="new-password"
+            />
 
-                    <button type="submit" className="forgot-password-button-primary">
-                        Cambiar Contraseña
-                    </button>
-                </form>
+            <Button type="submit" variant="primary" fullWidth>
+                Cambiar Contraseña
+            </Button>
 
-                <div className="forgot-password-footer">
-                    <p>
-                        ¿Recordaste tu contraseña?{' '}
-                        <Link to="/login" className="back-to-login-link">
-                            Volver al inicio de sesión
-                        </Link>
-                    </p>
-                </div>
+            <div style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
+                ¿Recordaste tu contraseña?{' '}
+                <Link to="/login" style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}>
+                    Iniciar sesión
+                </Link>
             </div>
-        </div>
+        </AuthFormContainer>
     );
 }

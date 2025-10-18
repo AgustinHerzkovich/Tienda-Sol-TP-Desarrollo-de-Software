@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useSession } from '../../../../../context/SessionContext';
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
+import { useToast } from '../../../../common/Toast';
 
 export default function NewProduct() {
   const { user } = useSession();
+  const { showToast } = useToast();
   const productosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/productos`;
 
   // Estado para modal de nuevo producto
@@ -87,17 +89,17 @@ export default function NewProduct() {
 
     // Validaciones
     if (!producto.titulo.trim()) {
-      alert('El título es obligatorio');
+      showToast('El título es obligatorio', 'error');
       return;
     }
 
     if (producto.precio <= 0) {
-      alert('El precio debe ser mayor a 0');
+      showToast('El precio debe ser mayor a 0', 'error');
       return;
     }
 
     if (producto.stock < 0) {
-      alert('El stock no puede ser negativo');
+      showToast('El stock no puede ser negativo', 'error');
       return;
     }
 
@@ -106,12 +108,12 @@ export default function NewProduct() {
     const fotosValidas = producto.fotos.filter(f => f.trim() !== '');
 
     if (categoriasValidas.length === 0) {
-      alert('Debe agregar al menos una categoría');
+      showToast('Debe agregar al menos una categoría', 'error');
       return;
     }
 
     if (fotosValidas.length === 0) {
-      alert('Debe agregar al menos una foto');
+      showToast('Debe agregar al menos una foto', 'error');
       return;
     }
 
@@ -127,7 +129,7 @@ export default function NewProduct() {
 
       await axios.post(productosEndpoint, nuevoProducto);
       
-      alert('¡Producto creado exitosamente!');
+      showToast('¡Producto creado exitosamente!', 'success');
       
       // Resetear formulario
       setProducto({
@@ -145,7 +147,7 @@ export default function NewProduct() {
     } catch (error) {
       console.error('Error al crear producto:', error);
       const errorMessage = error.response?.data?.message || 'Error al crear el producto. Por favor, intenta de nuevo.';
-      alert(errorMessage);
+      showToast(errorMessage, 'error');
     }
   };
 
@@ -161,13 +163,14 @@ export default function NewProduct() {
 
       {/* Modal de producto */}
       {showModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-newproduct">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Nuevo Producto</h2>
+              <h2 id="modal-title-newproduct">Nuevo Producto</h2>
               <button
                 className="modal-close"
                 onClick={() => setShowModal(false)}
+                aria-label="Cerrar modal"
               >
                 <FaTimes />
               </button>

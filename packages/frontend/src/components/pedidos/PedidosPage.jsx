@@ -5,16 +5,23 @@ import axios from 'axios';
 import { useCurrency } from '../../context/CurrencyContext';
 import { FaBox, FaClipboardList, FaArrowRight, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
+import LoadingSpinner from '../common/LoadingSpinner';
+import EmptyState from '../common/EmptyState';
+import PageHeader from '../common/PageHeader';
+import { useToast } from '../common/Toast';
 
 export default function PedidosPage() {
   const navigate = useNavigate()
   const { user } = useSession();
-    useEffect(() => {
+  const { showToast } = useToast();
+  
+  useEffect(() => {
     const shouldRedirect = user==null;
     if (shouldRedirect) {
       navigate('/');
     }
-  }, [user]);
+  }, [user, navigate]);
+  
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,31 +65,16 @@ export default function PedidosPage() {
   };
 
   if (loading) {
-    return (
-      <div className="pedidos-page">
-        <div className="loading-spinner">
-          <h2>
-            Cargando pedidos
-            <span className="puntitos-container">
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-            </span>
-          </h2>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando pedidos" />;
   }
 
   if (pedidos.length === 0) {
     return (
-      <div className="pedidos-page">
-        <div className="empty-pedidos">
-          <FaBox className="empty-icon" />
-          <h2>No tenés pedidos todavía</h2>
-          <p>Tus compras aparecerán aquí</p>
-        </div>
-      </div>
+      <EmptyState
+        icon={FaBox}
+        title="No tenés pedidos todavía"
+        message="Tus compras aparecerán aquí"
+      />
     );
   }
 
@@ -113,7 +105,7 @@ export default function PedidosPage() {
 
   const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `http://localhost:${backendPort}/pedidos/${pedidoId}`,
         { estado: nuevoEstado }
       );
@@ -125,10 +117,10 @@ export default function PedidosPage() {
         )
       );
 
-      alert(`Estado actualizado a: ${nuevoEstado}`);
+      showToast(`Estado actualizado a: ${nuevoEstado}`, 'success');
     } catch (error) {
       const errorMsg = error.response?.data?.message || error.message;
-      alert(`Error al cambiar estado: ${errorMsg}`);
+      showToast(`Error al cambiar estado: ${errorMsg}`, 'error');
       console.error('Error cambiando estado:', error);
     }
   };
@@ -146,12 +138,11 @@ export default function PedidosPage() {
 
   return (
     <div className="pedidos-page">
-      <div className="pedidos-header">
-        <h1>
-          <FaClipboardList /> Mis Pedidos
-        </h1>
-        <span className="pedidos-count">{pedidos.length} {pedidos.length === 1 ? 'pedido' : 'pedidos'}</span>
-      </div>
+      <PageHeader
+        icon={FaClipboardList}
+        title="Mis Pedidos"
+        badge={`${pedidos.length} ${pedidos.length === 1 ? 'pedido' : 'pedidos'}`}
+      />
 
       <div className="pedidos-list">
         {pedidosAMostrar.map((pedido) => (

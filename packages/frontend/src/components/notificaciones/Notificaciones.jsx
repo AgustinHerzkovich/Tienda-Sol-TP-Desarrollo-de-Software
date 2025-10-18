@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { FaRegBell } from "react-icons/fa6";
 import { useSession } from '../../context/SessionContext';
 import axios from 'axios';
@@ -8,6 +8,7 @@ export default function Notificaciones() {
     const [isOpen, setIsOpen] = useState(false);
     const [notificaciones, setNotificaciones] = useState({ leidas: [], noLeidas: [] });
     const { user } = useSession();
+    const dropdownRef = useRef(null);
 
     const fetchNotificaciones = async () => {
         if (!user?.id) return;
@@ -42,12 +43,29 @@ export default function Notificaciones() {
         fetchNotificaciones();
     }, [user]);
 
+    // Cerrar dropdown al hacer clic fuera
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
+
     const handleSeeNotifications = () => {
         setIsOpen(!isOpen);
     };
 
     return (
-        <div className="notificaciones-container">
+        <div className="notificaciones-container" ref={dropdownRef}>
             <button 
                 className="notificaciones-button"
                 title="notificaciones"

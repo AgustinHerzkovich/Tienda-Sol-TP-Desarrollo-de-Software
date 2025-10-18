@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './ProductoCarousel.css';
 import CarouselItem from '../productoItem/CarouselItem.jsx';
 import axios from 'axios';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function ProductoCarousel() {
   const [index, setIndex] = useState(0);
@@ -61,19 +62,7 @@ export default function ProductoCarousel() {
   };
 
   if (loading) {
-    return (
-      <div className="carousel-empty">
-        <div className="loading-spinner">
-          <h2>Cargando resultados
-            <span className="puntitos-container">
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-            </span>
-          </h2>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando productos" />;
   }
 
   if (!Array.isArray(productos) || productos.length === 0) {

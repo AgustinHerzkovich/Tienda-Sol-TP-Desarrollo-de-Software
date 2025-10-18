@@ -1,0 +1,30 @@
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-input-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-input-group input,
+.form-input-group select {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-input-group input:focus,
+.form-input-group select:focus {
+  outline: none;
+  border-color: var(--primary-purple, #22223b);
+}
+
+.form-input-group input::placeholder {
+  color: #999;
+}

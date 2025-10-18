@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './LoginPage.css';
 import { useSession } from '../../context/SessionContext';
+import AuthFormContainer from '../common/AuthFormContainer';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
+import { useToast } from '../common/Toast';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useSession();
+  const { login } = useSession();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -23,77 +27,63 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación básica
     if (formData.email && formData.password.length > 3) {
-      console.log('Login exitoso con:', formData);
+      const result = await login({ 
+        email: formData.email, 
+        password: formData.password 
+      });
 
-      // Hacer login directamente
-      const success = await login({ email: formData.email, password: formData.password });
-
-      if (success) {
-        // Navegar de vuelta a home
+      if (result.success) {
+        showToast('¡Inicio de sesión exitoso!', 'success');
         navigate('/');
+      } else {
+        showToast(result.error, 'error');
       }
     } else {
-      alert(
-        'Por favor ingresa un email válido y una contraseña de al menos 4 caracteres'
-      );
+      showToast('Por favor ingresa un email válido y una contraseña de al menos 4 caracteres', 'error');
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-page-container">
-        <div className="login-header">
-          <h1>Iniciar Sesión</h1>
-          <p>Accede a tu cuenta de Tienda Sol</p>
-        </div>
+    <AuthFormContainer title="Iniciar Sesión" onSubmit={handleSubmit}>
+      <FormInput
+        label="Correo Electrónico"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleInputChange}
+        required
+        placeholder="tu@email.com"
+        autoComplete="email"
+      />
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Correo Electrónico</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Ingresa tu email"
-              required
-            />
-          </div>
+      <FormInput
+        label="Contraseña"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleInputChange}
+        required
+        placeholder="••••••••"
+        autoComplete="current-password"
+      />
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Ingresa tu contraseña"
-              required
-            />
-          </div>
+      <Button type="submit" variant="primary" fullWidth>
+        Iniciar Sesión
+      </Button>
 
-          <button type="submit" className="login-button-primary">
-            Iniciar Sesión
-          </button>
-        </form>
-
-        <div className="login-links">
-          <Link to="/forgot-password" className="forgot-link">
-            ¿Olvidaste tu contraseña?
-          </Link>
-
-          <div className="signup-prompt">
-            <span>¿No tienes una cuenta?</span>
-            <Link to="/register" className="signup-link">
-              Crear cuenta
-            </Link>
-          </div>
-        </div>
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        <Link to="/forgot-password">
+          <Button variant="link">¿Olvidaste tu contraseña?</Button>
+        </Link>
       </div>
-    </div>
+
+      <div style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
+        ¿No tienes una cuenta?{' '}
+        <Link to="/register" style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}>
+          Crear cuenta
+        </Link>
+      </div>
+    </AuthFormContainer>
   );
 }

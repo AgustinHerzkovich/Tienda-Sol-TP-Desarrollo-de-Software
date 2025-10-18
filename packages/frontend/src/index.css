@@ -16,6 +16,33 @@ code {
   --primary-purple: #22223b;
   --primary-white: #ffffff;
   --secondary-white: #f2e9e4;
-  --primary-gray: #c0c0c0;
-  --secondary-gray: #9a8c98;
+  --primary-gray: #757575; /* Mejorado de #c0c0c0 para mejor contraste */
+  --secondary-gray: #666666; /* Mejorado de #9a8c98 para mejor contraste */
+}
+
+/* Mejoras de Accesibilidad */
+*:focus {
+  outline: 2px solid var(--primary-purple);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary-purple);
+  outline-offset: 2px;
+}
+
+/* Touch targets mínimos para móvil */
+@media (max-width: 768px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

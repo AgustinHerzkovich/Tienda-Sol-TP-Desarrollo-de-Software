@@ -39,12 +39,11 @@ export const SessionProvider = ({ children }) => {
         }
       });
       setUser(response.data);
-      return true; // Éxito
+      return { success: true }; // Éxito
     } catch (error) {
       console.error('Error durante el login:', error);
       const errorMessage = error.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
-      alert(errorMessage);
-      return false; // Error
+      return { success: false, error: errorMessage }; // Error con mensaje
     }
   };
 
@@ -66,13 +65,12 @@ export const SessionProvider = ({ children }) => {
       const response = await axios.post(usuariosEndpoint, newUser);
       const createdUser = response.data;
       // Hacer login automático tras el registro con las credenciales
-      await login({ email: createdUser.email, password: registerData.password });
-      return true; // Éxito
+      const loginResult = await login({ email: createdUser.email, password: registerData.password });
+      return loginResult; // Retorna el resultado del login
     } catch (error) {
       console.error('Error durante el registro:', error);
       const errorMessage = error.response?.data?.message || 'Error durante el registro. Por favor, intenta de nuevo.';
-      alert(errorMessage);
-      return false; // Error
+      return { success: false, error: errorMessage }; // Error con mensaje
     }
   }
 

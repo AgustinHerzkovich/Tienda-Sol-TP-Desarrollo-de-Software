@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCurrency } from '../../context/CurrencyContext';
 import axios from 'axios';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function SearchResultsPage() {
   const location = useLocation();
@@ -164,19 +165,7 @@ export default function SearchResultsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="search-results-container">
-        <div className="loading-spinner">
-          <h2>Cargando resultados
-            <span className="puntitos-container">
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-              <span className="punto">.</span>
-            </span>
-          </h2>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando resultados" />;
   }
 
   return (
