@@ -29,9 +29,11 @@ export const useAddToCart = () => {
 
     return success;
   };
+  
 
   return handleAddToCart;
 };
+
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);

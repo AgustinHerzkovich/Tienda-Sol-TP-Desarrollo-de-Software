@@ -4,9 +4,11 @@ import './ProductoDetailPage.css';
 import { useAddToCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import axios from 'axios';
+import { useSession } from '../../context/SessionContext';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
+  const { user } = useSession();
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -89,7 +91,8 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addToCart(producto);
-    navigate('/cart');
+    if(user != null)
+      navigate('/cart');
   };
 
   return (

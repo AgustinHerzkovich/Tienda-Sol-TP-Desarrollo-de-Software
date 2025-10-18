@@ -4,13 +4,21 @@ import { useSession } from '../../context/SessionContext';
 import axios from 'axios';
 import { useCurrency } from '../../context/CurrencyContext';
 import { FaBox, FaClipboardList, FaArrowRight, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
 export default function PedidosPage() {
+  const navigate = useNavigate()
   const { user } = useSession();
+    useEffect(() => {
+    const shouldRedirect = user==null;
+    if (shouldRedirect) {
+      navigate('/');
+    }
+  }, [user]);
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const pedidosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios/${user.id}/pedidos`;
+  const pedidosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios/${(user?.id)}/pedidos`
   const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
   const limit = 10;
   const { obtenerSimboloMoneda } = useCurrency();
@@ -36,7 +44,6 @@ export default function PedidosPage() {
         setLoading(false);
       }
     };
-
     if (user?.id) {
       fetchPedidos();
     }
