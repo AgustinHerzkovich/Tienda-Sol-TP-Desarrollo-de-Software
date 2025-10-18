@@ -41,11 +41,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    // TODO: Lógica de login con Google
-    console.log('Google login attempt');
-  };
-
   return (
     <div className="login-page">
       <div className="login-page-container">

@@ -50,12 +50,6 @@ export default function RegisterPage() {
         }
     };
 
-    const handleGoogleRegister = (e) => {
-        e.preventDefault();
-        // TODO: Lógica de registro con Google
-        console.log('Google register attempt');
-    }
-
     return (<div className="register-page">
         <div className="register-page-container">
             <div className="register-header">
