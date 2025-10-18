@@ -14,26 +14,39 @@ export default function ProductDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const addToCart = useAddToCart();
   const navigate = useNavigate();
-  const { obtenerSimboloMoneda, obtenerNombreMoneda, formatearPrecio } =
+  const { obtenerNombreMoneda, formatearPrecio } =
     useCurrency();
 
   const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
   const productoEndpoint = `http://localhost:${backendPort}/productos/${id}`;
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchProducto = async () => {
       try {
         setLoading(true);
         const response = await axios.get(productoEndpoint);
-        setProducto(response.data);
+        
+        if (isMounted) {
+          setProducto(response.data);
+        }
       } catch (error) {
-        setProducto(null);
+        if (isMounted) {
+          setProducto(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProducto();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [productoEndpoint]);
 
   if (loading) {

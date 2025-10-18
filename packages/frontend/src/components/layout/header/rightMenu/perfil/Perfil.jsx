@@ -20,6 +20,7 @@ export default function Perfil() {
     console.log('Cerrar sesión');
     setIsMenuOpen(false);
     logout(); // Usa la función del SessionContext
+    navigate('/'); // Redirige a la página principal después de cerrar sesión 
   };
 
   const handlePedidos = () => {

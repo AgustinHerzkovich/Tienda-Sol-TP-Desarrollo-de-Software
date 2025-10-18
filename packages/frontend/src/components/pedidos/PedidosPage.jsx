@@ -39,21 +39,37 @@ export default function PedidosPage() {
   };
 
   useEffect(() => {
+    let isMounted = true; // Flag para verificar si el componente sigue montado
+    
     const fetchPedidos = async () => {
       try {
         setLoading(true);
         const response = await axios.get(pedidosEndpoint);
-        setPedidos(Array.isArray(response.data) ? response.data : []);
+        
+        // Solo actualizar el estado si el componente sigue montado
+        if (isMounted) {
+          setPedidos(Array.isArray(response.data) ? response.data : []);
+        }
       } catch (error) {
         console.error('Error fetching pedidos:', error);
-        setPedidos([]);
+        if (isMounted) {
+          setPedidos([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
+    
     if (user?.id) {
       fetchPedidos();
     }
+    
+    // Cleanup function: marcar como desmontado cuando el componente se desmonte
+    return () => {
+      isMounted = false;
+    };
   }, [pedidosEndpoint, user]);
 
   const handlePageChange = (newPage) => {

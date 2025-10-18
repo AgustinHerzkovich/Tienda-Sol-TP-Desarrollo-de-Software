@@ -100,11 +100,11 @@ export default class PedidoService {
     ];
     const nuevoEstadoString = pedidoModificadoJSON.estado;
     const nuevoEstado = Object.values(EstadoPedido).find(
-      (e) => e.valor === nuevoEstadoString.valor
+      (e) => e.valor === nuevoEstadoString
     );
 
     if (nuevoEstado === EstadoPedido.CANCELADO) {
-      if (estadosIncancelables.includes(estadoActual.valor)) {
+      if (estadosIncancelables.includes(estadoActual)) {
         // No se puede cancelar un pedido si ya fue enviado o entregado
         throw new CancellationError(pedidoAlmacenado.id, estadoActual);
       }

@@ -37,6 +37,8 @@ export default function SearchResultsPage() {
   const limit = 10; // Productos por página
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchProductos = async () => {
       try {
         setLoading(true);
@@ -98,18 +100,28 @@ export default function SearchResultsPage() {
 
         const response = await axios.get(productosEndpoint, { params });
 
-        setProductos(response.data.productos || []);
-        setPagination(response.data.pagination || null);
+        if (isMounted) {
+          setProductos(response.data.productos || []);
+          setPagination(response.data.pagination || null);
+        }
       } catch (error) {
         console.error('Error al buscar productos:', error);
-        setProductos([]);
-        setPagination(null);
+        if (isMounted) {
+          setProductos([]);
+          setPagination(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProductos();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [
     currentPage,
     query,
