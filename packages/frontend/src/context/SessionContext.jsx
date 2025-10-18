@@ -49,7 +49,8 @@ export const SessionProvider = ({ children }) => {
 
   const logout = () => {
     console.log('SessionContext: Logout ejecutado');
-    setUser(null);
+    localStorage.clear(); // Borra todo el localStorage
+    window.location.reload() // Recarga la pagina
   };
 
   const register = async (registerData) => {
