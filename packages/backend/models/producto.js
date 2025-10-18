@@ -20,7 +20,8 @@ export default class Producto {
     moneda,
     stock,
     fotos,
-    activo
+    activo,
+    cantidadVentas
   ) {
     this.vendedor = vendedor;
     this.titulo = titulo;
@@ -40,7 +41,7 @@ export default class Producto {
 
   reducirStock(cantidad) {
     if (!this.estaDisponible(cantidad)) {
-      throw new ProductoOutOfStockError(this.id, cantidad); // TODO: Crear error custom
+      throw new ProductoOutOfStockError(this.id, cantidad);
     }
     this.stock -= cantidad;
   }
