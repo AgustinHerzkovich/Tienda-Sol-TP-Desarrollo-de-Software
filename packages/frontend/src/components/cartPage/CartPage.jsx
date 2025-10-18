@@ -6,7 +6,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 import axios from 'axios';
 import { useSession } from '../../context/SessionContext';
 import { useNavigate } from 'react-router-dom';
-
+import {useEffect} from 'react'
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
   const { obtenerSimboloMoneda, calcularTotal, formatearPrecio } =
@@ -15,7 +15,13 @@ export default function CartPage() {
   const pedidosEndpoint = `http://localhost:${backendPort}/pedidos`;
   const { user } = useSession();
   const navigate = useNavigate();
-
+    useEffect(() => {
+    const shouldRedirect = user==null;
+    if (shouldRedirect) {
+      alert("Te deslogueaste. Volveras al menu principal. ")
+      navigate('/');
+    }
+  }, [user]);
   // Calcular total con conversión automática
   const {
     total,

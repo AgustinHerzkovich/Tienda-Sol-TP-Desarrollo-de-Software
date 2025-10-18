@@ -5,7 +5,11 @@ export const EstadoPedido = Object.freeze({
     mensaje: 'Se ha realizado un pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
-      mensaje: `Pedido Id: ${pedido.id} - Comprador: ${pedido.comprador} - Productos: ${pedido.getProductos()} - Total: ${pedido.total} - Direccion de entrega: ${pedido.direccionEntrega}`,
+      mensaje: `- Pedido Id: ${pedido.id} \n
+      - Comprador: ${pedido.comprador} \n
+      - Productos: ${pedido.getProductos().map((producto) => producto.titulo)} \n
+      - Total: ${pedido.total} \n
+      - Direccion de entrega: País: ${pedido.direccionEntrega.pais}, Provincia: ${pedido.direccionEntrega.provincia}, Ciudad: ${pedido.direccionEntrega.ciudad}, Calle: ${pedido.direccionEntrega.calle}, Altura : ${pedido.direccionEntrega.altura}`,
     }),
   },
   CONFIRMADO: {
