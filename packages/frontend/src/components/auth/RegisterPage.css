@@ -111,56 +111,25 @@
   transform: translateY(0);
 }
 
-.register-divider {
-  display: flex;
-  align-items: center;
-  margin: 24px 0;
-  color: #a0aec0;
+.register-footer {
+  text-align: center;
+  margin-top: 24px;
 }
 
-.register-divider::before,
-.register-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #e2e8f0;
-}
-
-.register-divider span {
-  padding: 0 16px;
+.register-footer p {
+  color: #718096;
   font-size: 0.9rem;
-  font-weight: 500;
+  margin: 0;
 }
 
-.google-register-button {
-  width: 100%;
-  padding: 12px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 1rem;
+.back-to-login-link {
+  color: var(--primary-purple);
+  text-decoration: none;
   font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  transition: all 0.3s ease;
-  color: #2d3748;
+  transition: color 0.2s ease;
 }
 
-.google-register-button:hover {
-  background: #f7fafc;
-  border-color: #cbd5e0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.google-register-button:active {
-  transform: translateY(0);
-}
-
-.google-icon {
-  width: 20px;
-  height: 20px;
+.back-to-login-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
 }
