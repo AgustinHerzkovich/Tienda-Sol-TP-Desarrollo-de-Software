@@ -10,6 +10,7 @@ export default class Producto {
   stock;
   fotos;
   activo;
+  cantidadVentas;
 
   constructor(
     vendedor,
@@ -20,8 +21,7 @@ export default class Producto {
     moneda,
     stock,
     fotos,
-    activo,
-    cantidadVentas
+    activo
   ) {
     this.vendedor = vendedor;
     this.titulo = titulo;
