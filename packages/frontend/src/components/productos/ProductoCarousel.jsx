@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './ProductoCarousel.css';
 import CarouselItem from '../productoItem/CarouselItem.jsx';
-import axios from 'axios';
+import { getProductos } from '../../services/productoService';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function ProductoCarousel() {
@@ -10,21 +10,18 @@ export default function ProductoCarousel() {
   const [loading, setLoading] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const visible = 3;
-  const productosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/productos`;
 
   useEffect(() => {
     const fetchProductos = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(productosEndpoint, {
-          params: {
-            limit: 10,
-            sort: 'precio',
-            order: 'asc',
-          },
+        const data = await getProductos({
+          limit: 10,
+          sort: 'precio',
+          order: 'asc',
         });
         // El backend retorna { productos: [...], pagination: {...} }
-        setProductos(response.data.productos || []);
+        setProductos(data.productos || []);
       } catch (error) {
         setProductos([]);
       } finally {
@@ -33,7 +30,7 @@ export default function ProductoCarousel() {
     };
 
     fetchProductos();
-  }, [productosEndpoint]);
+  }, []);
 
   // Auto-play: avanza cada 3 segundos
   useEffect(() => {

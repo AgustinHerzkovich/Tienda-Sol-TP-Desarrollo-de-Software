@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FaRegBell } from "react-icons/fa6";
 import { useSession } from '../../context/SessionContext';
-import axios from 'axios';
+import { getNotificacionesByUsuario, marcarNotificacionComoLeida } from '../../services/notificacionService';
 import './Notificaciones.css';
 
 export default function Notificaciones() {
@@ -10,29 +10,27 @@ export default function Notificaciones() {
     const { user } = useSession();
     const dropdownRef = useRef(null);
 
-    const fetchNotificaciones = async () => {
+    const fetchNotificaciones = useCallback(async () => {
         if (!user?.id) return;
         
         try {
-            const [leidasRes, noLeidasRes] = await Promise.all([
-                axios.get(`http://localhost:8000/usuarios/${user.id}/notificaciones?read=true`),
-                axios.get(`http://localhost:8000/usuarios/${user.id}/notificaciones?read=false`)
+            const [leidas, noLeidas] = await Promise.all([
+                getNotificacionesByUsuario(user.id, true),
+                getNotificacionesByUsuario(user.id, false)
             ]);
 
             setNotificaciones({
-                leidas: leidasRes.data,
-                noLeidas: noLeidasRes.data
+                leidas,
+                noLeidas
             });
         } catch (error) {
             console.error('Error al obtener notificaciones:', error);
         }
-    };
+    }, [user?.id]);
 
     const marcarComoLeida = async (notificacionId) => {
         try {
-            await axios.patch(`http://localhost:8000/notificaciones/${notificacionId}`, {
-                read: true
-            });
+            await marcarNotificacionComoLeida(notificacionId);
             await fetchNotificaciones();
         } catch (error) {
             console.error('Error al marcar como leída:', error);
@@ -41,7 +39,7 @@ export default function Notificaciones() {
 
     useEffect(() => {
         fetchNotificaciones();
-    }, [user]);
+    }, [fetchNotificaciones]);
 
     // Cerrar dropdown al hacer clic fuera
     useEffect(() => {

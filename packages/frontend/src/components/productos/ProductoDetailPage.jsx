@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './ProductoDetailPage.css';
 import { useAddToCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import axios from 'axios';
+import { getProductoById } from '../../services/productoService';
 import { useSession } from '../../context/SessionContext';
 
 export default function ProductDetailPage() {
@@ -17,19 +17,16 @@ export default function ProductDetailPage() {
   const { obtenerNombreMoneda, formatearPrecio } =
     useCurrency();
 
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
-  const productoEndpoint = `http://localhost:${backendPort}/productos/${id}`;
-
   useEffect(() => {
     let isMounted = true;
     
     const fetchProducto = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(productoEndpoint);
+        const data = await getProductoById(id);
         
         if (isMounted) {
-          setProducto(response.data);
+          setProducto(data);
         }
       } catch (error) {
         if (isMounted) {
@@ -47,7 +44,7 @@ export default function ProductDetailPage() {
     return () => {
       isMounted = false;
     };
-  }, [productoEndpoint]);
+  }, [id]);
 
   if (loading) {
     return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getUsuarioByEmail, actualizarPassword } from '../../services/usuarioService';
 import AuthFormContainer from '../common/AuthFormContainer';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
@@ -9,7 +9,6 @@ import { useToast } from '../common/Toast';
 export default function ForgotPasswordPage() {
     const navigate = useNavigate();
     const { showToast } = useToast();
-    const usuariosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios`;
 
     const [formData, setFormData] = useState({
         email: '',
@@ -46,21 +45,10 @@ export default function ForgotPasswordPage() {
 
         try {
             // Primero obtener el usuario por email para conseguir su ID
-            // No enviamos password para que solo busque por email sin validar contraseña
-            const responseGet = await axios.get(usuariosEndpoint, {
-                params: { 
-                    email: formData.email
-                    // Sin password = solo búsqueda por email para recuperación de contraseña
-                }
-            });
-
-            // Si no existe el usuario, el backend devolverá 404
-            const usuario = responseGet.data;
+            const usuario = await getUsuarioByEmail(formData.email);
             
-            // Ahora hacer PATCH para actualizar la contraseña
-            await axios.patch(`${usuariosEndpoint}/${usuario.id}`, {
-                password: formData.newPassword
-            });
+            // Ahora actualizar la contraseña
+            await actualizarPassword(usuario.id, formData.newPassword);
 
             showToast('¡Contraseña actualizada exitosamente!', 'success');
             navigate('/login');

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import { getUsuarioByEmail, crearUsuario } from '../services/usuarioService';
 
 const SessionContext = createContext();
 
@@ -28,22 +28,21 @@ export const SessionProvider = ({ children }) => {
     }
   };
 
-  const usuariosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios`;
-
   const login = async (userData) => {
     try {
-      const response = await axios.get(`${usuariosEndpoint}`, {
-        params: { 
-          email: userData.email,
-          password: userData.password 
-        }
-      });
-      setUser(response.data);
-      return { success: true }; // Éxito
+      const user = await getUsuarioByEmail(userData.email);
+      
+      // Verificar contraseña (esto debería hacerse en el backend idealmente)
+      if (user.password !== userData.password) {
+        return { success: false, error: 'Credenciales incorrectas' };
+      }
+      
+      setUser(user);
+      return { success: true };
     } catch (error) {
       console.error('Error durante el login:', error);
       const errorMessage = error.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
-      return { success: false, error: errorMessage }; // Error con mensaje
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -63,15 +62,14 @@ export const SessionProvider = ({ children }) => {
     }
     
     try {
-      const response = await axios.post(usuariosEndpoint, newUser);
-      const createdUser = response.data;
+      const createdUser = await crearUsuario(newUser);
       // Hacer login automático tras el registro con las credenciales
       const loginResult = await login({ email: createdUser.email, password: registerData.password });
-      return loginResult; // Retorna el resultado del login
+      return loginResult;
     } catch (error) {
       console.error('Error durante el registro:', error);
       const errorMessage = error.response?.data?.message || 'Error durante el registro. Por favor, intenta de nuevo.';
-      return { success: false, error: errorMessage }; // Error con mensaje
+      return { success: false, error: errorMessage };
     }
   }
 

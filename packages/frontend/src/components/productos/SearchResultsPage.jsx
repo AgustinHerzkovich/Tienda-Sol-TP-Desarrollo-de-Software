@@ -2,7 +2,7 @@ import './SearchResultsPage.css';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCurrency } from '../../context/CurrencyContext';
-import axios from 'axios';
+import { getProductos } from '../../services/productoService';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function SearchResultsPage() {
@@ -30,7 +30,6 @@ export default function SearchResultsPage() {
     maxPrecio: '',
   });
 
-  const productosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/productos`;
   const query = new URLSearchParams(location.search).get('query') || '';
   const vendedorId =
     new URLSearchParams(location.search).get('vendedorId') || '';
@@ -98,11 +97,11 @@ export default function SearchResultsPage() {
           params.maxPrecio = parseFloat(filtrosAplicados.maxPrecio);
         }
 
-        const response = await axios.get(productosEndpoint, { params });
+        const data = await getProductos(params);
 
         if (isMounted) {
-          setProductos(response.data.productos || []);
-          setPagination(response.data.pagination || null);
+          setProductos(data.productos || []);
+          setPagination(data.pagination || null);
         }
       } catch (error) {
         console.error('Error al buscar productos:', error);
@@ -128,7 +127,6 @@ export default function SearchResultsPage() {
     vendedorId,
     ordenamiento,
     filtrosAplicados,
-    productosEndpoint,
   ]);
 
   const handlePageChange = (newPage) => {

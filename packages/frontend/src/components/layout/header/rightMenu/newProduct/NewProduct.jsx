@@ -3,13 +3,12 @@ import { FiPlus } from "react-icons/fi";
 import { useState } from 'react';
 import { useSession } from '../../../../../context/SessionContext';
 import { FaTimes, FaTrash } from 'react-icons/fa';
-import axios from 'axios';
+import { crearProducto } from '../../../../../services/productoService';
 import { useToast } from '../../../../common/Toast';
 
 export default function NewProduct() {
   const { user } = useSession();
   const { showToast } = useToast();
-  const productosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/productos`;
 
   // Estado para modal de nuevo producto
   const [showModal, setShowModal] = useState(false);
@@ -127,7 +126,7 @@ export default function NewProduct() {
         stock: parseInt(producto.stock)
       };
 
-      await axios.post(productosEndpoint, nuevoProducto);
+      await crearProducto(nuevoProducto);
       
       showToast('¡Producto creado exitosamente!', 'success');
       

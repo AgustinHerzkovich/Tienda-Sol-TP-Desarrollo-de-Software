@@ -3,19 +3,18 @@ import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes } from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import axios from 'axios';
+import { crearPedido } from '../../services/pedidoService';
 import { useSession } from '../../context/SessionContext';
 import { useNavigate } from 'react-router-dom';
 import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
 import { useToast } from '../common/Toast';
+
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
   const { obtenerSimboloMoneda, calcularTotal, formatearPrecio } =
     useCurrency();
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
-  const pedidosEndpoint = `http://localhost:${backendPort}/pedidos`;
   const { user } = useSession();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -95,7 +94,7 @@ export default function CartPage() {
     };
 
     try {
-      await axios.post(pedidosEndpoint, pedidoData);
+      await crearPedido(pedidoData);
 
       showToast('¡Compra realizada con éxito! Gracias por tu compra', 'success');
       setShowModal(false);

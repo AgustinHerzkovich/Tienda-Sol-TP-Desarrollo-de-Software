@@ -19,7 +19,7 @@ export default function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/health`)
+    fetch(`${process.env.REACT_APP_API_URL}/health`)
       .then((response) => response.json())
       .then((data) => setMessage(data.status))
       .catch((error) => console.error('Error cargando health.', error));

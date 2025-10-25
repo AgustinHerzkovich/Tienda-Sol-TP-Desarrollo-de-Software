@@ -1,7 +1,7 @@
 import './PedidosPage.css';
 import { useEffect, useState } from 'react';
 import { useSession } from '../../context/SessionContext';
-import axios from 'axios';
+import { getPedidos, actualizarEstadoPedido } from '../../services/pedidoService';
 import { useCurrency } from '../../context/CurrencyContext';
 import { FaBox, FaClipboardList, FaArrowRight, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
@@ -25,8 +25,6 @@ export default function PedidosPage() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const pedidosEndpoint = `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/usuarios/${(user?.id)}/pedidos`
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || '8000';
   const limit = 10;
   const { obtenerSimboloMoneda } = useCurrency();
 
@@ -44,11 +42,11 @@ export default function PedidosPage() {
     const fetchPedidos = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(pedidosEndpoint);
+        const data = await getPedidos();
         
         // Solo actualizar el estado si el componente sigue montado
         if (isMounted) {
-          setPedidos(Array.isArray(response.data) ? response.data : []);
+          setPedidos(Array.isArray(data) ? data : []);
         }
       } catch (error) {
         console.error('Error fetching pedidos:', error);
@@ -70,7 +68,7 @@ export default function PedidosPage() {
     return () => {
       isMounted = false;
     };
-  }, [pedidosEndpoint, user]);
+  }, [user]);
 
   const handlePageChange = (newPage) => {
     const totalPages = Math.ceil(pedidos.length / limit);
@@ -121,10 +119,7 @@ export default function PedidosPage() {
 
   const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
     try {
-      await axios.patch(
-        `http://localhost:${backendPort}/pedidos/${pedidoId}`,
-        { estado: nuevoEstado }
-      );
+      await actualizarEstadoPedido(pedidoId, nuevoEstado);
 
       // Actualizar el pedido en el estado local
       setPedidos(prevPedidos =>
