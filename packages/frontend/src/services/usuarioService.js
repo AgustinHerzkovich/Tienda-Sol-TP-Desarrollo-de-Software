@@ -10,6 +10,13 @@ export const getUsuarioByEmail = async (email) => {
   return response.data;
 };
 
+export const validarPassword = async (email, password) => {
+  const response = await axios.get(`${usuariosEndpoint}`, {
+    params: { email, password },
+  });
+  return response.data;
+};
+
 // Crear un nuevo usuario
 export const crearUsuario = async (userData) => {
   const response = await axios.post(usuariosEndpoint, userData);

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { getUsuarioByEmail, crearUsuario } from '../services/usuarioService';
+import { getUsuarioByEmail, crearUsuario, validarPassword } from '../services/usuarioService';
 
 const SessionContext = createContext();
 
@@ -33,7 +33,8 @@ export const SessionProvider = ({ children }) => {
       const user = await getUsuarioByEmail(userData.email);
       
       // Verificar contraseña (esto debería hacerse en el backend idealmente)
-      if (user.password !== userData.password) {
+      const isValid = await validarPassword(userData.email, userData.password);
+      if (!isValid) {
         return { success: false, error: 'Credenciales incorrectas' };
       }
       

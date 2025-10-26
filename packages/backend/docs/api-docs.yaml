@@ -608,6 +608,7 @@ components:
         - email
         - telefono
         - tipo
+        - password
       properties:
         nombre:
           type: string
@@ -623,6 +624,11 @@ components:
           description: Número de teléfono del usuario
         tipo:
           $ref: '#/components/schemas/TipoUsuario'
+        password:
+          type: string
+          format: password
+          minLength: 6
+          description: Contraseña del usuario (mínimo 6 caracteres)
 
     ProductoCreateRequest:
       type: object

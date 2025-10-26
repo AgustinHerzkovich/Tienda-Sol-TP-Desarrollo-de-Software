@@ -5,6 +5,7 @@ export default class Usuario {
   telefono;
   tipo;
   fechaAlta;
+  password;
 
   constructor(nombre, email, telefono, tipo) {
     this.nombre = nombre;
