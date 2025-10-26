@@ -42,7 +42,8 @@ export default function PedidosPage() {
     const fetchPedidos = async () => {
       try {
         setLoading(true);
-        const data = await getPedidos();
+        console.log('Fetching pedidos for user ID:', user.id);
+        const data = await getPedidos(user.id);
         
         // Solo actualizar el estado si el componente sigue montado
         if (isMounted) {

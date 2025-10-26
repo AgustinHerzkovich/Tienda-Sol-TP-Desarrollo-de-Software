@@ -1,16 +1,11 @@
 import axios from 'axios';
 
+const pedidosDeUsuarioEndpoint = (id) => process.env.REACT_APP_API_URL + '/usuarios/' + id + '/pedidos';
 const pedidosEndpoint = process.env.REACT_APP_API_URL + '/pedidos';
 
 // Obtener todos los pedidos del usuario autenticado
-export const getPedidos = async () => {
-  const response = await axios.get(pedidosEndpoint);
-  return response.data;
-};
-
-// Obtener un pedido por ID
-export const getPedidoById = async (pedidoId) => {
-  const response = await axios.get(`${pedidosEndpoint}/${pedidoId}`);
+export const getPedidos = async (id) => {
+  const response = await axios.get(pedidosDeUsuarioEndpoint(id));
   return response.data;
 };
 
