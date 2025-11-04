@@ -343,7 +343,7 @@ export default function SearchResultsPage() {
                     <div className="product-image">
                       <img
                         src={producto.fotos[0]}
-                        alt={producto.titulo}
+                        alt=""
                         onError={(e) => {
                           e.target.src =
                             'https://via.placeholder.com/300x200?text=Sin+Imagen';

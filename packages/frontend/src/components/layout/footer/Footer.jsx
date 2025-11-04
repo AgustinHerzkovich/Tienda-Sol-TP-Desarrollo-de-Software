@@ -43,7 +43,7 @@ export default function Footer() {
 
           {/* Información de contacto */}
           <div className="footer-section">
-            <h3 className="footer-title">Contacto</h3>
+            <h2 className="footer-title">Contacto</h2>
             <div className="footer-contact">
               <div className="contact-item">
                 <span className="contact-icon">📞</span>
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Ubicación */}
           <div className="footer-section">
-            <h3 className="footer-title">Ubicación</h3>
+            <h2 className="footer-title">Ubicación</h2>
             <div className="footer-location">
               <div className="location-item">
                 <span className="location-icon">🏢</span>
@@ -95,7 +95,7 @@ export default function Footer() {
 
           {/* Enlaces útiles */}
           <div className="footer-section">
-            <h3 className="footer-title">Enlaces Útiles</h3>
+            <h2 className="footer-title">Enlaces Útiles</h2>
             <ul className="footer-links">
               <li>
                 <button className="footer-link">Sobre Nosotros</button>

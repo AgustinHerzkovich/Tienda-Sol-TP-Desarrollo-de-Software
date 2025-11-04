@@ -29,8 +29,8 @@
 }
 
 .logo-icon {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   user-select: none;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .logo-title {
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: var(--secondary-white);
   font-family: 'Dancing Script', cursive;
@@ -52,7 +52,7 @@
 
 .first-letter {
   font-family: 'Great Vibes', cursive;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 400;
   color: var(--secondary-white);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -60,9 +60,9 @@
 }
 
 .logo-subtitle {
-  font-size: 0.55rem;
+  font-size: 1rem;
   font-weight: 500;
-  color: var(--secondary-gray);
+  color: var(--secondary-white);
   letter-spacing: 1px;
   font-family: 'Cinzel', serif;
   text-transform: uppercase;

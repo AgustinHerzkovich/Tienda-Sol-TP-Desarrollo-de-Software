@@ -26,6 +26,7 @@ export default function Searchbar() {
             value={searchTerm}
             onChange={handleInputChange}
             className="search-input"
+            aria-label="Buscar productos"
           />
           <button
             type="submit"

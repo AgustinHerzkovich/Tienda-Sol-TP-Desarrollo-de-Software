@@ -386,8 +386,8 @@
 }
 
 .product-stock {
-  font-size: 0.85rem;
-  color: #28a745;
+  font-size: 0.95rem;
+  color: #155724;
   font-weight: 500;
 }
 
@@ -398,9 +398,9 @@
 }
 
 .product-price {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #28a745;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #155724;
   margin: 0;
 }
 

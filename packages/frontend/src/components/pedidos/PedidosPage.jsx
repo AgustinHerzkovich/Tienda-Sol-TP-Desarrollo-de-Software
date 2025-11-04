@@ -200,7 +200,7 @@ export default function PedidosPage() {
             </div>
 
             <div className="pedido-items">
-              <h3>Productos ({Array.isArray(pedido.items) ? pedido.items.length : 0})</h3>
+              <h2>Productos ({Array.isArray(pedido.items) ? pedido.items.length : 0})</h2>
               <ul>
                 {Array.isArray(pedido.items) && pedido.items.map((item, index) => (
                   <li key={index} className="pedido-item">
@@ -219,7 +219,7 @@ export default function PedidosPage() {
 
             {pedido.direccionEntrega && (
               <div className="pedido-direccion">
-                <h4>Dirección de entrega</h4>
+                <h3>Dirección de entrega</h3>
                 <p>
                   {pedido.direccionEntrega.calle} {pedido.direccionEntrega.altura}
                   {pedido.direccionEntrega.piso && `, Piso ${pedido.direccionEntrega.piso}`}

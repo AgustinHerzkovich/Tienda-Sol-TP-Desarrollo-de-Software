@@ -19,7 +19,7 @@ const CarouselItem = ({ producto }) => {
       <div className="producto-card">
         <img
           src={producto.fotos[0]}
-          alt={producto.titulo}
+          alt=""
           className="producto-image"
         />
         <div className="producto-info">
@@ -45,7 +45,7 @@ const CarouselItem = ({ producto }) => {
               </span>
             </div>
             <div className="añadir-carrito-container">
-              <button className="añadir-carrito" onClick={handleAddToCart}>
+              <button className="añadir-carrito" aria-label="Añadir al carrito" onClick={handleAddToCart}>
                 <FaCartPlus />
               </button>
             </div>

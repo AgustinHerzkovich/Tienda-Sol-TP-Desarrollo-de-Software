@@ -151,15 +151,15 @@ export default function CartPage() {
           {cartItems.map((item) => (
             <div key={item.producto.id} className="cart-item">
               <div className="item-image">
-                <img src={item.producto.fotos[0]} alt={item.producto.titulo} />
+                <img src={item.producto.fotos[0]} alt="" />
               </div>
 
               <div className="item-details">
-                <h3>{item.producto.titulo}</h3>
-                <p className="item-price">
+                <h2>{item.producto.titulo}</h2>
+                <h3 className="item-price">
                   {obtenerSimboloMoneda(item.producto.moneda)}
                   {item.producto.precio.toLocaleString()}
-                </p>
+                </h3>
               </div>
 
               <div className="quantity-controls">

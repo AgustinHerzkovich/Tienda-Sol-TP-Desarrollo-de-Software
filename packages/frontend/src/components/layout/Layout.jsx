@@ -8,6 +8,7 @@ export default function Layout() {
     <div className="layout-container">
       <Header />
       <main className="main-content">
+        <h1 className="sr-only">Tienda Sol - Plataforma</h1>
         <Outlet />
       </main>
       <Footer />
