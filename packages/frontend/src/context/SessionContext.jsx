@@ -69,8 +69,16 @@ export const SessionProvider = ({ children }) => {
       return loginResult;
     } catch (error) {
       console.error('Error durante el registro:', error);
-      const errorMessage = error.response?.data?.message || 'Error durante el registro. Por favor, intenta de nuevo.';
-      return { success: false, error: errorMessage };
+      
+      if(Array.isArray(error.response?.data)){
+        const errorMessage = error.response?.data?.map(element => {
+          return element.message
+        }).join('. ') || 'Error durante el registro. Por favor, intenta de nuevo.';
+        return { success: false, error: errorMessage };
+      }else{
+        const errorMessage = error.response?.data?.message || 'Error durante el registro. Por favor, intenta de nuevo.'
+        return { success: false, error: errorMessage };
+      }
     }
   }
 
