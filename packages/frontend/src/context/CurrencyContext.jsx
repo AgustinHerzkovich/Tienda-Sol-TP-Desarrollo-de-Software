@@ -5,8 +5,8 @@ const CurrencyContext = createContext();
 // Tasas de cambio (podrían venir de una API)
 const EXCHANGE_RATES = {
   PESO_ARG: 1,
-  DOLAR_USA: 1300, // 1 USD = 1300 ARS (aproximado)
-  REAL: 250, // 1 BRL = 250 ARS (aproximado)
+  DOLAR_USA: 1500,
+  REAL: 250,
 };
 
 // Símbolos de moneda
