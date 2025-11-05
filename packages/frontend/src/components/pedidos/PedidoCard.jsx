@@ -57,7 +57,7 @@ export default function PedidoCard({
       </div>
 
       <PedidoItemsList
-        items={pedido.items}
+        items={Array.isArray(pedido.items) ? pedido.items : []}
         obtenerSimboloMoneda={obtenerSimboloMoneda}
       />
       {pedido.direccionEntrega && (
