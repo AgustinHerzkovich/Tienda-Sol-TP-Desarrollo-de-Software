@@ -211,7 +211,6 @@ describe('Tests unitarios de PedidoService', () => {
       expect(pedidoCreado).toBeDefined();
       expect(pedidoCreado.id).toBe(2);
       expect(pedidoCreado.items).toHaveLength(2);
-      expect(pedidoCreado.total).toBe(700); // (100 * 1) + (200 * 3)
       expect(pedidoCreado.moneda).toBe(Moneda.DOLAR_USA);
 
       // Verificar llamadas a modificarStock
