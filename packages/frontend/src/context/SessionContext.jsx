@@ -84,7 +84,7 @@ export const SessionProvider = ({ children }) => {
             ?.map((element) => {
               return element.message;
             })
-            .join('. ') ||
+            .join('. \n') ||
           'Error durante el registro. Por favor, intenta de nuevo.';
         return { success: false, error: errorMessage };
       } else {
