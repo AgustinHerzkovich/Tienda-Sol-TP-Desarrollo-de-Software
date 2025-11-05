@@ -15,13 +15,13 @@ export function ToastProvider({ children }) {
   const showToast = useCallback((message, type = 'info', duration = 8000) => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type, isExiting: false }]);
-    
+
     setTimeout(() => {
-    setToasts((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, isExiting: true } : t))
-    );
+      setToasts((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, isExiting: true } : t))
+      );
       setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
+        setToasts((prev) => prev.filter((t) => t.id !== id));
       }, 500);
     }, duration);
   }, []);
@@ -42,7 +42,7 @@ export function ToastProvider({ children }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`toast toast-${toast.type} ${toast.isExiting ? 'toast-slide-out' : 'toast-slide-in'}` }
+            className={`toast toast-${toast.type} ${toast.isExiting ? 'toast-slide-out' : 'toast-slide-in'}`}
             role="alert"
             aria-live="assertive"
           >
@@ -51,7 +51,9 @@ export function ToastProvider({ children }) {
               {toast.type === 'error' && <FaExclamationCircle />}
               {toast.type === 'info' && <FaInfoCircle />}
             </div>
-            <span style={{ whiteSpace: 'pre-line' }} className="toast-message">{toast.message}</span>
+            <span style={{ whiteSpace: 'pre-line' }} className="toast-message">
+              {toast.message}
+            </span>
             <button
               className="toast-close"
               onClick={() => removeToast(toast.id)}

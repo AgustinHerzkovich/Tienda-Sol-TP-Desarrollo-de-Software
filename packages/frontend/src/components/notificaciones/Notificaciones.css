@@ -59,7 +59,7 @@
   max-height: 1300%;
   overflow-y: auto;
   padding: 8px 0;
-  
+
   transition: all 0.2s ease-in-out;
 }
 .notificacion {
@@ -68,7 +68,9 @@
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   margin: 15px;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .notificacion:hover {
@@ -125,18 +127,18 @@ h4 {
   color: #666;
 }
 
-.no-leidas-section{
+.no-leidas-section {
   color: #000000;
   background-color: #ffffff;
 }
-.leidas-section{
+.leidas-section {
   color: #6b6b6b;
   background-color: #ffffff;
 }
 
 .no-leidas-label {
   color: #fff;
-  background-color: #ff6b6b; 
+  background-color: #ff6b6b;
   border-radius: 15px;
   padding: 2px 8px;
   font-weight: 600;
@@ -144,7 +146,7 @@ h4 {
 }
 .leidas-label {
   color: #fff;
-  background-color: #4cd964; 
+  background-color: #4cd964;
   border-radius: 15px;
   padding: 2px 8px;
   font-weight: 600;

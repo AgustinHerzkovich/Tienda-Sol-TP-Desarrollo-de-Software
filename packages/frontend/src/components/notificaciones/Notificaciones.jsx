@@ -89,15 +89,19 @@ export default function Notificaciones() {
           <div className="no-leidas-section">
             <h4 className="no-leidas-label">No leídas</h4>
             {notificaciones.noLeidas.map((notif) => (
-              <Notificacion key={notif.id} className=" no-leida" notif={notif} onClick={() => marcarComoLeida(notif.id)}/>
-            ))
-            }
+              <Notificacion
+                key={notif.id}
+                className=" no-leida"
+                notif={notif}
+                onClick={() => marcarComoLeida(notif.id)}
+              />
+            ))}
           </div>
 
           <div className="leidas-section">
             <h4 className="leidas-label">Leídas</h4>
             {notificaciones.leidas.map((notif) => (
-              <Notificacion key={notif.id} notif={notif} className="leida"/>
+              <Notificacion key={notif.id} notif={notif} className="leida" />
             ))}
           </div>
         </div>
