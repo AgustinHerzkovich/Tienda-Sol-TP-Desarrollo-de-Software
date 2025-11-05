@@ -20,25 +20,46 @@ export default class PedidoRepository extends Repository {
     const objectId = new mongoose.Types.ObjectId(usuarioId);
 
     const pedidos = await this.model.aggregate([
-      { $unwind: '$items' },
-      {
-        $lookup: {
-          from: 'productos',
-          localField: 'items.producto',
-          foreignField: '_id',
-          as: 'producto',
+  {
+    $lookup: {
+      from: 'productos',
+      localField: 'items.producto',
+      foreignField: '_id',
+      as: 'productosInfo',
+    },
+  },
+  {
+    $addFields: {
+      items: {
+        $map: {
+          input: '$items',
+          as: 'item',
+          in: {
+            $mergeObjects: [
+              '$$item',
+              {
+                producto: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: '$productosInfo',
+                        as: 'p',
+                        cond: { $eq: ['$$p._id', '$$item.producto'] },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            ],
+          },
         },
       },
-      { $unwind: '$producto' },
-      { $match: { 'producto.vendedor': objectId } },
-      {
-        $group: {
-          _id: '$_id',
-          pedido: { $first: '$$ROOT' },
-        },
-      },
-      { $replaceRoot: { newRoot: '$pedido' } },
-    ]);
+    },
+  },
+  { $match: { 'items.producto.vendedor': objectId } },
+]);
+
 
     return await PedidoModel.populate(pedidos, {
       path: 'items.producto',
