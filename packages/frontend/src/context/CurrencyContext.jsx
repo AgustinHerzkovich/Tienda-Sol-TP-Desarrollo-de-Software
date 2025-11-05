@@ -11,7 +11,7 @@ const EXCHANGE_RATES = {
 
 // Símbolos de moneda
 const CURRENCY_SYMBOLS = {
-  PESO_ARG: '$',
+  PESO_ARG: 'AR$',
   DOLAR_USA: 'US$',
   REAL: 'R$',
 };

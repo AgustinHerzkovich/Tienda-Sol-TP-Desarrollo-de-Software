@@ -209,7 +209,7 @@ export default function PedidosPage() {
                       <span className="item-titulo">{item.producto?.titulo || 'Producto'}</span>
                     </div>
                     <span className="item-precio">
-                      {obtenerSimboloMoneda(pedido.moneda)}
+                      {obtenerSimboloMoneda(item.producto.moneda)}
                       {(item.precioUnitario * item.cantidad)?.toFixed(2) || '0.00'}
                     </span>
                   </li>
