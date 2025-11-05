@@ -1,10 +1,7 @@
 import './PedidosPage.css';
 import { useEffect, useState } from 'react';
 import { useSession } from '../../context/SessionContext';
-import {
-  getPedidos,
-  actualizarEstadoPedido,
-} from '../../services/pedidoService';
+import { getPedidos, actualizarEstadoPedido } from '../../services/pedidoService';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useNavigate } from 'react-router';
 import { FaClipboardList, FaBox } from 'react-icons/fa';
@@ -54,8 +51,8 @@ export default function PedidosPage() {
   const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
     try {
       await actualizarEstadoPedido(pedidoId, nuevoEstado);
-      setPedidos((prev) =>
-        prev.map((p) => (p.id === pedidoId ? { ...p, estado: nuevoEstado } : p))
+      setPedidos(prev =>
+        prev.map(p => (p.id === pedidoId ? { ...p, estado: nuevoEstado } : p))
       );
       showToast(`Estado actualizado a: ${nuevoEstado}`, 'success');
     } catch (error) {
@@ -86,7 +83,7 @@ export default function PedidosPage() {
         pedidos={pedidos}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        limit={2}
+        limit={limit}
         onCambiarEstado={handleCambiarEstado}
         obtenerSimboloMoneda={obtenerSimboloMoneda}
         user={user}
