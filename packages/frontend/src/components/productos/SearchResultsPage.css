@@ -430,33 +430,40 @@
 }
 
 /* Loading */
-.loading-spinner{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
 }
 
 .loading-spinner h2 {
-    font-size: 1.5rem;
-    color: #333;
+  font-size: 1.5rem;
+  color: #333;
 }
 
 .puntitos-container {
-    display: inline-block;
+  display: inline-block;
 }
 
 .punto {
-    animation: puntitos 1.5s infinite ease-in-out;
-    opacity: 0;
+  animation: puntitos 1.5s infinite ease-in-out;
+  opacity: 0;
 }
 
-.puntitos-container .punto:nth-child(1) { animation-delay: 0s; }
-.puntitos-container .punto:nth-child(2) { animation-delay: 0.3s; }
-.puntitos-container .punto:nth-child(3) { animation-delay: 0.6s; }
+.puntitos-container .punto:nth-child(1) {
+  animation-delay: 0s;
+}
+.puntitos-container .punto:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.puntitos-container .punto:nth-child(3) {
+  animation-delay: 0.6s;
+}
 
 @keyframes puntitos {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
   50% {

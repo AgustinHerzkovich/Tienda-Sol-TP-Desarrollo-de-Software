@@ -19,7 +19,7 @@ export default function PedidosList({
   return (
     <>
       <div className="pedidos-list">
-        {pedidosAMostrar.map(pedido => (
+        {pedidosAMostrar.map((pedido) => (
           <PedidoCard
             key={pedido.id}
             pedido={pedido}
@@ -29,7 +29,11 @@ export default function PedidosList({
           />
         ))}
       </div>
-        <PedidoPaginacion totalPages={totalPages} setCurrentPage = {setCurrentPage} currentPage = {currentPage}/>
-      </>
+      <PedidoPaginacion
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
+    </>
   );
 }

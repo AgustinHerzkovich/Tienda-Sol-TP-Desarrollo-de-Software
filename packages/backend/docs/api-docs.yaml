@@ -113,7 +113,7 @@ paths:
         - in: query
           name: password
           required: false
-          schema: 
+          schema:
             type: string
             format: password
           description: Contraseña del usuario. Opcional - si se omite, solo busca por email sin validar contraseña

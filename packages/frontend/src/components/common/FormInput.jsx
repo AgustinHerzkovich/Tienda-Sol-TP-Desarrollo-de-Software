@@ -1,14 +1,14 @@
 import './FormInput.css';
 
-export default function FormInput({ 
-  label, 
-  type = "text", 
-  name, 
-  value, 
-  onChange, 
+export default function FormInput({
+  label,
+  type = 'text',
+  name,
+  value,
+  onChange,
   required = false,
-  placeholder = "",
-  autoComplete = "off"
+  placeholder = '',
+  autoComplete = 'off',
 }) {
   return (
     <div className="form-input-group">

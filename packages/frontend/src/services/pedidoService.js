@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const pedidosDeUsuarioEndpoint = (id) => process.env.REACT_APP_API_URL + '/usuarios/' + id + '/pedidos';
+const pedidosDeUsuarioEndpoint = (id) =>
+  process.env.REACT_APP_API_URL + '/usuarios/' + id + '/pedidos';
 const pedidosEndpoint = process.env.REACT_APP_API_URL + '/pedidos';
 
 // Obtener todos los pedidos del usuario autenticado

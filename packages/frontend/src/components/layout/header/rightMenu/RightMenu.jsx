@@ -13,10 +13,10 @@ export default function RightMenu() {
       {isLoggedIn() ? (
         <>
           {user?.tipo === 'VENDEDOR' && <NewProduct />}
-        
-          <Cart/>
-          <Notificaciones/>
-          <Perfil/>
+
+          <Cart />
+          <Notificaciones />
+          <Perfil />
         </>
       ) : (
         <Login />

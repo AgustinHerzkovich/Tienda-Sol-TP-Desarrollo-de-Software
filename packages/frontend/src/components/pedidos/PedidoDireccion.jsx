@@ -1,16 +1,8 @@
 import './PedidosPage.css';
 
-
 export default function PedidoDireccion({ direccion }) {
-  const { 
-     calle,
-     altura, 
-     piso,
-     departamento, 
-     ciudad, 
-     provincia, 
-     codigoPostal 
-    } = direccion;
+  const { calle, altura, piso, departamento, ciudad, provincia, codigoPostal } =
+    direccion;
 
   return (
     <div className="pedido-direccion">

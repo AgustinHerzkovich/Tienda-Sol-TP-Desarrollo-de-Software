@@ -14,17 +14,16 @@ export default function ProductDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const addToCart = useAddToCart();
   const navigate = useNavigate();
-  const { obtenerNombreMoneda, formatearPrecio } =
-    useCurrency();
+  const { obtenerNombreMoneda, formatearPrecio } = useCurrency();
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchProducto = async () => {
       try {
         setLoading(true);
         const data = await getProductoById(id);
-        
+
         if (isMounted) {
           setProducto(data);
         }
@@ -40,7 +39,7 @@ export default function ProductDetailPage() {
     };
 
     fetchProducto();
-    
+
     return () => {
       isMounted = false;
     };
@@ -50,7 +49,8 @@ export default function ProductDetailPage() {
     return (
       <div className="producto-detail-container">
         <div className="loading-spinner">
-          <h2>Cargando resultados
+          <h2>
+            Cargando resultados
             <span className="puntitos-container">
               <span className="punto">.</span>
               <span className="punto">.</span>
@@ -101,8 +101,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addToCart(producto);
-    if(user != null)
-      navigate('/cart');
+    if (user != null) navigate('/cart');
   };
 
   return (

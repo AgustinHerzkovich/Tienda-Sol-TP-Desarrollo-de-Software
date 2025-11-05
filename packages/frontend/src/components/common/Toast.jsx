@@ -1,5 +1,10 @@
 import './Toast.css';
-import { FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaTimes } from 'react-icons/fa';
+import {
+  FaCheckCircle,
+  FaExclamationCircle,
+  FaInfoCircle,
+  FaTimes,
+} from 'react-icons/fa';
 import { createContext, useContext, useState, useCallback } from 'react';
 
 const ToastContext = createContext();
@@ -9,24 +14,29 @@ export function ToastProvider({ children }) {
 
   const showToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-    
+    setToasts((prev) => [...prev, { id, message, type }]);
+
     setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
+      setToasts((prev) => prev.filter((t) => t.id !== id));
     }, duration);
   }, []);
 
   const removeToast = useCallback((id) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="toast-container" role="region" aria-live="polite" aria-label="Notificaciones">
-        {toasts.map(toast => (
-          <div 
-            key={toast.id} 
+      <div
+        className="toast-container"
+        role="region"
+        aria-live="polite"
+        aria-label="Notificaciones"
+      >
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
             className={`toast toast-${toast.type}`}
             role="alert"
             aria-live="assertive"
@@ -37,7 +47,7 @@ export function ToastProvider({ children }) {
               {toast.type === 'info' && <FaInfoCircle />}
             </div>
             <span className="toast-message">{toast.message}</span>
-            <button 
+            <button
               className="toast-close"
               onClick={() => removeToast(toast.id)}
               aria-label="Cerrar notificación"

@@ -1,6 +1,11 @@
 import './EmptyState.css';
 
-export default function EmptyState({ icon: Icon, title, message, actionButton }) {
+export default function EmptyState({
+  icon: Icon,
+  title,
+  message,
+  actionButton,
+}) {
   return (
     <div className="empty-state">
       {Icon && <Icon className="empty-icon" />}

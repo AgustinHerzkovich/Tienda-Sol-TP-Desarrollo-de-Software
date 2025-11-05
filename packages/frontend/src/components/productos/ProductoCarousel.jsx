@@ -37,7 +37,7 @@ export default function ProductoCarousel() {
     if (isPaused || productos.length === 0) return;
 
     const interval = setInterval(() => {
-      setIndex(prevIndex => {
+      setIndex((prevIndex) => {
         // Si llegó al final, vuelve al inicio
         if (prevIndex >= productos.length - visible) {
           return 0;
@@ -67,7 +67,7 @@ export default function ProductoCarousel() {
   }
 
   return (
-    <div 
+    <div
       className="carousel-container"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}

@@ -1,5 +1,5 @@
 import './NewProduct.css';
-import { FiPlus } from "react-icons/fi";
+import { FiPlus } from 'react-icons/fi';
 import { useState } from 'react';
 import { useSession } from '../../../../../context/SessionContext';
 import { FaTimes, FaTrash } from 'react-icons/fa';
@@ -20,7 +20,7 @@ export default function NewProduct() {
     moneda: 'PESO_ARG',
     stock: 0,
     fotos: [''],
-    activo: true
+    activo: true,
   });
 
   const handleProductoChange = (e) => {
@@ -103,8 +103,10 @@ export default function NewProduct() {
     }
 
     // Filtrar categorías y fotos vacías
-    const categoriasValidas = producto.categorias.filter(c => c.nombre.trim() !== '');
-    const fotosValidas = producto.fotos.filter(f => f.trim() !== '');
+    const categoriasValidas = producto.categorias.filter(
+      (c) => c.nombre.trim() !== ''
+    );
+    const fotosValidas = producto.fotos.filter((f) => f.trim() !== '');
 
     if (categoriasValidas.length === 0) {
       showToast('Debe agregar al menos una categoría', 'error');
@@ -123,13 +125,13 @@ export default function NewProduct() {
         fotos: fotosValidas,
         vendedorId: user.id,
         precio: parseFloat(producto.precio),
-        stock: parseInt(producto.stock)
+        stock: parseInt(producto.stock),
       };
 
       await crearProducto(nuevoProducto);
-      
+
       showToast('¡Producto creado exitosamente!', 'success');
-      
+
       // Resetear formulario
       setProducto({
         titulo: '',
@@ -139,13 +141,15 @@ export default function NewProduct() {
         moneda: 'PESO_ARG',
         stock: 0,
         fotos: [''],
-        activo: true
+        activo: true,
       });
-      
+
       setShowModal(false);
     } catch (error) {
       console.error('Error al crear producto:', error);
-      const errorMessage = error.response?.data?.message || 'Error al crear el producto. Por favor, intenta de nuevo.';
+      const errorMessage =
+        error.response?.data?.message ||
+        'Error al crear el producto. Por favor, intenta de nuevo.';
       showToast(errorMessage, 'error');
     }
   };
@@ -156,13 +160,22 @@ export default function NewProduct() {
 
   return (
     <div className="newproduct-container">
-      <button className="newproduct-button" title="Nuevo Producto" onClick={handleNewProductClick}>
+      <button
+        className="newproduct-button"
+        title="Nuevo Producto"
+        onClick={handleNewProductClick}
+      >
         <FiPlus />
       </button>
 
       {/* Modal de producto */}
       {showModal && (
-        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-newproduct">
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title-newproduct"
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h2 id="modal-title-newproduct">Nuevo Producto</h2>
@@ -284,7 +297,9 @@ export default function NewProduct() {
                       <input
                         type="text"
                         value={categoria.nombre}
-                        onChange={(e) => handleCategoriaChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleCategoriaChange(index, e.target.value)
+                        }
                         placeholder="Ej: Electrónica, Computadoras"
                         required
                       />
@@ -321,7 +336,9 @@ export default function NewProduct() {
                       <input
                         type="url"
                         value={foto}
-                        onChange={(e) => handleFotoChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleFotoChange(index, e.target.value)
+                        }
                         placeholder="https://ejemplo.com/imagen.jpg"
                         required
                       />

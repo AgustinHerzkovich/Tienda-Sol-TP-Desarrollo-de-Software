@@ -1,5 +1,9 @@
 import { createContext, useContext, useState } from 'react';
-import { getUsuarioByEmail, crearUsuario, validarPassword } from '../services/usuarioService';
+import {
+  getUsuarioByEmail,
+  crearUsuario,
+  validarPassword,
+} from '../services/usuarioService';
 
 const SessionContext = createContext();
 
@@ -17,7 +21,6 @@ export const SessionProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-
   const setUser = (user) => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -31,18 +34,20 @@ export const SessionProvider = ({ children }) => {
   const login = async (userData) => {
     try {
       const user = await getUsuarioByEmail(userData.email);
-      
+
       // Verificar contraseña (esto debería hacerse en el backend idealmente)
       const isValid = await validarPassword(userData.email, userData.password);
       if (!isValid) {
         return { success: false, error: 'Credenciales incorrectas' };
       }
-      
+
       setUser(user);
       return { success: true };
     } catch (error) {
       console.error('Error durante el login:', error);
-      const errorMessage = error.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
+      const errorMessage =
+        error.response?.data?.message ||
+        'Error al iniciar sesión. Verifica tus credenciales.';
       return { success: false, error: errorMessage };
     }
   };
@@ -50,7 +55,7 @@ export const SessionProvider = ({ children }) => {
   const logout = () => {
     console.log('SessionContext: Logout ejecutado');
     localStorage.clear(); // Borra todo el localStorage
-    window.location.reload() // Recarga la pagina
+    window.location.reload(); // Recarga la pagina
   };
 
   const register = async (registerData) => {
@@ -59,28 +64,37 @@ export const SessionProvider = ({ children }) => {
       email: registerData.email,
       telefono: registerData.telefono,
       tipo: registerData.tipoUsuario,
-      password: registerData.password
-    }
-    
+      password: registerData.password,
+    };
+
     try {
       const createdUser = await crearUsuario(newUser);
       // Hacer login automático tras el registro con las credenciales
-      const loginResult = await login({ email: createdUser.email, password: registerData.password });
+      const loginResult = await login({
+        email: createdUser.email,
+        password: registerData.password,
+      });
       return loginResult;
     } catch (error) {
       console.error('Error durante el registro:', error);
-      
-      if(Array.isArray(error.response?.data)){
-        const errorMessage = error.response?.data?.map(element => {
-          return element.message
-        }).join('. ') || 'Error durante el registro. Por favor, intenta de nuevo.';
+
+      if (Array.isArray(error.response?.data)) {
+        const errorMessage =
+          error.response?.data
+            ?.map((element) => {
+              return element.message;
+            })
+            .join('. ') ||
+          'Error durante el registro. Por favor, intenta de nuevo.';
         return { success: false, error: errorMessage };
-      }else{
-        const errorMessage = error.response?.data?.message || 'Error durante el registro. Por favor, intenta de nuevo.'
+      } else {
+        const errorMessage =
+          error.response?.data?.message ||
+          'Error durante el registro. Por favor, intenta de nuevo.';
         return { success: false, error: errorMessage };
       }
     }
-  }
+  };
 
   const isLoggedIn = () => {
     const loggedIn = !!user;

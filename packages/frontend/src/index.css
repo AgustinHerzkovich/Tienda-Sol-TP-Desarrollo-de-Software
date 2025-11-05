@@ -39,9 +39,9 @@ code {
 @media (max-width: 768px) {
   button,
   a,
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"] {
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'] {
     min-height: 44px;
     min-width: 44px;
   }

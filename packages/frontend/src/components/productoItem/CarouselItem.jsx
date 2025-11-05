@@ -17,11 +17,7 @@ const CarouselItem = ({ producto }) => {
   return (
     <div key={producto.id} className="carousel-card">
       <div className="producto-card">
-        <img
-          src={producto.fotos[0]}
-          alt=""
-          className="producto-image"
-        />
+        <img src={producto.fotos[0]} alt="" className="producto-image" />
         <div className="producto-info">
           <h3 className="producto-title">{producto.titulo}</h3>
           <p className="producto-description">{producto.descripcion}</p>
@@ -45,7 +41,11 @@ const CarouselItem = ({ producto }) => {
               </span>
             </div>
             <div className="añadir-carrito-container">
-              <button className="añadir-carrito" aria-label="Añadir al carrito" onClick={handleAddToCart}>
+              <button
+                className="añadir-carrito"
+                aria-label="Añadir al carrito"
+                onClick={handleAddToCart}
+              >
                 <FaCartPlus />
               </button>
             </div>

@@ -59,7 +59,7 @@ const productoSchema = new mongoose.Schema(
     cantidadVentas: {
       type: Number,
       required: true,
-  },
+    },
   },
   {
     timestamps: true,

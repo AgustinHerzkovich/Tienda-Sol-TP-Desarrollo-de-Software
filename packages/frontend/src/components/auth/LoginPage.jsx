@@ -28,9 +28,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (formData.email && formData.password.length > 3) {
-      const result = await login({ 
-        email: formData.email, 
-        password: formData.password 
+      const result = await login({
+        email: formData.email,
+        password: formData.password,
       });
 
       if (result.success) {
@@ -40,7 +40,10 @@ export default function LoginPage() {
         showToast(result.error, 'error');
       }
     } else {
-      showToast('Por favor ingresa un email válido y una contraseña de al menos 4 caracteres', 'error');
+      showToast(
+        'Por favor ingresa un email válido y una contraseña de al menos 4 caracteres',
+        'error'
+      );
     }
   };
 
@@ -80,7 +83,10 @@ export default function LoginPage() {
 
       <div style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
         ¿No tienes una cuenta?{' '}
-        <Link to="/register" style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}>
+        <Link
+          to="/register"
+          style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}
+        >
           Crear cuenta
         </Link>
       </div>

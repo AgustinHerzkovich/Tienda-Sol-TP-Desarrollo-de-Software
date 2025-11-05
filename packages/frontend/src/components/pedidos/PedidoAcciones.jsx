@@ -3,14 +3,16 @@ import './PedidosPage.css';
 
 export default function PedidoAcciones({ pedido, user, onCambiarEstado }) {
   const estadosVendedor = {
-    'PENDIENTE': 'CONFIRMADO',
-    'CONFIRMADO': 'EN_PREPARACION',
-    'EN_PREPARACION': 'ENVIADO',
-    'ENVIADO': 'ENTREGADO',
+    PENDIENTE: 'CONFIRMADO',
+    CONFIRMADO: 'EN_PREPARACION',
+    EN_PREPARACION: 'ENVIADO',
+    ENVIADO: 'ENTREGADO',
   };
 
-  const puedeAvanzarEstado = user.tipo === 'VENDEDOR' && estadosVendedor[pedido.estado];
-  const puedeCancelar = user.tipo === 'COMPRADOR' &&
+  const puedeAvanzarEstado =
+    user.tipo === 'VENDEDOR' && estadosVendedor[pedido.estado];
+  const puedeCancelar =
+    user.tipo === 'COMPRADOR' &&
     !['ENVIADO', 'ENTREGADO', 'CANCELADO'].includes(pedido.estado);
 
   return (
@@ -18,7 +20,9 @@ export default function PedidoAcciones({ pedido, user, onCambiarEstado }) {
       {puedeAvanzarEstado && (
         <button
           className="btn-avanzar-estado"
-          onClick={() => onCambiarEstado(pedido.id, estadosVendedor[pedido.estado])}
+          onClick={() =>
+            onCambiarEstado(pedido.id, estadosVendedor[pedido.estado])
+          }
         >
           <FaArrowRight /> {estadosVendedor[pedido.estado]}
         </button>

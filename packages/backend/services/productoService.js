@@ -85,12 +85,16 @@ export default class ProductoService {
       producto.reducirStock(Math.abs(cantidad));
     }
     // Solo actualizar el campo stock
-    await this.productoRepository.update(producto.id, { stock: producto.stock });
+    await this.productoRepository.update(producto.id, {
+      stock: producto.stock,
+    });
   }
 
   async aumentarVentas(producto, cantidad) {
     producto.aumentarVentas(cantidad);
     // Solo actualizar el campo cantidadVentas
-    await this.productoRepository.update(producto.id, { cantidadVentas: producto.cantidadVentas });
+    await this.productoRepository.update(producto.id, {
+      cantidadVentas: producto.cantidadVentas,
+    });
   }
 }

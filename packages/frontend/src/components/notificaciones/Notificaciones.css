@@ -1,6 +1,6 @@
 .notificaciones-detail {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .notificaciones-container {
@@ -36,33 +36,33 @@
 }
 
 .notificacion-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #b30000;
-    color: #ffffff;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #b30000;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
 }
 
 .notificaciones-dropdown {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    width: 650px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
-    max-height: 300px;
-    overflow-y: auto;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 650px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .notificacion {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
 }
 
 .no-leida {
@@ -72,7 +72,9 @@
   border-radius: 8px;
   padding: 8px 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .no-leida:hover {
@@ -94,20 +96,20 @@
 }
 
 .marcar-leida-btn {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 8px;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
 }
 
 .marcar-leida-btn:hover {
-    background: #0056b3;
+  background: #0056b3;
 }
 
 h4 {
-    margin: 8px;
-    color: #666;
+  margin: 8px;
+  color: #666;
 }

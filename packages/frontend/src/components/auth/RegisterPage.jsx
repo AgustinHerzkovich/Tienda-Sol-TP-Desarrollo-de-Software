@@ -17,7 +17,7 @@ export default function RegisterPage() {
     tipoUsuario: '',
     email: '',
     password: '',
-    repeatPassword: ''
+    repeatPassword: '',
   });
 
   const handleInputChange = (e) => {
@@ -42,7 +42,7 @@ export default function RegisterPage() {
         password: formData.password,
         nombre: formData.nombre,
         telefono: formData.telefono,
-        tipoUsuario: formData.tipoUsuario
+        tipoUsuario: formData.tipoUsuario,
       });
 
       if (result.success) {
@@ -52,7 +52,10 @@ export default function RegisterPage() {
         showToast(result.error, 'error');
       }
     } else {
-      showToast('Por favor ingresa un email válido y una contraseña de al menos 4 caracteres', 'error');
+      showToast(
+        'Por favor ingresa un email válido y una contraseña de al menos 4 caracteres',
+        'error'
+      );
     }
   };
 
@@ -132,7 +135,10 @@ export default function RegisterPage() {
 
       <div style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
         ¿Ya tienes una cuenta?{' '}
-        <Link to="/login" style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}>
+        <Link
+          to="/login"
+          style={{ color: 'var(--primary-purple, #22223b)', fontWeight: 600 }}
+        >
           Iniciar sesión
         </Link>
       </div>

@@ -1,7 +1,10 @@
 import express from 'express';
 import UsuarioController from '../controllers/usuarioController.js';
 import { validateSchema } from '../middlewares/validateSchema.js';
-import { usuarioPostSchema, usuarioPatchSchema } from '../schemas/zodSchemas/usuarioSchema.js';
+import {
+  usuarioPostSchema,
+  usuarioPatchSchema,
+} from '../schemas/zodSchemas/usuarioSchema.js';
 import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
 
 const usuarioPath = '/usuarios';
@@ -31,12 +34,9 @@ export default function usuarioRoutes(getController) {
     }
   );
 
-  router.get(
-    usuarioPath,
-    async (req, res, next) => {
-      await usuarioController.obtener(req, res, next);
-    }
-  );
+  router.get(usuarioPath, async (req, res, next) => {
+    await usuarioController.obtener(req, res, next);
+  });
 
   router.patch(
     usuarioPath + '/:id',

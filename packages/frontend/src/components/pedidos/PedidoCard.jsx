@@ -3,7 +3,6 @@ import PedidoDireccion from './PedidoDireccion.jsx';
 import PedidoAcciones from './PedidoAcciones.jsx';
 import './PedidosPage.css';
 
-
 export const getEstadoClass = (estado) => {
   const e = estado?.toLowerCase() || '';
   if (e.includes('pendiente')) return 'estado-pendiente';
@@ -22,35 +21,48 @@ export const formatearFecha = (fecha) => {
     month: 'long',
     day: 'numeric',
   });
-};  
+};
 
-export default function PedidoCard({ 
-  pedido, 
-  user, 
-  onCambiarEstado, 
-  obtenerSimboloMoneda }) {
+export default function PedidoCard({
+  pedido,
+  user,
+  onCambiarEstado,
+  obtenerSimboloMoneda,
+}) {
   return (
     <div className="pedido-card">
       <div className="pedido-card-header">
         <div className="pedido-info">
-          <span className="pedido-fecha">{formatearFecha(pedido.fechaCreacion)}</span>
+          <span className="pedido-fecha">
+            {formatearFecha(pedido.fechaCreacion)}
+          </span>
           <div className="estado-container">
             <span className={`pedido-estado ${getEstadoClass(pedido.estado)}`}>
               {pedido.estado || 'Pendiente'}
             </span>
-            <PedidoAcciones pedido={pedido} user={user} onCambiarEstado={onCambiarEstado} />
+            <PedidoAcciones
+              pedido={pedido}
+              user={user}
+              onCambiarEstado={onCambiarEstado}
+            />
           </div>
         </div>
         <div className="pedido-total">
           <span className="total-label">Total:</span>
           <span className="total-monto">
-            {obtenerSimboloMoneda(pedido.moneda)}{pedido.total?.toFixed(2)}
+            {obtenerSimboloMoneda(pedido.moneda)}
+            {pedido.total?.toFixed(2)}
           </span>
         </div>
       </div>
 
-      <PedidoItemsList items={pedido.items} obtenerSimboloMoneda={obtenerSimboloMoneda} />
-      {pedido.direccionEntrega && <PedidoDireccion direccion={pedido.direccionEntrega} />}
+      <PedidoItemsList
+        items={pedido.items}
+        obtenerSimboloMoneda={obtenerSimboloMoneda}
+      />
+      {pedido.direccionEntrega && (
+        <PedidoDireccion direccion={pedido.direccionEntrega} />
+      )}
     </div>
   );
 }

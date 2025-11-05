@@ -1,7 +1,7 @@
 import CambioEstadoPedido from './cambioEstadoPedido.js';
 import _ from 'lodash';
 import { EstadoPedido } from './estadoPedido.js';
-import TasaDeCambioHelper from './tasaDeCambioHelper.js'
+import TasaDeCambioHelper from './tasaDeCambioHelper.js';
 export default class Pedido {
   id;
   comprador;
@@ -25,7 +25,13 @@ export default class Pedido {
   }
 
   calcularTotal() {
-    return _.sumBy(this.items, (item) => TasaDeCambioHelper.convertir(item.subtotal(), item.producto.moneda, this.moneda));
+    return _.sumBy(this.items, (item) =>
+      TasaDeCambioHelper.convertir(
+        item.subtotal(),
+        item.producto.moneda,
+        this.moneda
+      )
+    );
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {

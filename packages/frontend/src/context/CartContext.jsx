@@ -29,22 +29,16 @@ export const useAddToCart = () => {
 
     return success;
   };
-  
 
   return handleAddToCart;
 };
 
-
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(
-    () => {
+  const [cartItems, setCartItems] = useState(() => {
     const stored = localStorage.getItem('cartItems');
     return stored ? JSON.parse(stored) : [];
-  }
-  );
+  });
   const { isLoggedIn } = useSession();
-
-
 
   const addItem = (producto, onNotLoggedIn) => {
     // Verificar si el usuario está logueado
@@ -70,34 +64,33 @@ export const CartProvider = ({ children }) => {
         // Si existe, incrementar la cantidad
         newItems = prevItems.map((item) =>
           item.producto.id === producto.id
-        ? { ...item, cantidad: item.cantidad + 1 }
-        : item
-      );
-    } else {
-      // Si no existe, agregarlo con cantidad 1
-       newItems = [
-        ...prevItems,
-        {
-          producto: producto,
-          cantidad: 1,
-          precioUnitario: producto.precio,
-        },
-      ];
-    }
-    
-    localStorage.setItem('cartItems', JSON.stringify(newItems));
-    return newItems
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        );
+      } else {
+        // Si no existe, agregarlo con cantidad 1
+        newItems = [
+          ...prevItems,
+          {
+            producto: producto,
+            cantidad: 1,
+            precioUnitario: producto.precio,
+          },
+        ];
+      }
+
+      localStorage.setItem('cartItems', JSON.stringify(newItems));
+      return newItems;
     });
     return true; // Retorna true si se añadió exitosamente
   };
 
   const removeItem = (id) => {
-    setCartItems((prevItems) =>{
-      const newItems = prevItems.filter((item) => item.producto.id !== id)
+    setCartItems((prevItems) => {
+      const newItems = prevItems.filter((item) => item.producto.id !== id);
       localStorage.setItem('cartItems', JSON.stringify(newItems));
       return newItems;
-      }
-    );
+    });
   };
 
   const updateQuantity = (id, newQuantity) => {
@@ -105,14 +98,13 @@ export const CartProvider = ({ children }) => {
       removeItem(id);
       return;
     }
-    setCartItems((prevItems) =>{
+    setCartItems((prevItems) => {
       const newItems = prevItems.map((item) =>
         item.producto.id === id ? { ...item, cantidad: newQuantity } : item
-      )
+      );
       localStorage.setItem('cartItems', JSON.stringify(newItems));
-      return newItems
-    }
-    );
+      return newItems;
+    });
   };
 
   const getTotalPrice = () => {
@@ -128,7 +120,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('cartItems',);
+    localStorage.removeItem('cartItems');
   };
 
   const value = {

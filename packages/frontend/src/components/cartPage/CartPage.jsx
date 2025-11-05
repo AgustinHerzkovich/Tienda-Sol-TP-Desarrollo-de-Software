@@ -18,11 +18,11 @@ export default function CartPage() {
   const { user } = useSession();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
+
   useEffect(() => {
-    const shouldRedirect = user==null;
+    const shouldRedirect = user == null;
     if (shouldRedirect) {
-      showToast("Sesión cerrada. Redirigiendo al inicio.", 'info');
+      showToast('Sesión cerrada. Redirigiendo al inicio.', 'info');
       navigate('/');
     }
   }, [user, navigate, showToast]);
@@ -47,7 +47,7 @@ export default function CartPage() {
     lat: '',
     lon: '',
   });
-  
+
   // Función para manejar cambios en el formulario de dirección
   const handleDireccionChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +68,7 @@ export default function CartPage() {
 
   const handleContinuarCompra = () => {
     navigate('/productos');
-  }
+  };
 
   // Confirmar compra con dirección
   const handleConfirmarCompra = async (e) => {
@@ -96,7 +96,10 @@ export default function CartPage() {
     try {
       await crearPedido(pedidoData);
 
-      showToast('¡Compra realizada con éxito! Gracias por tu compra', 'success');
+      showToast(
+        '¡Compra realizada con éxito! Gracias por tu compra',
+        'success'
+      );
       setShowModal(false);
       clearCart();
       // Resetear formulario
@@ -112,7 +115,7 @@ export default function CartPage() {
         lat: '',
         lon: '',
       });
-      
+
       // Redirigir a pedidos después de 1 segundo
       setTimeout(() => navigate('/pedidos'), 1000);
     } catch (error) {
@@ -252,7 +255,12 @@ export default function CartPage() {
 
       {/* Modal de dirección de entrega */}
       {showModal && (
-        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-direccion">
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title-direccion"
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h2 id="modal-title-direccion">Dirección de Entrega</h2>

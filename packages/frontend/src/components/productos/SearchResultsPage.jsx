@@ -37,7 +37,7 @@ export default function SearchResultsPage() {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchProductos = async () => {
       try {
         setLoading(true);
@@ -117,17 +117,11 @@ export default function SearchResultsPage() {
     };
 
     fetchProductos();
-    
+
     return () => {
       isMounted = false;
     };
-  }, [
-    currentPage,
-    query,
-    vendedorId,
-    ordenamiento,
-    filtrosAplicados,
-  ]);
+  }, [currentPage, query, vendedorId, ordenamiento, filtrosAplicados]);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && pagination && newPage <= pagination.totalPages) {

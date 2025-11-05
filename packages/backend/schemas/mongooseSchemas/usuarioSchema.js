@@ -42,10 +42,10 @@ const UsuarioSchema = new mongoose.Schema(
 );
 
 UsuarioSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next(); 
+  if (!this.isModified('password')) return next();
 
   try {
-    const salt = await bcrypt.genSalt(10) // Genera un salt aleatorio
+    const salt = await bcrypt.genSalt(10); // Genera un salt aleatorio
     this.password = await bcrypt.hash(this.password, salt); // Hashea la contraseña con el salt
     next();
   } catch (error) {
