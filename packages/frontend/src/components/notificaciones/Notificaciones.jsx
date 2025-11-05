@@ -6,6 +6,7 @@ import {
   marcarNotificacionComoLeida,
 } from '../../services/notificacionService';
 import './Notificaciones.css';
+import Notificacion from './Notificacion';
 
 export default function Notificaciones() {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,26 +87,17 @@ export default function Notificaciones() {
       {isOpen && (
         <div className="notificaciones-dropdown">
           <div className="no-leidas-section">
-            <h4>No leídas</h4>
+            <h4 className="no-leidas-label">No leídas</h4>
             {notificaciones.noLeidas.map((notif) => (
-              <div key={notif.id} className="notificacion no-leida">
-                <p>{notif.mensaje}</p>
-                <button
-                  className="marcar-leida-btn"
-                  onClick={() => marcarComoLeida(notif.id)}
-                >
-                  Marcar como leída
-                </button>
-              </div>
-            ))}
+              <Notificacion key={notif.id} className=" no-leida" notif={notif} onClick={() => marcarComoLeida(notif.id)}/>
+            ))
+            }
           </div>
 
           <div className="leidas-section">
-            <h4>Leídas</h4>
+            <h4 className="leidas-label">Leídas</h4>
             {notificaciones.leidas.map((notif) => (
-              <div key={notif.id} className="notificacion leida">
-                <p>{notif.mensaje}</p>
-              </div>
+              <Notificacion key={notif.id} notif={notif} className="leida"/>
             ))}
           </div>
         </div>

@@ -1,3 +1,17 @@
+import { Moneda } from "./moneda.js";
+
+function monedaString(moneda){
+  if(moneda == Moneda.DOLAR_USA){
+    return "US$"
+  }else if(moneda == Moneda.REAL){
+    return "R$"
+  }else if(moneda == Moneda.PESO_ARG){
+    return "AR$"
+  }else{
+    return "$"
+  }
+}
+
 export const EstadoPedido = Object.freeze({
   // ENUM en javascript
   PENDIENTE: {
@@ -5,10 +19,10 @@ export const EstadoPedido = Object.freeze({
     mensaje: 'Se ha realizado un pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
-      mensaje: `- Pedido Id: ${pedido.id} \n
-      - Comprador: ${pedido.comprador} \n
-      - Productos: ${pedido.getProductos().map((producto) => producto.titulo)} \n
-      - Total: ${pedido.total} \n
+      mensaje: `- Pedido Id: ${pedido.id}
+      - Comprador: ${pedido.comprador}
+      - Productos: ${pedido.getProductos().map((producto) => " " + producto.titulo)}
+      - Total: ${monedaString(pedido.moneda)} ${pedido.total}
       - Direccion de entrega: País: ${pedido.direccionEntrega.pais}, Provincia: ${pedido.direccionEntrega.provincia}, Ciudad: ${pedido.direccionEntrega.ciudad}, Calle: ${pedido.direccionEntrega.calle}, Altura : ${pedido.direccionEntrega.altura}`,
     }),
   },
