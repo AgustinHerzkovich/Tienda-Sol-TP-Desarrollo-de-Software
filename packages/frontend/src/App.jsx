@@ -29,16 +29,6 @@ export default function App() {
     return (
       <div className="error">
         <p>NO ANDA EL SERVIDOR</p>
-        <p>Pero hey, al menos tenés esto mientras esperás...</p>
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
       </div>
     );
   }

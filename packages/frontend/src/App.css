@@ -43,7 +43,7 @@
     0 0 20px crimson;
   text-align: center;
   animation:
-    shake 0.3s infinite steps(20),
+    shake 0.7s infinite steps(20),
     aparecer 2s forwards 3s;
 }
 @keyframes shake {
