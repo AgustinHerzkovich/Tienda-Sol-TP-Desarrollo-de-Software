@@ -6,6 +6,7 @@ import {
   usuarioPatchSchema,
 } from '../schemas/zodSchemas/usuarioSchema.js';
 import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
+import { direccionSchema } from '../schemas/zodSchemas/direccionSchema.js'
 
 const usuarioPath = '/usuarios';
 
@@ -45,6 +46,15 @@ export default function usuarioRoutes(getController) {
       await usuarioController.actualizar(req, res, next);
     }
   );
+
+  router.get(usuarioPath + '/:id/direcciones', async (req, res, next) => {
+    await usuarioController.getDirecciones(req, res, next);
+  });
+  
+  router.post(usuarioPath + '/:id/direcciones', validateSchema(direccionSchema, 'body'),
+  async (req, res, next) => {
+    await usuarioController.postDireccion(req, res, next);
+  });
 
   return router;
 }
