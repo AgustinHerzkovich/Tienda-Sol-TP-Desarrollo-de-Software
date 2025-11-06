@@ -6,6 +6,7 @@ export default class Usuario {
   tipo;
   fechaAlta;
   password;
+  direcciones;
 
   constructor(nombre, email, telefono, tipo) {
     this.nombre = nombre;
@@ -13,5 +14,10 @@ export default class Usuario {
     this.telefono = telefono;
     this.tipo = tipo;
     this.fechaAlta = Date.now();
+    this.direcciones = [];
+  }
+
+  agregarDireccion(direccionEntrega){
+    this.direcciones.push(direccionEntrega)
   }
 }

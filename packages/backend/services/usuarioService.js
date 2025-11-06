@@ -5,6 +5,7 @@ import PasswordRequiredError from '../error/passwordRequiredError.js';
 import bcrypt from 'bcrypt';
 import Usuario from '../models/usuario.js';
 import { TipoUsuario } from '../models/tipoUsuario.js';
+import  DireccionEntrega  from '../models/direccionEntrega.js'
 
 export default class UsuarioService {
   constructor(usuarioRepository) {
@@ -137,4 +138,28 @@ export default class UsuarioService {
     usuario = await this.usuarioRepository.update(usuarioId, actualizaciones);
     return this.toDTO(usuario);
   }
+
+  async getDirecciones(idUsuario){
+    const usuario = await this.usuarioRepository.findById(idUsuario);
+    return usuario.direcciones
+  }
+  async agregarDireccion(idUsuario, direccionJson){
+    const direccion = new DireccionEntrega(
+    direccionJson.calle,
+    direccionJson.altura,
+    direccionJson.piso,
+    direccionJson.departamento,
+    direccionJson.codigoPostal,
+    direccionJson.ciudad,
+    direccionJson.provincia,
+    direccionJson.pais,
+    direccionJson.lat,
+    direccionJson.lon)
+    const usuario = await this.usuarioRepository.findById(idUsuario);
+    usuario.agregarDireccion(direccion);
+    await this.usuarioRepository.update(idUsuario, usuario)
+    return direccion;
+  }
+
+
 }

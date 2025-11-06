@@ -3,6 +3,19 @@ import Usuario from '../../models/usuario.js';
 import { TipoUsuario } from '../../models/tipoUsuario.js';
 import bcrypt from 'bcrypt';
 
+const DireccionSchema = new mongoose.Schema({
+  calle: { type: String, required: true },
+  altura: { type: String, required: true },
+  piso: { type: String, required: true },
+  departamento: { type: String, required: true },
+  codigoPostal: { type: String, required: true },
+  ciudad: { type: String, required: true },
+  provincia: { type: String, required: true },
+  pais: { type: String, required: true },
+  lat: { type: String, required: true },
+  lon: { type: String, required: true },
+});
+
 const UsuarioSchema = new mongoose.Schema(
   {
     nombre: {
@@ -34,6 +47,7 @@ const UsuarioSchema = new mongoose.Schema(
       type: Date,
       require: true,
     },
+    direcciones:[DireccionSchema]
   },
   {
     timestamps: true,
