@@ -16,7 +16,9 @@ export function ToastProvider({ children }) {
     const id = Date.now();
     // si ya hay una toast igual que no está saliendo, no crear otra
     setToasts((prev) => {
-      const exists = prev.some(t => t.message === message && t.type === type && !t.isExiting);
+      const exists = prev.some(
+        (t) => t.message === message && t.type === type && !t.isExiting
+      );
       if (exists) return prev;
       const id = Date.now();
       return [...prev, { id, message, type, isExiting: false }];

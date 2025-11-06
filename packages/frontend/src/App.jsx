@@ -40,7 +40,10 @@ export default function App() {
             favor, intentá recargar la página en unos minutos.
           </p>
           <div className="server-actions">
-            <button className="btn-retry" onClick={() => window.location.reload()}>
+            <button
+              className="btn-retry"
+              onClick={() => window.location.reload()}
+            >
               Reintentar
             </button>
           </div>
