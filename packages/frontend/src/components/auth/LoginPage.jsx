@@ -35,7 +35,7 @@ export default function LoginPage() {
 
       if (result.success) {
         showToast('¡Inicio de sesión exitoso!', 'success');
-        navigate('/');
+        navigate(-1);
       } else {
         showToast(result.error, 'error');
       }

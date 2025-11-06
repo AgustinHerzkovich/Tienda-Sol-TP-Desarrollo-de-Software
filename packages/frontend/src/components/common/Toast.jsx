@@ -14,7 +14,13 @@ export function ToastProvider({ children }) {
 
   const showToast = useCallback((message, type = 'info', duration = 8000) => {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type, isExiting: false }]);
+    // si ya hay una toast igual que no está saliendo, no crear otra
+    setToasts((prev) => {
+      const exists = prev.some(t => t.message === message && t.type === type && !t.isExiting);
+      if (exists) return prev;
+      const id = Date.now();
+      return [...prev, { id, message, type, isExiting: false }];
+    });
 
     setTimeout(() => {
       setToasts((prev) =>

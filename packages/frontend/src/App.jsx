@@ -27,8 +27,24 @@ export default function App() {
 
   if (!message) {
     return (
-      <div className="error">
-        <p>NO ANDA EL SERVIDOR</p>
+      <div className="server-down">
+        <div className="server-down-card">
+          <img
+            src={`${process.env.PUBLIC_URL || ''}/favicon.ico`}
+            alt="Tienda Sol logo"
+            className="server-logo"
+          />
+          <h2>Servidor no disponible</h2>
+          <p>
+            Estamos teniendo problemas para conectarnos con el servidor. Por
+            favor, intentá recargar la página en unos minutos.
+          </p>
+          <div className="server-actions">
+            <button className="btn-retry" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

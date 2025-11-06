@@ -9,7 +9,21 @@ export default function ProductoCarousel() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
-  const visible = 3;
+  const [visible, setVisible] = useState(3);
+
+  useEffect(() => {
+    const calcVisible = () => {
+      const w = window.innerWidth;
+      if (w <= 768) return 1; // mobile
+      if (w <= 1024) return 2; // tablet
+      return 3; // desktop
+    };
+
+    const update = () => setVisible(calcVisible());
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -49,6 +63,13 @@ export default function ProductoCarousel() {
     // Limpiar el intervalo cuando el componente se desmonta o cambian las dependencias
     return () => clearInterval(interval);
   }, [productos.length, visible, isPaused]);
+
+  useEffect(() => {
+    const maxIndex = Math.max(0, productos.length - visible);
+    if (index > maxIndex) {
+      setIndex(maxIndex);
+    }
+  }, [productos.length, visible, index]);
 
   const siguiente = () => {
     if (index < productos.length - visible) setIndex(index + 1);

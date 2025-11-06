@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Searchbar.css';
 
-export default function Searchbar() {
+/**
+ * Searchbar component
+ * @param {{onSearch?: ()=>void}} props - optional onSearch callback called after submitting search
+ */
+export default function Searchbar({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -10,6 +14,7 @@ export default function Searchbar() {
     e.preventDefault();
     if (e.key && e.key !== 'Enter') return;
     navigate(`/productos?query=${searchTerm}`);
+    if (typeof onSearch === 'function') onSearch();
   };
 
   const handleInputChange = (e) => {

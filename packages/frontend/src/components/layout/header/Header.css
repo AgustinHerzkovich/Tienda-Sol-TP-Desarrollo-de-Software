@@ -30,3 +30,40 @@
     background-position: 0% 50%;
   }
 }
+
+@media (max-width: 900px) {
+  .header {
+    padding: 0 20px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 12px;
+    height: 56px;
+    align-items: center;
+  }
+
+  .searchbar {
+    display: none !important;
+  }
+
+  .rightmenu-container {
+    margin-left: auto;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  .logo-icon {
+    width: 34px;
+    height: 34px;
+  }
+  .logo-title {
+    font-size: 1.2rem;
+  }
+  .logo-subtitle {
+    display: none;
+  }
+}

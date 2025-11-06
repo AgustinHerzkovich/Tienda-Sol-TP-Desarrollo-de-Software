@@ -67,3 +67,21 @@
   font-family: 'Cinzel', serif;
   text-transform: uppercase;
 }
+
+@media (max-width: 768px) {
+  .logo-container {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    padding: 6px 8px;
+  }
+
+  .logo-content {
+    gap: 8px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+}

@@ -47,7 +47,7 @@ export default function RegisterPage() {
 
       if (result.success) {
         showToast('¡Registro exitoso! Bienvenido', 'success');
-        navigate('/');
+        navigate(-1);
       } else {
         showToast(result.error, 'error');
       }

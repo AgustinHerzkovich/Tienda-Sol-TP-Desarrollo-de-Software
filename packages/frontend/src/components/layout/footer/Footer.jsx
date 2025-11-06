@@ -25,20 +25,6 @@ export default function Footer() {
               Tu tienda online de confianza. Encuentra los mejores productos con
               la calidad y el servicio que mereces.
             </p>
-            <div className="footer-social">
-              <button className="social-link" aria-label="Facebook">
-                📘
-              </button>
-              <button className="social-link" aria-label="Instagram">
-                📷
-              </button>
-              <button className="social-link" aria-label="Twitter">
-                🐦
-              </button>
-              <button className="social-link" aria-label="YouTube">
-                📺
-              </button>
-            </div>
           </div>
 
           {/* Información de contacto */}
@@ -91,28 +77,6 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Enlaces útiles */}
-          <div className="footer-section">
-            <h2 className="footer-title">Enlaces Útiles</h2>
-            <ul className="footer-links">
-              <li>
-                <button className="footer-link">Sobre Nosotros</button>
-              </li>
-              <li>
-                <button className="footer-link">Términos y Condiciones</button>
-              </li>
-              <li>
-                <button className="footer-link">Política de Privacidad</button>
-              </li>
-              <li>
-                <button className="footer-link">Preguntas Frecuentes</button>
-              </li>
-              <li>
-                <button className="footer-link">Centro de Ayuda</button>
-              </li>
-            </ul>
           </div>
         </div>
 

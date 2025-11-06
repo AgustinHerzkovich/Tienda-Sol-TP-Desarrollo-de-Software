@@ -68,3 +68,48 @@
     opacity: 1;
   }
 }
+
+.server-down {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.server-down-card {
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(34, 34, 59, 0.08);
+  max-width: 420px;
+}
+.server-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+.server-down-card h2 {
+  margin: 8px 0 6px;
+  font-size: 1.25rem;
+  color: #22223b;
+}
+.server-down-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+.btn-retry {
+  background: var(--primary-purple);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-retry:hover {
+  opacity: 0.95;
+}
