@@ -10,6 +10,7 @@ export default class Producto {
   stock;
   fotos;
   activo;
+  cantidadVentas;
 
   constructor(
     vendedor,
@@ -40,7 +41,7 @@ export default class Producto {
 
   reducirStock(cantidad) {
     if (!this.estaDisponible(cantidad)) {
-      throw new ProductoOutOfStockError(this.id, cantidad); // TODO: Crear error custom
+      throw new ProductoOutOfStockError(this.id, cantidad);
     }
     this.stock -= cantidad;
   }

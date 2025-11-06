@@ -56,12 +56,21 @@ const productoSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    cantidadVentas: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
     collection: 'productos',
   }
 );
+
+productoSchema.pre(/^find/, function (next) {
+  this.populate('vendedor', 'nombre email');
+  next();
+});
 
 productoSchema.loadClass(Producto);
 

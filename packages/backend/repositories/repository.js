@@ -15,4 +15,8 @@ export default class Repository {
   async findById(id) {
     return await this.model.findById(id);
   }
+
+  async find(filter = {}) {
+    return await this.model.find(filter);
+  }
 }

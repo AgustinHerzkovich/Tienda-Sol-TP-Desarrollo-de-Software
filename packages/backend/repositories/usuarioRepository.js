@@ -5,4 +5,8 @@ export default class UsuarioRepository extends Repository {
   constructor() {
     super(UsuarioModel);
   }
+
+  async findByEmail(email) {
+    return this.model.findOne({ email });
+  }
 }

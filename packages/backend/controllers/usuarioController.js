@@ -1,16 +1,8 @@
-import { notificacionPatchSchema } from '../schemas/zodSchemas/notificacionSchema.js';
-
 export default class UsuarioController {
-  constructor(
-    usuarioService,
-    pedidoService,
-    notificacionService,
-    productoService
-  ) {
+  constructor(usuarioService, pedidoService, notificacionService) {
     this.usuarioService = usuarioService;
     this.pedidoService = pedidoService;
     this.notificacionService = notificacionService;
-    this.productoService = productoService;
   }
 
   async pedidos(req, res, next) {
@@ -21,47 +13,6 @@ export default class UsuarioController {
       await this.usuarioService.findById(id);
       const pedidos = await this.pedidoService.pedidosByUser(id);
       res.status(200).json(pedidos);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async productos(req, res, next) {
-    const id = req.params.id;
-    // Filtros, paginación y ordenamiento desde query params
-    const {
-      titulo,
-      categoria,
-      descripcion,
-      minPrecio,
-      maxPrecio,
-      page = 1,
-      limit = 10,
-      sort = 'precio', // campo de ordenamiento (precio, ventas)
-      order = 'asc', // asc o desc
-    } = req.query;
-
-    const filtros = {
-      titulo,
-      categoria,
-      descripcion,
-      minPrecio,
-      maxPrecio,
-      sort,
-      order,
-    };
-
-    try {
-      await this.usuarioService.findById(id);
-      const productos = await this.productoService.findByVendedorId(
-        id,
-        filtros,
-        {
-          page: Number(page),
-          limit: Number(limit),
-        }
-      );
-      res.status(200).json(productos);
     } catch (err) {
       next(err);
     }
@@ -87,6 +38,31 @@ export default class UsuarioController {
     try {
       const usuario = await this.usuarioService.crear(req.validatedData);
       res.status(201).json(usuario);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async obtener(req, res, next) {
+    const { email, password } = req.query;
+
+    try {
+      const usuarios = await this.usuarioService.find(email, password);
+      res.status(200).json(usuarios);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async actualizar(req, res, next) {
+    const usuarioId = req.params.id;
+    const usuarioData = req.validatedData;
+    try {
+      const usuarioActualizado = await this.usuarioService.actualizar(
+        usuarioId,
+        usuarioData
+      );
+      res.status(200).json(usuarioActualizado);
     } catch (err) {
       next(err);
     }

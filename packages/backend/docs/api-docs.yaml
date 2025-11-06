@@ -94,6 +94,64 @@ paths:
 
   # Usuarios
   /usuarios:
+    get:
+      summary: Obtener usuarios, buscar por email o login
+      description: |
+        - Sin parámetros: Lista todos los usuarios del sistema.
+        - Con email (sin password): Devuelve el usuario específico sin validar contraseña (útil para recuperación de contraseña).
+        - Con email y password: Valida las credenciales y devuelve el usuario específico (login).
+      tags:
+        - Usuarios
+      parameters:
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+            format: email
+          description: Correo electrónico del usuario
+        - in: query
+          name: password
+          required: false
+          schema:
+            type: string
+            format: password
+          description: Contraseña del usuario. Opcional - si se omite, solo busca por email sin validar contraseña
+      responses:
+        '200':
+          description: Lista de usuarios (sin parámetros) o usuario específico (con email)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Usuario'
+                    description: Array de usuarios cuando no se proporcionan parámetros
+                  - $ref: '#/components/schemas/Usuario'
+                    description: Usuario específico cuando se proporciona email
+        '400':
+          description: Formato inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Contraseña incorrecta (cuando se proporciona email y password)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Contraseña incorrecta'
+        '404':
+          description: Usuario con el email especificado no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Usuario con email: usuario@ejemplo.com no encontrado'
     post:
       summary: Crear un nuevo usuario
       description: Registra un nuevo usuario en el sistema
@@ -149,87 +207,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /usuarios/{id}/productos:
-    get:
-      summary: Obtener productos de un vendedor
-      description: Lista los productos de un vendedor con filtros, paginación y ordenamiento
-      tags:
-        - Usuarios
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-            pattern: '^[a-f0-9]{24}$'
-          description: ID único del usuario vendedor
-        - in: query
-          name: titulo
-          schema:
-            type: string
-          description: Filtrar por título del producto
-        - in: query
-          name: categoria
-          schema:
-            type: string
-          description: Filtrar por categoría
-        - in: query
-          name: descripcion
-          schema:
-            type: string
-          description: Filtrar por descripción
-        - in: query
-          name: minPrecio
-          schema:
-            type: number
-          description: Precio mínimo
-        - in: query
-          name: maxPrecio
-          schema:
-            type: number
-          description: Precio máximo
-        - in: query
-          name: page
-          schema:
-            type: integer
-            default: 1
-          description: Número de página
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 10
-          description: Cantidad de elementos por página
-        - in: query
-          name: sort
-          schema:
-            type: string
-            enum: [precio, ventas]
-            default: precio
-          description: Campo para ordenar
-        - in: query
-          name: order
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: asc
-          description: Orden ascendente o descendente
-      responses:
-        '200':
-          description: Lista de productos del vendedor
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Producto'
-        '404':
-          description: Usuario no encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
   /usuarios/{id}/notificaciones:
     get:
       summary: Obtener notificaciones de un usuario
@@ -265,8 +242,180 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /usuarios/{id}:
+    patch:
+      summary: Actualizar datos de un usuario
+      description: Permite actualizar nombre, teléfono y/o contraseña de un usuario existente. Todos los campos son opcionales.
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  minLength: 1
+                  description: Nombre completo del usuario
+                  example: 'Juan Pérez Actualizado'
+                telefono:
+                  type: string
+                  minLength: 1
+                  description: Número de teléfono del usuario
+                  example: '1234567890'
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 64
+                  description: |
+                    Nueva contraseña del usuario. Debe cumplir:
+                    - Mínimo 8 caracteres
+                    - Al menos una letra minúscula
+                    - Al menos una letra mayúscula
+                    - Al menos un número
+                    - Al menos un carácter especial (@$!%*?&_.-)
+                  example: 'NuevaPass123!'
+              description: Al menos uno de los campos debe ser proporcionado
+            examples:
+              actualizarNombre:
+                summary: Actualizar solo nombre
+                value:
+                  nombre: 'Juan Pérez Actualizado'
+              actualizarPassword:
+                summary: Actualizar solo contraseña
+                value:
+                  password: 'NuevaPass123!'
+              actualizarVarios:
+                summary: Actualizar nombre y teléfono
+                value:
+                  nombre: 'Juan Pérez'
+                  telefono: '9876543210'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Datos de actualización inválidos o formato incorrecto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                passwordDebil:
+                  summary: Contraseña no cumple requisitos
+                  value:
+                    message: 'La contraseña debe tener al menos 8 caracteres'
+                emailEnUso:
+                  summary: Email ya existe (si se permite actualizar email en futuro)
+                  value:
+                    message: 'El email ya está en uso por otro usuario'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Usuario con id: 507f1f77bcf86cd799439011 no encontrado'
+
   # Productos
   /productos:
+    get:
+      summary: Obtener productos
+      description: Lista todos los productos con filtros opcionales, paginación y ordenamiento
+      tags:
+        - Productos
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Búsqueda de texto libre en título, descripción y categorías (búsqueda global con OR)
+        - in: query
+          name: titulo
+          schema:
+            type: string
+          description: Filtrar por título del producto (búsqueda exacta/parcial)
+        - in: query
+          name: categoria
+          schema:
+            type: string
+          description: Filtrar por categoría
+        - in: query
+          name: descripcion
+          schema:
+            type: string
+          description: Filtrar por descripción
+        - in: query
+          name: minPrecio
+          schema:
+            type: number
+          description: Precio mínimo
+        - in: query
+          name: maxPrecio
+          schema:
+            type: number
+          description: Precio máximo
+        - in: query
+          name: vendedorId
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: Filtrar por ID del vendedor
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Número de página
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Cantidad de elementos por página
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [precio, ventas]
+            default: precio
+          description: Campo para ordenar
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+          description: Orden ascendente o descendente
+      responses:
+        '200':
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        '400':
+          description: Error en los parámetros de consulta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Crear un nuevo producto
       description: Registra un nuevo producto en el sistema
@@ -287,6 +436,34 @@ paths:
                 $ref: '#/components/schemas/Producto'
         '400':
           description: Error en los datos del producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /productos/{id}:
+    get:
+      summary: Obtener producto por ID
+      description: Obtiene los detalles de un producto específico por su ID
+      tags:
+        - Productos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del producto
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          description: Producto no encontrado
           content:
             application/json:
               schema:
@@ -431,6 +608,7 @@ components:
         - email
         - telefono
         - tipo
+        - password
       properties:
         nombre:
           type: string
@@ -446,6 +624,11 @@ components:
           description: Número de teléfono del usuario
         tipo:
           $ref: '#/components/schemas/TipoUsuario'
+        password:
+          type: string
+          format: password
+          minLength: 6
+          description: Contraseña del usuario (mínimo 6 caracteres)
 
     ProductoCreateRequest:
       type: object

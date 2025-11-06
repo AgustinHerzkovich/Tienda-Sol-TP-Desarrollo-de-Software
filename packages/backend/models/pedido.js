@@ -1,7 +1,7 @@
 import CambioEstadoPedido from './cambioEstadoPedido.js';
 import _ from 'lodash';
 import { EstadoPedido } from './estadoPedido.js';
-
+import TasaDeCambioHelper from './tasaDeCambioHelper.js';
 export default class Pedido {
   id;
   comprador;
@@ -16,8 +16,8 @@ export default class Pedido {
   constructor(comprador, items, moneda, direccionEntrega) {
     this.comprador = comprador;
     this.items = items; // Asumimos que no va a tener dos itemsPedido para un mismo producto, en ese caso es uno solo con las cantidades sumadas
-    this.total = this.calcularTotal(); // El total no se pasa en el constructor
     this.moneda = moneda;
+    this.total = this.calcularTotal(); // El total no se pasa en el constructor
     this.direccionEntrega = direccionEntrega;
     this.estado = EstadoPedido.PENDIENTE;
     this.fechaCreacion = Date.now();
@@ -25,7 +25,13 @@ export default class Pedido {
   }
 
   calcularTotal() {
-    return _.sumBy(this.items, (item) => item.subtotal());
+    return _.sumBy(this.items, (item) =>
+      TasaDeCambioHelper.convertir(
+        item.subtotal(),
+        item.producto.moneda,
+        this.moneda
+      )
+    );
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {

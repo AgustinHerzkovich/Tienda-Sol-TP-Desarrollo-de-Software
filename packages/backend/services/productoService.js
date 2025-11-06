@@ -65,9 +65,8 @@ export default class ProductoService {
     return producto;
   }
 
-  async findByVendedorId(userId, filtros, paginacion) {
-    const resultado = await this.productoRepository.findByVendedorId(
-      userId,
+  async findAll(filtros, paginacion) {
+    const resultado = await this.productoRepository.findAll(
       filtros,
       paginacion
     );
@@ -85,11 +84,17 @@ export default class ProductoService {
     } else {
       producto.reducirStock(Math.abs(cantidad));
     }
-    await this.productoRepository.update(producto.id, producto);
+    // Solo actualizar el campo stock
+    await this.productoRepository.update(producto.id, {
+      stock: producto.stock,
+    });
   }
 
   async aumentarVentas(producto, cantidad) {
     producto.aumentarVentas(cantidad);
-    await this.productoRepository.update(producto.id, producto);
+    // Solo actualizar el campo cantidadVentas
+    await this.productoRepository.update(producto.id, {
+      cantidadVentas: producto.cantidadVentas,
+    });
   }
 }

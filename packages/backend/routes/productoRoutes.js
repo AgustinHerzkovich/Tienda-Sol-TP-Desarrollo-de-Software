@@ -17,5 +17,13 @@ export default function productoRoutes(getController) {
     }
   );
 
+  router.get(`${productoPath}/:id`, async (req, res, next) => {
+    await productoController.obtenerPorId(req, res, next);
+  });
+
+  router.get(`${productoPath}`, async (req, res, next) => {
+    await productoController.obtenerTodos(req, res, next);
+  });
+
   return router;
 }

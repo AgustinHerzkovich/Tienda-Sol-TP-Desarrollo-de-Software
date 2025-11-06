@@ -28,11 +28,88 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.error {
+  opacity: 0;
+  color: red;
+  font-weight: bold;
+  font-size: 2.5em;
+  background-color: black;
+  border: 3px solid red;
+  padding: 10px;
+  text-transform: uppercase;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  box-shadow:
+    0 0 10px red,
+    0 0 20px crimson;
+  text-align: center;
+  animation:
+    shake 0.7s infinite steps(20),
+    aparecer 2s forwards 3s;
+}
+@keyframes shake {
+  0% {
+    transform: translateX(0);
   }
+  25% {
+    transform: translateX(-20px);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+  75% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes aparecer {
   to {
-    transform: rotate(360deg);
+    opacity: 1;
   }
+}
+
+.server-down {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.server-down-card {
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(34, 34, 59, 0.08);
+  max-width: 420px;
+}
+.server-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+.server-down-card h2 {
+  margin: 8px 0 6px;
+  font-size: 1.25rem;
+  color: #22223b;
+}
+.server-down-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+.btn-retry {
+  background: var(--primary-purple);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-retry:hover {
+  opacity: 0.95;
 }

@@ -30,7 +30,7 @@ describe('Tests unitarios de productoService', () => {
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
-      findByVendedorId: jest.fn(),
+      findAll: jest.fn(),
     };
 
     mockUsuarioService = {
@@ -166,45 +166,65 @@ describe('Tests unitarios de productoService', () => {
     });
   });
 
-  describe('findByVendedorId', () => {
-    const vendedorId = 1;
+  describe('findAll', () => {
     const mockProductos = [
       { id: 1, titulo: 'Producto 1', precio: 100, cantidadVendida: 10 },
       { id: 2, titulo: 'Producto 2', precio: 200, cantidadVendida: 5 },
+      { id: 3, titulo: 'Producto 3', precio: 150, cantidadVendida: 15 },
     ];
     const mockPagination = {
       currentPage: 1,
       totalPages: 1,
-      totalItems: 2,
+      totalItems: 3,
       itemsPerPage: 10,
     };
 
-    test('busca productos sin filtros y retorna estructura con productos y paginación', async () => {
+    beforeEach(() => {
+      mockProductoRepository.findAll = jest.fn();
+    });
+
+    test('busca todos los productos sin filtros y retorna estructura con productos y paginación', async () => {
       const mockResponse = {
         productos: mockProductos,
         pagination: mockPagination,
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        {},
-        {}
-      );
+      const resultado = await productoService.findAll({}, {});
 
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
-        {},
-        {}
-      );
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith({}, {});
       expect(resultado).toHaveProperty('productos');
       expect(resultado).toHaveProperty('pagination');
-      expect(resultado.productos).toHaveLength(2);
+      expect(resultado.productos).toHaveLength(3);
       expect(resultado.pagination).toEqual(mockPagination);
     });
 
-    test('aplica filtros de búsqueda por título', async () => {
+    test('filtra productos por vendedorId específico', async () => {
+      const filtros = {
+        vendedorId: '507f1f77bcf86cd799439011',
+        sort: 'precio',
+        order: 'asc',
+      };
+      const paginacion = { page: 1, limit: 10 };
+
+      const mockResponse = {
+        productos: [mockProductos[0]],
+        pagination: { ...mockPagination, totalItems: 1 },
+      };
+
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
+
+      const resultado = await productoService.findAll(filtros, paginacion);
+
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(
+        filtros,
+        paginacion
+      );
+      expect(resultado.productos).toHaveLength(1);
+    });
+
+    test('aplica filtros de búsqueda por título sin vendedor específico', async () => {
       const filtros = {
         titulo: 'iPhone',
         sort: 'precio',
@@ -217,73 +237,76 @@ describe('Tests unitarios de productoService', () => {
         pagination: { ...mockPagination, totalItems: 1 },
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        filtros,
-        paginacion
-      );
+      const resultado = await productoService.findAll(filtros, paginacion);
 
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(
         filtros,
         paginacion
       );
       expect(resultado.productos).toHaveLength(1);
     });
 
-    test('aplica filtros de categoría', async () => {
+    test('aplica múltiples filtros combinados incluyendo vendedorId', async () => {
       const filtros = {
-        categoria: 'Tecnología',
+        vendedorId: '507f1f77bcf86cd799439011',
+        titulo: 'Smart',
+        categoria: 'Electrodomésticos',
+        descripcion: 'TV',
+        minPrecio: 100,
+        maxPrecio: 500,
         sort: 'precio',
         order: 'desc',
       };
-      const paginacion = { page: 1, limit: 5 };
+      const paginacion = { page: 1, limit: 20 };
 
       const mockResponse = {
-        productos: mockProductos,
-        pagination: { ...mockPagination, itemsPerPage: 5 },
+        productos: [mockProductos[1]],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 20,
+        },
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      await productoService.findByVendedorId(vendedorId, filtros, paginacion);
+      const resultado = await productoService.findAll(filtros, paginacion);
 
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(
         filtros,
         paginacion
       );
+      expect(resultado.productos).toHaveLength(1);
+      expect(resultado.pagination.totalItems).toBe(1);
     });
 
-    test('aplica filtros de rango de precios', async () => {
-      const filtros = {
-        minPrecio: 50,
-        maxPrecio: 150,
-        sort: 'precio',
-        order: 'asc',
-      };
+    test('aplica paginación correctamente', async () => {
+      const filtros = {};
+      const paginacion = { page: 2, limit: 5 };
 
       const mockResponse = {
-        productos: [mockProductos[0]], // Solo el de precio 100
-        pagination: { ...mockPagination, totalItems: 1 },
+        productos: mockProductos.slice(0, 2), // Simula página 2
+        pagination: {
+          currentPage: 2,
+          totalPages: 3,
+          totalItems: 12,
+          itemsPerPage: 5,
+        },
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        filtros,
-        {}
-      );
+      const resultado = await productoService.findAll(filtros, paginacion);
 
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(
         filtros,
-        {}
+        paginacion
       );
-      expect(resultado.productos).toHaveLength(1);
+      expect(resultado.pagination.currentPage).toBe(2);
+      expect(resultado.pagination.itemsPerPage).toBe(5);
     });
 
     test('aplica ordenamiento por ventas descendente', async () => {
@@ -293,89 +316,15 @@ describe('Tests unitarios de productoService', () => {
       };
 
       const mockResponse = {
-        productos: [mockProductos[0], mockProductos[1]], // Ordenados por ventas desc
+        productos: [mockProductos[2], mockProductos[0], mockProductos[1]], // Ordenados por ventas desc (15, 10, 5)
         pagination: mockPagination,
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      await productoService.findByVendedorId(vendedorId, filtros, {});
+      await productoService.findAll(filtros, {});
 
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
-        filtros,
-        {}
-      );
-    });
-
-    test('aplica paginación correctamente', async () => {
-      const filtros = {};
-      const paginacion = { page: 2, limit: 5 };
-
-      const mockResponse = {
-        productos: mockProductos,
-        pagination: {
-          currentPage: 2,
-          totalPages: 3,
-          totalItems: 12,
-          itemsPerPage: 5,
-        },
-      };
-
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
-
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        filtros,
-        paginacion
-      );
-
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
-        filtros,
-        paginacion
-      );
-      expect(resultado.pagination.currentPage).toBe(2);
-      expect(resultado.pagination.itemsPerPage).toBe(5);
-    });
-
-    test('aplica múltiples filtros combinados', async () => {
-      const filtros = {
-        titulo: 'Smart',
-        categoria: 'Electrodomésticos',
-        descripcion: 'TV',
-        minPrecio: 100000,
-        maxPrecio: 500000,
-        sort: 'precio',
-        order: 'desc',
-      };
-      const paginacion = { page: 1, limit: 20 };
-
-      const mockResponse = {
-        productos: [mockProductos[1]], // Solo uno cumple todos los filtros
-        pagination: {
-          currentPage: 1,
-          totalPages: 1,
-          totalItems: 1,
-          itemsPerPage: 20,
-        },
-      };
-
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
-
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        filtros,
-        paginacion
-      );
-
-      expect(mockProductoRepository.findByVendedorId).toHaveBeenCalledWith(
-        vendedorId,
-        filtros,
-        paginacion
-      );
-      expect(resultado.productos).toHaveLength(1);
-      expect(resultado.pagination.totalItems).toBe(1);
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(filtros, {});
     });
 
     test('retorna array vacío cuando no hay productos', async () => {
@@ -389,13 +338,9 @@ describe('Tests unitarios de productoService', () => {
         },
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
-      const resultado = await productoService.findByVendedorId(
-        vendedorId,
-        {},
-        {}
-      );
+      const resultado = await productoService.findAll({}, {});
 
       expect(resultado.productos).toHaveLength(0);
       expect(resultado.pagination.totalItems).toBe(0);
@@ -407,18 +352,43 @@ describe('Tests unitarios de productoService', () => {
         pagination: mockPagination,
       };
 
-      mockProductoRepository.findByVendedorId.mockResolvedValue(mockResponse);
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
 
       // Spy en toDTO para verificar que se llama
       const toDTOSpy = jest.spyOn(productoService, 'toDTO');
 
-      await productoService.findByVendedorId(vendedorId, {}, {});
+      await productoService.findAll({}, {});
 
-      expect(toDTOSpy).toHaveBeenCalledTimes(2); // Una vez por cada producto
+      expect(toDTOSpy).toHaveBeenCalledTimes(3); // Una vez por cada producto
       expect(toDTOSpy).toHaveBeenCalledWith(mockProductos[0]);
       expect(toDTOSpy).toHaveBeenCalledWith(mockProductos[1]);
+      expect(toDTOSpy).toHaveBeenCalledWith(mockProductos[2]);
 
       toDTOSpy.mockRestore();
+    });
+
+    test('funciona sin filtro de vendedor para obtener productos de todos los vendedores', async () => {
+      const filtros = {
+        categoria: 'Tecnología',
+        minPrecio: 100,
+        sort: 'precio',
+        order: 'asc',
+        // Sin vendedorId - busca en todos los vendedores
+      };
+
+      const mockResponse = {
+        productos: mockProductos,
+        pagination: mockPagination,
+      };
+
+      mockProductoRepository.findAll.mockResolvedValue(mockResponse);
+
+      const resultado = await productoService.findAll(filtros, {});
+
+      expect(mockProductoRepository.findAll).toHaveBeenCalledWith(filtros, {});
+      expect(resultado.productos).toHaveLength(3);
+      // Verificar que no se pasó vendedorId en los filtros
+      expect(filtros.vendedorId).toBeUndefined();
     });
   });
 });

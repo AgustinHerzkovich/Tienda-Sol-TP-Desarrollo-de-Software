@@ -43,7 +43,8 @@ export default class PedidoService {
 
     // Traer el comprador
     const comprador = await this.getComprador(pedidoJSON.compradorId);
-    if (comprador == null) {// deberia estar en el getComprador
+    if (comprador == null) {
+      // deberia estar en el getComprador
       throw new Error('El comprador no existe para este producto!');
     }
 
@@ -99,11 +100,11 @@ export default class PedidoService {
     ];
     const nuevoEstadoString = pedidoModificadoJSON.estado;
     const nuevoEstado = Object.values(EstadoPedido).find(
-      (e) => e.valor === nuevoEstadoString.valor
+      (e) => e.valor === nuevoEstadoString
     );
 
     if (nuevoEstado === EstadoPedido.CANCELADO) {
-      if (estadosIncancelables.includes(estadoActual.valor)) {
+      if (estadosIncancelables.includes(estadoActual)) {
         // No se puede cancelar un pedido si ya fue enviado o entregado
         throw new CancellationError(pedidoAlmacenado.id, estadoActual);
       }
@@ -146,7 +147,13 @@ export default class PedidoService {
   }
 
   async pedidosByUser(usuarioId) {
-    const pedidos = await this.pedidoRepository.findByUserId(usuarioId);
+    const usuario = await this.usuarioService.findById(usuarioId);
+    let pedidos;
+    if (usuario.tipo === TipoUsuario.COMPRADOR) {
+      pedidos = await this.pedidoRepository.findByCompradorId(usuarioId);
+    } else {
+      pedidos = await this.pedidoRepository.findByVendedorId(usuarioId);
+    }
     return pedidos.map((pedido) => this.toDTO(pedido));
   }
 
