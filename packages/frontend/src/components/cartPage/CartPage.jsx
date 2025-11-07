@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes } from 'react-icons/fa';
+import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes, FaSave } from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
@@ -10,14 +10,37 @@ import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
 import { useToast } from '../common/Toast';
+import axios from 'axios'
 
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
   const { obtenerSimboloMoneda, calcularTotal, formatearPrecio } =
-    useCurrency();
+  useCurrency();
   const { user } = useSession();
   const navigate = useNavigate();
   const { showToast } = useToast();
+  
+  const direccionesEndpoint = process.env.REACT_APP_API_URL + `/usuarios/${user?.id}/direcciones`;
+  const [direccionesUsuario, setDireccionesUsuario] = useState([])
+
+  useEffect(() => {
+    if (!user.id) return;
+    axios.get(direccionesEndpoint).then((res) => {
+      setDireccionesUsuario(res.data);
+    });
+  }, []);
+
+  const handleGuardarDireccion = async () => {
+    try {
+      const res = await axios.post(direccionesEndpoint, direccionEntrega);
+      setDireccionesUsuario((prev) => [...prev, res.data]);
+      showToast('Dirección guardada correctamente', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Error al guardar la dirección', 'info');
+    }
+  };
+
 
   useEffect(() => {
     const shouldRedirect = user == null;
@@ -262,6 +285,7 @@ export default function CartPage() {
           aria-labelledby="modal-title-direccion"
         >
           <div className="modal-content">
+            
             <div className="modal-header">
               <h2 id="modal-title-direccion">Dirección de Entrega</h2>
               <button
@@ -272,7 +296,24 @@ export default function CartPage() {
                 <FaTimes />
               </button>
             </div>
-
+            {/* Desplegable de direcciones existentes */}
+            <div className="form-group">
+              <label htmlFor="direccionesGuardadas">Direcciones guardadas</label>
+              <select
+                id="direccionesGuardadas"
+                onChange={(e) => {  // Setea la direccion por su _id
+                  const dir = direccionesUsuario.find((d) => d._id === e.target.value);
+                  if (dir) setDireccionEntrega(dir);
+                }}
+              >
+                <option value="">-- Selecciona una dirección --</option>
+                {direccionesUsuario.map((d) => (  // Mapea todas las direcciones por _id
+                  <option key={d._id} value={d._id}>
+                    {`${d.calle} ${d.altura}, ${d.ciudad}`}
+                  </option>
+                ))}
+              </select>
+            </div>
             <form onSubmit={handleConfirmarCompra} className="direccion-form">
               <div className="form-row">
                 <div className="form-group">
@@ -419,6 +460,13 @@ export default function CartPage() {
                 <button type="submit" className="btn-confirmar">
                   <FaCreditCard />
                   Confirmar Compra
+                </button>
+                <button
+                  type="button" 
+                  onClick={handleGuardarDireccion} // Hace un post de la direccion y agrega a la lista
+                  className="btn-guardar"
+                  >
+                  <FaSave /> Guardar Dirección
                 </button>
               </div>
             </form>
