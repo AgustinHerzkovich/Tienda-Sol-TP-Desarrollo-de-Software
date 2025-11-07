@@ -517,6 +517,7 @@
 .btn-confirmar:hover {
   background: var(--hover-purple);
   transform: translateY(-2px);
+  color: var(--primary-purple);
   box-shadow: 0 4px 12px rgba(128, 0, 128, 0.3);
 }
 
@@ -540,7 +541,6 @@
     flex-direction: column;
   }
 }
-
 .lista-direcciones {
   list-style: none;
   padding: 0;
@@ -556,6 +556,12 @@
   border-radius: 6px;
   margin-bottom: 5px;
   background-color: #f9f9f9;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.direccion-item:hover {
+  background-color: #eef6ff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
 
 .direccion-boton {
@@ -565,10 +571,16 @@
   text-align: left;
   cursor: pointer;
   flex: 1;
+  padding: 6px 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.direccion-boton:hover {
-  text-decoration: underline;
+
+.direccion-boton:active {
+  background-color: #007bff33;
+  color: #0056b3;
+  border-radius: 6px;
 }
 
 .btn-eliminar {
@@ -576,9 +588,12 @@
   border: none;
   color: #cc0000;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1.2em;
+  position: relative;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .btn-eliminar:hover {
   color: #ff3333;
+  transform: translateY(-3px) rotate(-8deg);
 }

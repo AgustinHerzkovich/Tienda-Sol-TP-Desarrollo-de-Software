@@ -34,10 +34,10 @@ export default function CartPage() {
     try {
       const res = await axios.post(direccionesEndpoint, direccionEntrega);
       setDireccionesUsuario((prev) => [...prev, res.data]);
-      showToast('Dirección guardada correctamente', 'success');
+      showToast('Dirección guardada', 'success');
     } catch (err) {
       console.error(err);
-      showToast('Error al guardar la dirección', 'info');
+      showToast('Error al guardar la dirección', 'error');
     }
   };
 
@@ -314,22 +314,20 @@ export default function CartPage() {
                         {`${d.calle} ${d.altura}, ${d.ciudad}`}
                       </button>
 
-                      {/* Botón de eliminar (ícono de cruz o tacho) */}
+                      {/* Botón de eliminar*/}
                       <button
                         type="button"
                         className="btn-eliminar"
                         onClick={async () => {
                           try {
-                            // DELETE al endpoint correspondiente
                             await axios.delete(`${direccionesEndpoint}/${d._id}`);
-                            // Actualiza el estado local quitando la dirección
                             setDireccionesUsuario((prev) =>
                               prev.filter((dir) => dir._id !== d._id)
                             );
-                            showToast("Dirección eliminada correctamente", "success");
+                            showToast("Dirección eliminada", "success");
                           } catch (err) {
                             console.error(err);
-                            showToast("Error al eliminar la dirección", "info");
+                            showToast("Error al eliminar la dirección", "error");
                           }
                         }}
                         title="Eliminar dirección"
@@ -491,7 +489,7 @@ export default function CartPage() {
                 <button
                   type="button" 
                   onClick={handleGuardarDireccion} // Hace un post de la direccion y agrega a la lista
-                  className="btn-guardar"
+                  className="btn-cancelar"
                   >
                   <FaSave /> Guardar Dirección
                 </button>
