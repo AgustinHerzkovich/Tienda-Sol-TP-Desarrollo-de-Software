@@ -15,4 +15,13 @@ export default class UsuarioRepository extends Repository {
       { $pull: { direcciones: { _id: idDireccion } } }
     );
   }
+    async agregarDireccionYReturnDireccionConId(idUsuario, direccion) {
+      const usuario = await UsuarioModel.findByIdAndUpdate(
+        idUsuario,
+        { $push: { direcciones: direccion } },
+        { new: true, runValidators: true }
+      );
+      if (!usuario) throw new Error('Usuario no encontrado');
+      return usuario.direcciones.at(usuario.direcciones.length - 1);
+  }
 }

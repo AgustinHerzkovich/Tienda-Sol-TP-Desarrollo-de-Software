@@ -155,10 +155,8 @@ export default class UsuarioService {
     direccionJson.pais,
     direccionJson.lat,
     direccionJson.lon)
-    const usuario = await this.usuarioRepository.findById(idUsuario);
-    usuario.agregarDireccion(direccion);
-    await this.usuarioRepository.update(idUsuario, usuario)
-    return direccion;
+    const direccionPersistida = await this.usuarioRepository.agregarDireccionYReturnDireccionConId(idUsuario, direccion);
+    return direccionPersistida;
   }
 
   async eliminarDireccion(idUsuario, idDireccion){
