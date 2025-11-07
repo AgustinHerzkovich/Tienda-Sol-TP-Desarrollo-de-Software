@@ -296,23 +296,50 @@ export default function CartPage() {
                 <FaTimes />
               </button>
             </div>
-            {/* Desplegable de direcciones existentes */}
+            {/* Lista de direcciones existentes */}
             <div className="form-group">
-              <label htmlFor="direccionesGuardadas">Direcciones guardadas</label>
-              <select
-                id="direccionesGuardadas"
-                onChange={(e) => {  // Setea la direccion por su _id
-                  const dir = direccionesUsuario.find((d) => d._id === e.target.value);
-                  if (dir) setDireccionEntrega(dir);
-                }}
-              >
-                <option value="">-- Selecciona una dirección --</option>
-                {direccionesUsuario.map((d) => (  // Mapea todas las direcciones por _id
-                  <option key={d._id} value={d._id}>
-                    {`${d.calle} ${d.altura}, ${d.ciudad}`}
-                  </option>
-                ))}
-              </select>
+              <label>Direcciones guardadas</label>
+
+              {direccionesUsuario.length === 0 ? (
+                <p>No hay direcciones guardadas</p>
+              ) : (
+                <ul className="lista-direcciones">
+                  {direccionesUsuario.map((d) => (
+                    <li key={d._id} className="direccion-item">
+                      <button
+                        type="button"
+                        className="direccion-boton"
+                        onClick={() => setDireccionEntrega(d)} // selecciona dirección
+                      >
+                        {`${d.calle} ${d.altura}, ${d.ciudad}`}
+                      </button>
+
+                      {/* Botón de eliminar (ícono de cruz o tacho) */}
+                      <button
+                        type="button"
+                        className="btn-eliminar"
+                        onClick={async () => {
+                          try {
+                            // DELETE al endpoint correspondiente
+                            await axios.delete(`${direccionesEndpoint}/${d._id}`);
+                            // Actualiza el estado local quitando la dirección
+                            setDireccionesUsuario((prev) =>
+                              prev.filter((dir) => dir._id !== d._id)
+                            );
+                            showToast("Dirección eliminada correctamente", "success");
+                          } catch (err) {
+                            console.error(err);
+                            showToast("Error al eliminar la dirección", "info");
+                          }
+                        }}
+                        title="Eliminar dirección"
+                      >
+                        <FaTrash />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <form onSubmit={handleConfirmarCompra} className="direccion-form">
               <div className="form-row">
