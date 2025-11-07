@@ -17,7 +17,7 @@ export default class Usuario {
     this.direcciones = [];
   }
 
-  agregarDireccion(direccionEntrega){
-    this.direcciones.push(direccionEntrega)
+  agregarDireccion(direccionEntrega) {
+    this.direcciones.push(direccionEntrega);
   }
 }

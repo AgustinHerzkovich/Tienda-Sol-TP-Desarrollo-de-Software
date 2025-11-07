@@ -47,7 +47,7 @@ const UsuarioSchema = new mongoose.Schema(
       type: Date,
       require: true,
     },
-    direcciones:[DireccionSchema]
+    direcciones: [DireccionSchema],
   },
   {
     timestamps: true,

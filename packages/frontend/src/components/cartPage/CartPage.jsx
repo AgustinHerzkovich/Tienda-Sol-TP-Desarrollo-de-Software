@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes, FaSave } from 'react-icons/fa';
+import {
+  FaTrash,
+  FaShoppingCart,
+  FaCreditCard,
+  FaTimes,
+  FaSave,
+} from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
@@ -10,18 +16,19 @@ import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
 import { useToast } from '../common/Toast';
-import axios from 'axios'
+import axios from 'axios';
 
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
   const { obtenerSimboloMoneda, calcularTotal, formatearPrecio } =
-  useCurrency();
+    useCurrency();
   const { user } = useSession();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  
-  const direccionesEndpoint = process.env.REACT_APP_API_URL + `/usuarios/${user?.id}/direcciones`;
-  const [direccionesUsuario, setDireccionesUsuario] = useState([])
+
+  const direccionesEndpoint =
+    process.env.REACT_APP_API_URL + `/usuarios/${user?.id}/direcciones`;
+  const [direccionesUsuario, setDireccionesUsuario] = useState([]);
 
   useEffect(() => {
     if (!user.id) return;
@@ -40,7 +47,6 @@ export default function CartPage() {
       showToast('Error al guardar la dirección', 'error');
     }
   };
-
 
   useEffect(() => {
     const shouldRedirect = user == null;
@@ -285,7 +291,6 @@ export default function CartPage() {
           aria-labelledby="modal-title-direccion"
         >
           <div className="modal-content">
-            
             <div className="modal-header">
               <h2 id="modal-title-direccion">Dirección de Entrega</h2>
               <button
@@ -320,14 +325,19 @@ export default function CartPage() {
                         className="btn-eliminar"
                         onClick={async () => {
                           try {
-                            await axios.delete(`${direccionesEndpoint}/${d._id}`);
+                            await axios.delete(
+                              `${direccionesEndpoint}/${d._id}`
+                            );
                             setDireccionesUsuario((prev) =>
                               prev.filter((dir) => dir._id !== d._id)
                             );
-                            showToast("Dirección eliminada", "success");
+                            showToast('Dirección eliminada', 'success');
                           } catch (err) {
                             console.error(err);
-                            showToast("Error al eliminar la dirección", "error");
+                            showToast(
+                              'Error al eliminar la dirección',
+                              'error'
+                            );
                           }
                         }}
                         title="Eliminar dirección"
@@ -487,10 +497,10 @@ export default function CartPage() {
                   Confirmar Compra
                 </button>
                 <button
-                  type="button" 
+                  type="button"
                   onClick={handleGuardarDireccion} // Hace un post de la direccion y agrega a la lista
                   className="btn-cancelar"
-                  >
+                >
                   <FaSave /> Guardar Dirección
                 </button>
               </div>

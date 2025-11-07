@@ -68,7 +68,7 @@ export default class UsuarioController {
     }
   }
 
-  async getDirecciones(req, res, next){
+  async getDirecciones(req, res, next) {
     const usuarioId = req.params.id;
     try {
       const direcciones = await this.usuarioService.getDirecciones(usuarioId);
@@ -77,17 +77,20 @@ export default class UsuarioController {
       next(err);
     }
   }
-  async postDireccion(req, res, next){
+  async postDireccion(req, res, next) {
     const usuarioId = req.params.id;
     const validatedDireccion = req.validatedData;
     try {
-      const direccion = await this.usuarioService.agregarDireccion(usuarioId, validatedDireccion);
+      const direccion = await this.usuarioService.agregarDireccion(
+        usuarioId,
+        validatedDireccion
+      );
       res.status(200).json(direccion);
     } catch (err) {
       next(err);
     }
   }
-  async deleteDireccion(req, res, next){
+  async deleteDireccion(req, res, next) {
     const usuarioId = req.params.id;
     const direccionId = req.params.idDireccion;
     try {
@@ -97,5 +100,4 @@ export default class UsuarioController {
       next(err);
     }
   }
-
 }
