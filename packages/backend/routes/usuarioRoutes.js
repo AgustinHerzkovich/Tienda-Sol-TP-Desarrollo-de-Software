@@ -55,6 +55,10 @@ export default function usuarioRoutes(getController) {
   async (req, res, next) => {
     await usuarioController.postDireccion(req, res, next);
   });
+  router.delete(usuarioPath + '/:id/direcciones/:idDireccion',
+  async (req, res, next) => {
+    await usuarioController.deleteDireccion(req, res, next);
+  });
 
   return router;
 }

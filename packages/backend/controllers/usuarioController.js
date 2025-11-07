@@ -87,6 +87,15 @@ export default class UsuarioController {
       next(err);
     }
   }
-
+  async deleteDireccion(req, res, next){
+    const usuarioId = req.params.id;
+    const direccionId = req.params.idDireccion;
+    try {
+      await this.usuarioService.eliminarDireccion(usuarioId, direccionId);
+      res.status(204).json();
+    } catch (err) {
+      next(err);
+    }
+  }
 
 }

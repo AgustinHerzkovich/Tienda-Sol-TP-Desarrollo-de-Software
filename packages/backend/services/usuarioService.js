@@ -161,5 +161,8 @@ export default class UsuarioService {
     return direccion;
   }
 
-
+  async eliminarDireccion(idUsuario, idDireccion){
+    const usuario = await this.usuarioRepository.deleteDireccion(idUsuario, idDireccion);
+    return
+  }
 }
