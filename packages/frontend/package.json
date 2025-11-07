@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^15.6.0",
     "eslint-config-react-app": "^7.0.1"
   }
 }
