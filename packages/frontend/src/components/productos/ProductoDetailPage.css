@@ -105,7 +105,6 @@
   box-shadow: 0 4px 12px rgba(34, 34, 59, 0.3);
 }
 
-/* PRODUCT INFO SECTION */
 .producto-info {
   padding: 20px 0;
 }
@@ -139,52 +138,53 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
-.producto-description {
+.producto-description-long {
   margin-bottom: 30px;
 }
 
-.producto-description p {
+.producto-description-long p {
   font-size: 1.1rem;
   line-height: 1.7;
   color: #555555;
   margin: 0;
-  transition: max-height 0.3s ease;
-}
-
-.producto-description p.collapsed {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-}
-
-.producto-description p.expanded {
-  display: block;
-  overflow: visible;
+  transition: all 0.3s ease;
   white-space: pre-line;
-  -webkit-line-clamp: 999;
+}
+
+.producto-description-long p.collapsed {
+  max-height: calc(1.7em * 5);
+  overflow: hidden;
+  position: relative;
+}
+
+.producto-description-long p.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 2em;
+  background: linear-gradient(to bottom, transparent, white);
+}
+
+.producto-description-long p.expanded {
+  max-height: none;
+  overflow: visible;
 }
 
 .btn-ver-mas {
   background: none;
   border: none;
-  color: #22223b;
-  font-size: 1rem;
-  font-weight: 600;
+  color: #007bff;
   cursor: pointer;
-  padding: 8px 0;
-  margin-top: 8px;
-  text-decoration: underline;
-  transition: color 0.2s ease;
+  padding: 0;
+  margin-top: 10px;
+  font-size: 1rem;
 }
 
 .btn-ver-mas:hover {
-  color: #4a4e69;
+  text-decoration: underline;
 }
-
 .producto-price-container {
   background: linear-gradient(135deg, #22223b 0%, #4a4e69 100%);
   color: white;

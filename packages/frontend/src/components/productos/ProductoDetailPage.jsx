@@ -177,10 +177,19 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="producto-description">
-            <p style={{ whiteSpace: 'pre-line' }} className={isDescriptionExpanded ? 'expanded' : 'collapsed'}>
+          <div className="producto-description-long">
+            <p
+              className={
+                producto.descripcion.length > 200
+                  ? isDescriptionExpanded
+                    ? 'expanded'
+                    : 'collapsed'
+                  : ''
+              }
+            >
               {producto.descripcion}
             </p>
+
             {producto.descripcion.length > 200 && (
               <button
                 className="btn-ver-mas"
