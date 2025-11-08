@@ -1,5 +1,5 @@
 import PedidoCard from './PedidoCard';
-import PedidoPaginacion from './PedidoPaginacion';
+import Pagination from '../common/Pagination';
 import './PedidosPage.css';
 
 export default function PedidosList({
@@ -29,10 +29,11 @@ export default function PedidosList({
           />
         ))}
       </div>
-      <PedidoPaginacion
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
+      <Pagination
         currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={pedidos.length}
+        onPageChange={setCurrentPage}
       />
     </>
   );

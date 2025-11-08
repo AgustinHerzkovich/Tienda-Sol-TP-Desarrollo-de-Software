@@ -9,9 +9,13 @@ export default class NotificacionRepository extends Repository {
 
   async findByUserId(idBuscado, leida) {
     const objectId = new mongoose.Types.ObjectId(idBuscado);
-    return await this.model.find({
-      usuarioDestino: objectId,
-      leida: leida,
-    });
+
+    return await this.model
+      .find({
+        usuarioDestino: objectId,
+        leida: leida,
+      })
+      .sort({ fechaAlta: -1 })
+      .limit(30);
   }
 }

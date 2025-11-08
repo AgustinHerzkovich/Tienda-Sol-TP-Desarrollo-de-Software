@@ -13,7 +13,9 @@ export default class PedidoRepository extends Repository {
 
   async findByCompradorId(usuarioId) {
     const objectId = new mongoose.Types.ObjectId(usuarioId);
-    return await this.model.find({ comprador: objectId });
+    return await this.model
+      .find({ comprador: objectId })
+      .sort({ fechaCreacion: -1 });
   }
 
   async findByVendedorId(usuarioId) {
@@ -58,6 +60,7 @@ export default class PedidoRepository extends Repository {
         },
       },
       { $match: { 'items.producto.vendedor': objectId } },
+      { $sort: { fechaCreacion: -1 } },
     ]);
 
     return await PedidoModel.populate(pedidos, {

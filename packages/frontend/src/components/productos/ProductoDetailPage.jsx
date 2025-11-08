@@ -12,6 +12,7 @@ export default function ProductDetailPage() {
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const addToCart = useAddToCart();
   const navigate = useNavigate();
   const { obtenerNombreMoneda, formatearPrecio } = useCurrency();
@@ -177,7 +178,17 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="producto-description">
-            <p>{producto.descripcion}</p>
+            <p style={{ whiteSpace: 'pre-line' }} className={isDescriptionExpanded ? 'expanded' : 'collapsed'}>
+              {producto.descripcion}
+            </p>
+            {producto.descripcion.length > 200 && (
+              <button
+                className="btn-ver-mas"
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              >
+                {isDescriptionExpanded ? 'Ver menos' : 'Ver más'}
+              </button>
+            )}
           </div>
 
           <div className="producto-price-container">

@@ -26,19 +26,31 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const direccionesEndpoint =
-    process.env.REACT_APP_API_URL + `/usuarios/${user?.id}/direcciones`;
   const [direccionesUsuario, setDireccionesUsuario] = useState([]);
 
   useEffect(() => {
-    if (!user.id) return;
-    axios.get(direccionesEndpoint).then((res) => {
-      setDireccionesUsuario(res.data);
-    });
-  }, []);
+    if (!user?.id) return;
+    
+    const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+    
+    axios
+      .get(direccionesEndpoint)
+      .then((res) => {
+        setDireccionesUsuario(res.data);
+      })
+      .catch((err) => {
+        console.error('Error al cargar direcciones:', err);
+        showToast('Error al cargar direcciones guardadas', 'error');
+      });
+  }, [user?.id, showToast]);
 
   const handleGuardarDireccion = async () => {
+    if (!user?.id) return;
+    
+    const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+    
     try {
+      await setearLatitudYLongitud(direccionEntrega);
       const res = await axios.post(direccionesEndpoint, direccionEntrega);
       setDireccionesUsuario((prev) => [...prev, res.data]);
       showToast('Dirección guardada', 'success');
@@ -99,6 +111,41 @@ export default function CartPage() {
     navigate('/productos');
   };
 
+  const setearLatitudYLongitud = async (direccion) => {
+    // Construir query de búsqueda con los datos de la dirección
+    const query = `${direccion.calle} ${direccion.altura}, ${direccion.ciudad}, ${direccion.provincia}, ${direccion.pais}`;
+    
+    try {
+      // Nominatim API (OpenStreetMap) - gratuita, sin API key
+      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          q: query,
+          format: 'json',
+          limit: 1,
+          addressdetails: 1
+        },
+        headers: {
+          'User-Agent': 'TiendaSol-App/1.0' // Nominatim requiere User-Agent
+        }
+      });
+
+      if (response.data && response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        direccion.lat = lat;
+        direccion.lon = lon;
+        console.log(`Coordenadas encontradas: lat=${lat}, lon=${lon}`);
+      } else {
+        console.warn('No se encontraron coordenadas para la dirección proporcionada');
+        // Dejar lat/lon vacíos o usar valores por defecto (ej. centro de la ciudad)
+        showToast('No se pudo geocodificar la dirección. Verifica los datos.', 'warning');
+      }
+    } catch (error) {
+      console.error('Error al obtener coordenadas:', error);
+      showToast('Error al obtener coordenadas de la dirección', 'error');
+      // No bloquear el flujo, seguir adelante con lat/lon vacíos o que el backend maneje
+    }
+  };
+
   // Confirmar compra con dirección
   const handleConfirmarCompra = async (e) => {
     e.preventDefault();
@@ -113,6 +160,9 @@ export default function CartPage() {
 
     // Usar la moneda predominante calculada automáticamente
     const moneda = monedaPredominante;
+    
+    // Obtener coordenadas antes de enviar el pedido (await para esperar)
+    await setearLatitudYLongitud(direccionEntrega);
 
     const pedidoData = {
       compradorId,
@@ -303,7 +353,7 @@ export default function CartPage() {
             </div>
             {/* Lista de direcciones existentes */}
             <div className="form-group">
-              <label>Direcciones guardadas</label>
+              <h3 className="form-section-title">Direcciones guardadas</h3>
 
               {direccionesUsuario.length === 0 ? (
                 <p>No hay direcciones guardadas</p>
@@ -324,6 +374,10 @@ export default function CartPage() {
                         type="button"
                         className="btn-eliminar"
                         onClick={async () => {
+                          if (!user?.id) return;
+                          
+                          const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+                          
                           try {
                             await axios.delete(
                               `${direccionesEndpoint}/${d._id}`
@@ -453,33 +507,6 @@ export default function CartPage() {
                     onChange={handleDireccionChange}
                     required
                     placeholder="Ej: Argentina"
-                  />
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="lat">Latitud *</label>
-                  <input
-                    type="text"
-                    id="lat"
-                    name="lat"
-                    value={direccionEntrega.lat}
-                    onChange={handleDireccionChange}
-                    required
-                    placeholder="Ej: -31.4201"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="lon">Longitud *</label>
-                  <input
-                    type="text"
-                    id="lon"
-                    name="lon"
-                    value={direccionEntrega.lon}
-                    onChange={handleDireccionChange}
-                    required
-                    placeholder="Ej: -64.1888"
                   />
                 </div>
               </div>
