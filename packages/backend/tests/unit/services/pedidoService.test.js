@@ -316,6 +316,7 @@ describe('Tests unitarios de PedidoService', () => {
 
       // Configurar mocks - IMPORTANTE: findById debe devolver el pedido
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
       mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
         // Simular que el repository actualiza el pedido y lo devuelve
         pedidoParaModificar.estado = 'CONFIRMADO';
@@ -341,6 +342,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'EN_PREPARACION' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
       mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
         pedidoParaModificar.estado = 'EN_PREPARACION';
         return Promise.resolve(pedidoParaModificar);
@@ -358,6 +360,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'ENTREGADO' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
       mockProductoService.aumentarVentas.mockResolvedValue(undefined);
       mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
         pedidoParaModificar.estado = 'ENTREGADO';
@@ -383,6 +386,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'ENTREGADO' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       // Mock de aumentarVentas que REALMENTE incremente el valor
       mockProductoService.aumentarVentas.mockImplementation(
@@ -427,6 +431,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'ENTREGADO' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoMultiple);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       // Mock que incremente realmente las ventas
       mockProductoService.aumentarVentas.mockImplementation(
@@ -461,6 +466,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'CANCELADO' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
       mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
         pedidoParaModificar.estado = 'CANCELADO';
@@ -485,6 +491,7 @@ describe('Tests unitarios de PedidoService', () => {
 
       // IMPORTANTE: Configurar el mock para devolver el pedido
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       await expect(
         pedidoService.modificar(pedidoParaModificar.id, pedidoModificadoJSON)
@@ -498,6 +505,7 @@ describe('Tests unitarios de PedidoService', () => {
       const pedidoModificadoJSON = { estado: 'CANCELADO' }; // Enviar como string
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       await expect(
         pedidoService.modificar(pedidoParaModificar.id, pedidoModificadoJSON)
