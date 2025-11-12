@@ -4,7 +4,7 @@ import { useSession } from '../../context/SessionContext';
 import AuthFormContainer from '../common/AuthFormContainer';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();

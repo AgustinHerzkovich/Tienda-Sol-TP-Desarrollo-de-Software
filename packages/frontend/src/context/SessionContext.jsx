@@ -54,8 +54,7 @@ export const SessionProvider = ({ children }) => {
 
   const logout = () => {
     console.log('SessionContext: Logout ejecutado');
-    localStorage.clear(); // Borra todo el localStorage
-    window.location.reload(); // Recarga la pagina
+    setUser(null); // Limpia el user del estado y localStorage
   };
 
   const register = async (registerData) => {

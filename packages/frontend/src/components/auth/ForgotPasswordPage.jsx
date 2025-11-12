@@ -7,7 +7,7 @@ import {
 import AuthFormContainer from '../common/AuthFormContainer';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();

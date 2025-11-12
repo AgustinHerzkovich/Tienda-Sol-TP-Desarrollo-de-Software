@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
 import axios from 'axios';
 
 export default function CartPage() {
@@ -60,13 +60,6 @@ export default function CartPage() {
     }
   };
 
-  useEffect(() => {
-    const shouldRedirect = user == null;
-    if (shouldRedirect) {
-      showToast('Sesión cerrada. Redirigiendo al inicio.', 'info');
-      navigate('/');
-    }
-  }, [user, navigate, showToast]);
   // Calcular total con conversión automática
   const {
     total,

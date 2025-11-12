@@ -13,7 +13,7 @@ import { SessionProvider } from './context/SessionContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import SearchResultsPage from './components/productos/SearchResultsPage';
 import PedidosPage from './components/pedidos/PedidosPage';
-import { ToastProvider } from './components/common/Toast';
+import { ToastProvider } from './context/ToastContext';
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -53,34 +53,34 @@ export default function App() {
   }
   return (
     <div className="App">
-      <SessionProvider>
-        <CurrencyProvider>
-          <CartProvider>
-            <ToastProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route
-                    path="/forgot-password"
-                    element={<ForgotPasswordPage />}
-                  />
-                  <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="/cart" element={<CartPage />} />
-                    <Route
-                      path="productos/:id"
-                      element={<ProductDetailPage />}
-                    />
-                    <Route path="productos" element={<SearchResultsPage />} />
-                    <Route path="pedidos" element={<PedidosPage />} />
-                  </Route>
-                </Routes>
-              </BrowserRouter>
-            </ToastProvider>
-          </CartProvider>
-        </CurrencyProvider>
-      </SessionProvider>
+      <ToastProvider>
+        <SessionProvider>
+            <CurrencyProvider>
+              <CartProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/register" element={<RegisterPage />} />
+                      <Route
+                        path="/forgot-password"
+                        element={<ForgotPasswordPage />}
+                      />
+                      <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route
+                          path="productos/:id"
+                          element={<ProductDetailPage />}
+                        />
+                        <Route path="productos" element={<SearchResultsPage />} />
+                        <Route path="pedidos" element={<PedidosPage />} />
+                      </Route>
+                    </Routes>
+                  </BrowserRouter>
+              </CartProvider>
+            </CurrencyProvider>
+          </SessionProvider>
+        </ToastProvider>
     </div>
   );
 }
