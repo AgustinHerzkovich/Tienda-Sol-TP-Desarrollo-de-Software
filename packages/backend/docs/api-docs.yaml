@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API para una plataforma de comercio electrónico que permite gestionar usuarios, productos, pedidos y notificaciones
 servers:
-  - url: http://localhost:8000
+  - url: https://tpa-2025-2c-01-v1wg.onrender.com
     description: Servidor de desarrollo local
 paths:
   # Health Check
