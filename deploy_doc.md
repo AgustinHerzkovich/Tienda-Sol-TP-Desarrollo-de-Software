@@ -21,29 +21,36 @@ Antes de desplegar, asegurarse de tener:
 ## 2.1 Backend en Render
 
 ### **1. Crear servicio web en Render**
+
 - Ir a https://render.com
 - Crear un nuevo **Web Service**.
 - Seleccionar **Node.js**.
 - Subir el backend desde GitHub o usando Deploy via Tar.
 
 ### **2. Configurar variables de entorno**
-Agregar en Render → *Environment Variables*:
+
+Agregar en Render → _Environment Variables_:
 
 - `MONGODB_URI = mongodb+srv://USER:PASS@CLUSTER/Tienda-Sol?...`
 - `PORT = 8000`
 - `SERVER_URL = https://<tu-backend>.onrender.com`
 
 ### **3. Configurar Startup Command**
+
 Render debe ejecutar:
+
 ```
 npm start
 ```
 
 ### **4. Deploy automático**
+
 Render inicia el deploy automáticamente al crear el servicio.
 
 ### **5. Validar logs**
+
 En la sección **Logs**, validar que aparezca:
+
 ```
 MongoDB is connected
 Server running on port 8000
@@ -54,47 +61,60 @@ Server running on port 8000
 ## 2.2 Base de Datos en MongoDB Atlas
 
 ### **1. Crear cluster**
+
 - Crear proyecto y cluster en Atlas.
 
 ### **2. Permitir IPs**
+
 En **Network Access** → agregar:
+
 ```
 0.0.0.0/0
 ```
 
 ### **3. Crear usuario de BD**
+
 En **Database Access**, crear usuario con permisos Read/Write.
 
 ### **4. Obtener connection string**
-Desde *Connect → Drivers*.
+
+Desde _Connect → Drivers_.
 
 ---
 
 ## 2.3 Frontend en Netlify
 
 ### **1. Crear sitio en Netlify**
+
 - Entrar a https://netlify.app
 - Crear un nuevo sitio.
 - Elegir modo manual (upload folder) o GitHub.
 
 ### **2. Construir frontend**
+
 En local ejecutar:
+
 ```
 npm run build
 ```
 
 ### **3. Subir la carpeta "dist" o "build"**
+
 Netlify la desplegará automáticamente.
 
 ### **4. Configurar variables (si aplica)**
+
 Si tu frontend necesita una URL del backend:
+
 - Netlify → Site Settings → Environment Variables
 - Agregar:
+
 ```
 VITE_API_URL=https://tu-backend.onrender.com
 ```
 
 ### **5. Cambiar nombre del sitio (opcional)**
+
 Netlify → Site Settings → Change site name.
 
 ---
@@ -104,16 +124,20 @@ Netlify → Site Settings → Change site name.
 ## 3.1 Nueva Release del Backend
 
 ### **1. Actualizar código en GitHub**
+
 - Merge a la rama main.
 - Render detectará cambios y redeployará automáticamente.
 
 ### **2. Si es Deploy manual**
-- Entrar a Render → *Manual Deploy → Deploy latest commit*.
+
+- Entrar a Render → _Manual Deploy → Deploy latest commit_.
 
 ### **3. Verificar logs**
+
 Confirmar que el backend inició sin errores.
 
 ### **4. Probar endpoints**
+
 Con Postman o Swagger.
 
 ---
@@ -123,14 +147,17 @@ Con Postman o Swagger.
 ### **1. Actualizar código del frontend**
 
 ### **2. Generar build**
+
 ```
 npm run build
 ```
 
 ### **3. Subir nueva carpeta build/dist a Netlify**
+
 Netlify reemplaza la versión anterior automáticamente.
 
 ### **4. Probar funcionamiento**
+
 Acceder a la URL pública y validar llamadas al backend.
 
 ---
@@ -138,19 +165,24 @@ Acceder a la URL pública y validar llamadas al backend.
 # 4. Problemas Comunes y Soluciones
 
 ### **CORS Error**
+
 Backend debe tener:
+
 ```js
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: '*' }));
 ```
 
 ### **Swagger mostrando "Failed to Fetch"**
+
 En swagger config:
+
 ```
 servers:
   - url: https://tu-backend.onrender.com
 ```
 
 ### **Errores de conexión a MongoDB**
+
 - Revisar password con caracteres especiales.
 - Revisar IPs habilitadas.
 - Revisar variable MONGODB_URI.

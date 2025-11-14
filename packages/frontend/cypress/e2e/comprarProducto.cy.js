@@ -61,7 +61,7 @@ describe('Compra de Producto E2E', () => {
 
     // 11. Click en "Confirmar Compra"
     cy.contains('button', 'Confirmar Compra').click();
-    
+
     // 12. Validar que aparece el toast de éxito
     cy.contains('¡Compra realizada con éxito! Gracias por tu compra', {
       timeout: 10000,

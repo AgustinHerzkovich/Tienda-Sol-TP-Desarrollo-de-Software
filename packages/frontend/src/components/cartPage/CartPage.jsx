@@ -30,9 +30,9 @@ export default function CartPage() {
 
   useEffect(() => {
     if (!user?.id) return;
-    
+
     const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
-    
+
     axios
       .get(direccionesEndpoint)
       .then((res) => {
@@ -46,9 +46,9 @@ export default function CartPage() {
 
   const handleGuardarDireccion = async () => {
     if (!user?.id) return;
-    
+
     const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
-    
+
     try {
       await setearLatitudYLongitud(direccionEntrega);
       const res = await axios.post(direccionesEndpoint, direccionEntrega);
@@ -107,20 +107,23 @@ export default function CartPage() {
   const setearLatitudYLongitud = async (direccion) => {
     // Construir query de búsqueda con los datos de la dirección
     const query = `${direccion.calle} ${direccion.altura}, ${direccion.ciudad}, ${direccion.provincia}, ${direccion.pais}`;
-    
+
     try {
       // Nominatim API (OpenStreetMap) - gratuita, sin API key
-      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-        params: {
-          q: query,
-          format: 'json',
-          limit: 1,
-          addressdetails: 1
-        },
-        headers: {
-          'User-Agent': 'TiendaSol-App/1.0' // Nominatim requiere User-Agent
+      const response = await axios.get(
+        'https://nominatim.openstreetmap.org/search',
+        {
+          params: {
+            q: query,
+            format: 'json',
+            limit: 1,
+            addressdetails: 1,
+          },
+          headers: {
+            'User-Agent': 'TiendaSol-App/1.0', // Nominatim requiere User-Agent
+          },
         }
-      });
+      );
 
       if (response.data && response.data.length > 0) {
         const { lat, lon } = response.data[0];
@@ -128,9 +131,14 @@ export default function CartPage() {
         direccion.lon = lon;
         console.log(`Coordenadas encontradas: lat=${lat}, lon=${lon}`);
       } else {
-        console.warn('No se encontraron coordenadas para la dirección proporcionada');
+        console.warn(
+          'No se encontraron coordenadas para la dirección proporcionada'
+        );
         // Dejar lat/lon vacíos o usar valores por defecto (ej. centro de la ciudad)
-        showToast('No se pudo geocodificar la dirección. Verifica los datos.', 'warning');
+        showToast(
+          'No se pudo geocodificar la dirección. Verifica los datos.',
+          'warning'
+        );
       }
     } catch (error) {
       console.error('Error al obtener coordenadas:', error);
@@ -153,7 +161,7 @@ export default function CartPage() {
 
     // Usar la moneda predominante calculada automáticamente
     const moneda = monedaPredominante;
-    
+
     // Obtener coordenadas antes de enviar el pedido (await para esperar)
     await setearLatitudYLongitud(direccionEntrega);
 
@@ -368,9 +376,9 @@ export default function CartPage() {
                         className="btn-eliminar"
                         onClick={async () => {
                           if (!user?.id) return;
-                          
+
                           const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
-                          
+
                           try {
                             await axios.delete(
                               `${direccionesEndpoint}/${d._id}`

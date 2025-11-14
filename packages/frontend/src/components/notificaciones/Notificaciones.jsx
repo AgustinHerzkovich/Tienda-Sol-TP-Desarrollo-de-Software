@@ -110,7 +110,11 @@ export default function Notificaciones() {
               <div className="notificaciones-list">
                 {notificaciones.leidas.length > 0 ? (
                   notificaciones.leidas.map((notif) => (
-                    <Notificacion key={notif.id} notif={notif} className="leida" />
+                    <Notificacion
+                      key={notif.id}
+                      notif={notif}
+                      className="leida"
+                    />
                   ))
                 ) : (
                   <p className="no-notificaciones">Sin notificaciones leídas</p>

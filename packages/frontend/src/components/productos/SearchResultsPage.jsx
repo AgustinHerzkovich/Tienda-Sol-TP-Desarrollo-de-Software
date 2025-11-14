@@ -34,7 +34,7 @@ export default function SearchResultsPage() {
   const query = new URLSearchParams(location.search).get('query') || '';
   const vendedorId =
     new URLSearchParams(location.search).get('vendedorId') || '';
-  const limit = 10; // Productos por página
+  const limit = 12; // Productos por página
 
   useEffect(() => {
     let isMounted = true;

@@ -81,9 +81,11 @@ export default class PedidoService {
     const pedidoGuardado = await this.pedidoRepository.create(pedido);
 
     // Crear una copia temporal con estado completo para la notificación
-    const pedidoParaNotificacion =
-      this.crearCopiaParaNotificacion(pedidoGuardado, comprador);
-    
+    const pedidoParaNotificacion = this.crearCopiaParaNotificacion(
+      pedidoGuardado,
+      comprador
+    );
+
     // Notificar
     await this.notificacionService.notificarPedido(pedidoParaNotificacion);
 
@@ -102,7 +104,7 @@ export default class PedidoService {
     const nuevoEstado = Object.values(EstadoPedido).find(
       (e) => e.valor === nuevoEstadoString
     );
-    
+
     const comprador = await this.getComprador(pedidoAlmacenado.comprador);
     if (comprador == null) {
       // deberia estar en el getComprador
@@ -143,8 +145,10 @@ export default class PedidoService {
     );
 
     // Crear una copia temporal con estado completo para la notificación
-    const pedidoParaNotificacion =
-      this.crearCopiaParaNotificacion(pedidoAlmacenado, comprador);
+    const pedidoParaNotificacion = this.crearCopiaParaNotificacion(
+      pedidoAlmacenado,
+      comprador
+    );
 
     // Notificar
     await this.notificacionService.notificarPedido(pedidoParaNotificacion);
