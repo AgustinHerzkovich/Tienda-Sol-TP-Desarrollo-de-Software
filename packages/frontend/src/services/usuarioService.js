@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const usuariosEndpoint = process.env.REACT_APP_API_URL + '/usuarios';
+const usuariosEndpoint = `${process.env.REACT_APP_API_URL}/usuarios`;
 
 // Obtener usuario por email
 export const getUsuarioByEmail = async (email) => {
