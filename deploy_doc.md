@@ -31,16 +31,19 @@ Antes de desplegar, asegurarse de tener:
 
 Agregar en Render → _Environment Variables_:
 
+- `ALLOWED_ORIGINS = https://tu-frontend.netlify.app`
 - `MONGODB_URI = mongodb+srv://USER:PASS@CLUSTER/Tienda-Sol?...`
-- `PORT = 8000`
+- `MONGODB_NAME = Tienda-Sol`
+- `SERVER_PORT = 8000`
 - `SERVER_URL = https://<tu-backend>.onrender.com`
+- `NODE_ENV = production`
 
 ### **3. Configurar Startup Command**
 
 Render debe ejecutar:
 
 ```
-npm start
+npm -w backend run start
 ```
 
 ### **4. Deploy automático**
@@ -110,7 +113,8 @@ Si tu frontend necesita una URL del backend:
 - Agregar:
 
 ```
-VITE_API_URL=https://tu-backend.onrender.com
+FRONTEND_URL = https://tu-frontend.netlify.app
+REACT_APP_API_URL = https://tu-backend.onrender.com
 ```
 
 ### **5. Cambiar nombre del sitio (opcional)**
