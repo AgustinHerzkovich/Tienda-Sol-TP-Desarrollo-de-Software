@@ -8,6 +8,10 @@ export default class ProductoRepository extends Repository {
     super(ProductoModel);
   }
 
+  async findById(id) {
+    return await this.model.findById(id).populate('vendedor', 'nombre email');
+  }
+
   async findAll(filtros = {}, paginacion = {}) {
     // Construir el filtro base (sin filtro fijo de vendedor)
     const query = {};
@@ -120,6 +124,22 @@ export default class ProductoRepository extends Repository {
       pipeline.push({ $skip: skip });
       pipeline.push({ $limit: limit });
 
+      // Popular el vendedor
+      pipeline.push({
+        $lookup: {
+          from: 'usuarios',
+          localField: 'vendedor',
+          foreignField: '_id',
+          as: 'vendedor',
+        },
+      });
+      pipeline.push({
+        $unwind: {
+          path: '$vendedor',
+          preserveNullAndEmptyArrays: true,
+        },
+      });
+
       const productos = await this.model.aggregate(pipeline).exec();
 
       return {
@@ -144,6 +164,7 @@ export default class ProductoRepository extends Repository {
     // Ejecutar consulta
     const productos = await this.model
       .find(query)
+      .populate('vendedor', 'nombre email')
       .sort(sortOptions)
       .skip(skip)
       .limit(limit)

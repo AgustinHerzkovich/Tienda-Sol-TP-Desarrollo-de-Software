@@ -349,9 +349,11 @@ export default function SearchResultsPage() {
 
                   <div className="product-info">
                     <h3 className="product-title">{producto.titulo}</h3>
-                    <p className="product-description">
-                      {producto.descripcion}
-                    </p>
+                    {producto.vendedor && (
+                      <p className="product-vendedor">
+                        Vendedor: {producto.vendedor.nombre || producto.vendedor}
+                      </p>
+                    )}
 
                     <div className="product-details">
                       <div className="product-categories">
