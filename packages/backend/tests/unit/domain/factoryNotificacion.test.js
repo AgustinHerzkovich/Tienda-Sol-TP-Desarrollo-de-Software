@@ -35,6 +35,7 @@ describe('Tests unitarios de factory notificación', () => {
       '1192871245',
       TipoUsuario.COMPRADOR
     );
+    comprador.id = 'comprador123';
 
     vendedor = new Usuario(
       'Carlos',
@@ -42,6 +43,7 @@ describe('Tests unitarios de factory notificación', () => {
       '1184710281',
       TipoUsuario.VENDEDOR
     );
+    vendedor.id = 'vendedor456';
 
     factoryNotificacion = new FactoryNotificacion();
 
@@ -85,7 +87,7 @@ describe('Tests unitarios de factory notificación', () => {
       const mensaje = factoryNotificacion.crearSegunEstadoPedido(
         EstadoPedido.PENDIENTE
       );
-      expect(mensaje).toBe('Se ha realizado un pedido! ');
+      expect(mensaje).toBe('Se ha realizado un pedido! \n');
     });
 
     test('Mensaje para estado CONFIRMADO', () => {
@@ -148,7 +150,7 @@ describe('Tests unitarios de factory notificación', () => {
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedidoCopy);
 
-      expect(notificacion.usuarioDestino).toBe(comprador);
+      expect(notificacion.usuarioDestino).toBe(comprador.id);
       expect(notificacion.mensaje).toContain('Confirmamos tu pedido!!');
     });
 
@@ -157,7 +159,7 @@ describe('Tests unitarios de factory notificación', () => {
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
-      expect(notificacion.usuarioDestino).toBe(comprador);
+      expect(notificacion.usuarioDestino).toBe(comprador.id);
       expect(notificacion.mensaje).toContain('Estamos preparando tu pedido!');
     });
 
@@ -166,7 +168,7 @@ describe('Tests unitarios de factory notificación', () => {
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
-      expect(notificacion.usuarioDestino).toBe(comprador);
+      expect(notificacion.usuarioDestino).toBe(comprador.id);
       expect(notificacion.mensaje).toContain('Enviamos tu pedido!');
     });
 
@@ -175,7 +177,7 @@ describe('Tests unitarios de factory notificación', () => {
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
-      expect(notificacion.usuarioDestino).toBe(comprador);
+      expect(notificacion.usuarioDestino).toBe(comprador.id);
       expect(notificacion.mensaje).toContain('Entregamos tu pedido!');
     });
 
@@ -196,7 +198,7 @@ describe('Tests unitarios de factory notificación', () => {
       const notificacion = factoryNotificacion.crearSegunPedido(pedido);
 
       expect(notificacion.mensaje).toContain('Confirmamos tu pedido!!');
-      expect(notificacion.mensaje).toContain('Pedido Id: 123');
+      expect(notificacion.mensaje).toContain('Productos confirmados');
     });
 
     test('La notificación creada es una instancia válida', () => {
@@ -255,7 +257,7 @@ describe('Tests unitarios de factory notificación', () => {
 
       const notificacion = factoryNotificacion.crearSegunPedido(pedidoMultiple);
 
-      expect(notificacion.usuarioDestino).toBe(comprador);
+      expect(notificacion.usuarioDestino).toBe(comprador.id);
       expect(notificacion.mensaje).toContain('Confirmamos tu pedido!!');
     });
   });

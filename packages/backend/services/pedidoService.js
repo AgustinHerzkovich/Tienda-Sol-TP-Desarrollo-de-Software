@@ -81,8 +81,10 @@ export default class PedidoService {
     const pedidoGuardado = await this.pedidoRepository.create(pedido);
 
     // Crear una copia temporal con estado completo para la notificación
-    const pedidoParaNotificacion =
-      this.crearCopiaParaNotificacion(pedidoGuardado);
+    const pedidoParaNotificacion = this.crearCopiaParaNotificacion(
+      pedidoGuardado,
+      comprador
+    );
 
     // Notificar
     await this.notificacionService.notificarPedido(pedidoParaNotificacion);
@@ -102,6 +104,12 @@ export default class PedidoService {
     const nuevoEstado = Object.values(EstadoPedido).find(
       (e) => e.valor === nuevoEstadoString
     );
+
+    const comprador = await this.getComprador(pedidoAlmacenado.comprador);
+    if (comprador == null) {
+      // deberia estar en el getComprador
+      throw new Error('El comprador no existe para este producto!');
+    }
 
     if (nuevoEstado === EstadoPedido.CANCELADO) {
       if (estadosIncancelables.includes(estadoActual)) {
@@ -137,8 +145,10 @@ export default class PedidoService {
     );
 
     // Crear una copia temporal con estado completo para la notificación
-    const pedidoParaNotificacion =
-      this.crearCopiaParaNotificacion(pedidoAlmacenado);
+    const pedidoParaNotificacion = this.crearCopiaParaNotificacion(
+      pedidoAlmacenado,
+      comprador
+    );
 
     // Notificar
     await this.notificacionService.notificarPedido(pedidoParaNotificacion);
@@ -167,7 +177,7 @@ export default class PedidoService {
   }
 
   // Helper para crear una copia temporal con estado completo para notificaciones
-  crearCopiaParaNotificacion(pedidoMongoose) {
+  crearCopiaParaNotificacion(pedidoMongoose, comprador) {
     const estadoString = pedidoMongoose.estado;
     const estadoCompleto = Object.values(EstadoPedido).find(
       (e) => e.valor === estadoString
@@ -176,7 +186,7 @@ export default class PedidoService {
     // Crear una copia simple del pedido con el estado completo
     return {
       id: pedidoMongoose.id || pedidoMongoose._id,
-      comprador: pedidoMongoose.comprador,
+      comprador: comprador,
       items: pedidoMongoose.items,
       total: pedidoMongoose.total,
       moneda: pedidoMongoose.moneda,

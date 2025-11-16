@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const productosEndpoint = process.env.REACT_APP_API_URL + '/productos';
+const productosEndpoint = `${process.env.REACT_APP_API_URL}/productos`;
 
 // Obtener todos los productos con filtros y paginación
 export const getProductos = async (params = {}) => {

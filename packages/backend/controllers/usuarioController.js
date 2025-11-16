@@ -67,4 +67,37 @@ export default class UsuarioController {
       next(err);
     }
   }
+
+  async getDirecciones(req, res, next) {
+    const usuarioId = req.params.id;
+    try {
+      const direcciones = await this.usuarioService.getDirecciones(usuarioId);
+      res.status(200).json(direcciones);
+    } catch (err) {
+      next(err);
+    }
+  }
+  async postDireccion(req, res, next) {
+    const usuarioId = req.params.id;
+    const validatedDireccion = req.validatedData;
+    try {
+      const direccion = await this.usuarioService.agregarDireccion(
+        usuarioId,
+        validatedDireccion
+      );
+      res.status(200).json(direccion);
+    } catch (err) {
+      next(err);
+    }
+  }
+  async deleteDireccion(req, res, next) {
+    const usuarioId = req.params.id;
+    const direccionId = req.params.idDireccion;
+    try {
+      await this.usuarioService.eliminarDireccion(usuarioId, direccionId);
+      res.status(204).json();
+    } catch (err) {
+      next(err);
+    }
+  }
 }

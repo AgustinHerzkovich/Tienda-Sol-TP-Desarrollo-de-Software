@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API para una plataforma de comercio electrónico que permite gestionar usuarios, productos, pedidos y notificaciones
 servers:
-  - url: http://localhost:8000
+  - url: https://tpa-2025-2c-01-v1wg.onrender.com
     description: Servidor de desarrollo local
 paths:
   # Health Check
@@ -330,6 +330,105 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 message: 'Usuario con id: 507f1f77bcf86cd799439011 no encontrado'
+
+  /usuarios/{id}/direcciones:
+    get:
+      summary: Obtener direcciones de un usuario
+      description: Lista todas las direcciones registradas de un usuario específico
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario
+      responses:
+        '200':
+          description: Lista de direcciones del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DireccionEntrega'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Agregar una dirección a un usuario
+      description: Registra una nueva dirección de entrega para un usuario
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DireccionEntregaRequest'
+      responses:
+        '200':
+          description: Dirección agregada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DireccionEntrega'
+        '400':
+          description: Error en los datos de la dirección
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}/direcciones/{idDireccion}:
+    delete:
+      summary: Eliminar una dirección de un usuario
+      description: Elimina una dirección de entrega específica de un usuario
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único del usuario
+        - in: path
+          name: idDireccion
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{24}$'
+          description: ID único de la dirección a eliminar
+      responses:
+        '204':
+          description: Dirección eliminada exitosamente
+        '404':
+          description: Usuario o dirección no encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   # Productos
   /productos:
@@ -688,6 +787,69 @@ components:
           type: boolean
           description: Estado de lectura de la notificación
 
+    DireccionEntregaRequest:
+      type: object
+      required:
+        - calle
+        - altura
+        - piso
+        - codigoPostal
+        - ciudad
+        - provincia
+        - pais
+        - lat
+        - lon
+      properties:
+        calle:
+          type: string
+          minLength: 1
+          description: Nombre de la calle
+          example: 'Av. Libertador'
+        altura:
+          type: string
+          minLength: 1
+          description: Altura de la calle
+          example: '1234'
+        piso:
+          type: string
+          minLength: 1
+          description: Piso
+          example: '3'
+        departamento:
+          type: string
+          description: Departamento (opcional)
+          example: 'A'
+        codigoPostal:
+          type: string
+          minLength: 1
+          description: Código postal
+          example: '5000'
+        ciudad:
+          type: string
+          minLength: 1
+          description: Ciudad
+          example: 'Córdoba'
+        provincia:
+          type: string
+          minLength: 1
+          description: Provincia o estado
+          example: 'Córdoba'
+        pais:
+          type: string
+          minLength: 1
+          description: País
+          example: 'Argentina'
+        lat:
+          type: string
+          minLength: 1
+          description: Latitud geográfica
+          example: '-31.4201'
+        lon:
+          type: string
+          minLength: 1
+          description: Longitud geográfica
+          example: '-64.1888'
+
     # Esquemas de entidades
     Usuario:
       type: object
@@ -884,6 +1046,44 @@ components:
         motivo:
           type: string
           description: Motivo del cambio de estado
+
+    DireccionEntrega:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{24}$'
+          description: ID único de la dirección
+        calle:
+          type: string
+          description: Nombre de la calle
+        altura:
+          type: string
+          description: Altura de la calle
+        piso:
+          type: string
+          description: Piso
+        departamento:
+          type: string
+          description: Departamento (si aplica)
+        codigoPostal:
+          type: string
+          description: Código postal
+        ciudad:
+          type: string
+          description: Ciudad
+        provincia:
+          type: string
+          description: Provincia o estado
+        pais:
+          type: string
+          description: País
+        lat:
+          type: string
+          description: Latitud geográfica
+        lon:
+          type: string
+          description: Longitud geográfica
 
     # Enums
     EstadoPedido:

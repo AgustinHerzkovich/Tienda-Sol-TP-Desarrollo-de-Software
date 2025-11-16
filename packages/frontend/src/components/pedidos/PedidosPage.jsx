@@ -11,7 +11,7 @@ import { FaClipboardList, FaBox } from 'react-icons/fa';
 import LoadingSpinner from '../common/LoadingSpinner';
 import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
 import PedidosList from './PedidosList';
 
 export default function PedidosPage() {

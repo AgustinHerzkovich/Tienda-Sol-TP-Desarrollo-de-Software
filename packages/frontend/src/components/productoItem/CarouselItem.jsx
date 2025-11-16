@@ -20,7 +20,11 @@ const CarouselItem = ({ producto }) => {
         <img src={producto.fotos[0]} alt="" className="producto-image" />
         <div className="producto-info">
           <h3 className="producto-title">{producto.titulo}</h3>
-          <p className="producto-description">{producto.descripcion}</p>
+          {producto.vendedor && (
+            <p className="producto-vendedor">
+              Vendedor: {producto.vendedor.nombre || producto.vendedor}
+            </p>
+          )}
           <div className="producto-details">
             <span className="producto-cantidadVentas">
               {producto.cantidadVentas}

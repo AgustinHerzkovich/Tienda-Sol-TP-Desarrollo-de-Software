@@ -16,46 +16,52 @@ export const EstadoPedido = Object.freeze({
   // ENUM en javascript
   PENDIENTE: {
     valor: 'PENDIENTE',
-    mensaje: 'Se ha realizado un pedido! ',
+    mensaje: 'Se ha realizado un pedido! \n',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
-      mensaje: `- Pedido Id: ${pedido.id}
-      - Comprador: ${pedido.comprador}
-      - Productos: ${pedido.getProductos().map((producto) => ' ' + producto.titulo)}
+      mensaje: `- Comprador: ${pedido.comprador.nombre}
+      - Productos: ${pedido.items.map((item) => ' ' + item.producto.titulo + ' x' + item.cantidad)}
       - Total: ${monedaString(pedido.moneda)} ${pedido.total}
-      - Direccion de entrega: País: ${pedido.direccionEntrega.pais}, Provincia: ${pedido.direccionEntrega.provincia}, Ciudad: ${pedido.direccionEntrega.ciudad}, Calle: ${pedido.direccionEntrega.calle}, Altura : ${pedido.direccionEntrega.altura}`,
+      - Direccion de entrega: ${pedido.direccionEntrega.pais}, ${pedido.direccionEntrega.provincia}, ${pedido.direccionEntrega.ciudad}, Calle: ${pedido.direccionEntrega.calle}, ${pedido.direccionEntrega.altura}`,
     }),
   },
   CONFIRMADO: {
     valor: 'CONFIRMADO',
     mensaje: 'Confirmamos tu pedido!! ',
     notificacion: (pedido) => ({
-      destinatario: pedido.comprador,
-      mensaje: `Pedido Id: ${pedido.id}`,
+      destinatario: pedido.comprador.id,
+      mensaje: `Productos confirmados:
+      ${pedido.items.map((item) => `- ${item.producto.titulo} x${item.cantidad}`).join('\n')}
+      Total: ${monedaString(pedido.moneda)} ${pedido.total}`,
     }),
   },
   EN_PREPARACION: {
     valor: 'EN_PREPARACION',
     mensaje: 'Estamos preparando tu pedido! ',
     notificacion: (pedido) => ({
-      destinatario: pedido.comprador,
-      mensaje: `Pedido Id: ${pedido.id}`,
+      destinatario: pedido.comprador.id,
+      mensaje: `Productos en preparación:
+      ${pedido.items.map((item) => `- ${item.producto.titulo} x${item.cantidad}`).join('\n')}`,
     }),
   },
   ENVIADO: {
     valor: 'ENVIADO',
     mensaje: 'Enviamos tu pedido! ',
     notificacion: (pedido) => ({
-      destinatario: pedido.comprador,
-      mensaje: `Pedido Id: ${pedido.id}`,
+      destinatario: pedido.comprador.id,
+      mensaje: `Productos enviados:
+      ${pedido.items.map((item) => `- ${item.producto.titulo} x${item.cantidad}`).join('\n')}
+      Dirección de entrega: ${pedido.direccionEntrega.calle} ${pedido.direccionEntrega.altura}, ${pedido.direccionEntrega.ciudad}`,
     }),
   },
   ENTREGADO: {
     valor: 'ENTREGADO',
     mensaje: 'Entregamos tu pedido! ',
     notificacion: (pedido) => ({
-      destinatario: pedido.comprador,
-      mensaje: `Pedido Id: ${pedido.id}`,
+      destinatario: pedido.comprador.id,
+      mensaje: `Productos entregados:
+      ${pedido.items.map((item) => `- ${item.producto.titulo} x${item.cantidad}`).join('\n')}
+      ¡Gracias por tu compra!`,
     }),
   },
   CANCELADO: {
@@ -63,7 +69,9 @@ export const EstadoPedido = Object.freeze({
     mensaje: 'Un comprador canceló un pedido! ',
     notificacion: (pedido) => ({
       destinatario: pedido.getVendedor(),
-      mensaje: `Pedido Id: ${pedido.id}`,
+      mensaje: `Pedido cancelado:
+      ${pedido.items.map((item) => `- ${item.producto.titulo} x${item.cantidad}`).join('\n')}
+      Comprador: ${pedido.comprador.nombre}`,
     }),
   },
 });

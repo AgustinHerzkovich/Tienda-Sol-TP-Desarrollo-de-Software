@@ -3,6 +3,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import { LuUserRound } from 'react-icons/lu';
 import './Perfil.css';
 import { useSession } from '../../../../../context/SessionContext';
+import { useToast } from '../../../../../context/ToastContext';
 import { FiPackage } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ export default function Perfil() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const { logout, user } = useSession();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handlePerfilClick = () => {
@@ -19,8 +21,9 @@ export default function Perfil() {
   const handleCerrarSesion = () => {
     console.log('Cerrar sesión');
     setIsMenuOpen(false);
-    logout(); // Usa la función del SessionContext
-    navigate('/'); // Redirige a la página principal después de cerrar sesión
+    logout(); // Limpia la sesión del contexto
+    showToast('Sesión cerrada exitosamente', 'success'); // Muestra el toast ANTES de navegar
+    navigate('/'); // Redirige a la página principal
   };
 
   const handlePedidos = () => {

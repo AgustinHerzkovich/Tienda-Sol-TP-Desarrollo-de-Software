@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FaTrash, FaShoppingCart, FaCreditCard, FaTimes } from 'react-icons/fa';
+import {
+  FaTrash,
+  FaShoppingCart,
+  FaCreditCard,
+  FaTimes,
+  FaSave,
+} from 'react-icons/fa';
 import './CartPage.css';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
@@ -9,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
+import axios from 'axios';
 
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
@@ -19,13 +26,40 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
+  const [direccionesUsuario, setDireccionesUsuario] = useState([]);
+
   useEffect(() => {
-    const shouldRedirect = user == null;
-    if (shouldRedirect) {
-      showToast('Sesión cerrada. Redirigiendo al inicio.', 'info');
-      navigate('/');
+    if (!user?.id) return;
+
+    const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+
+    axios
+      .get(direccionesEndpoint)
+      .then((res) => {
+        setDireccionesUsuario(res.data);
+      })
+      .catch((err) => {
+        console.error('Error al cargar direcciones:', err);
+        showToast('Error al cargar direcciones guardadas', 'error');
+      });
+  }, [user?.id, showToast]);
+
+  const handleGuardarDireccion = async () => {
+    if (!user?.id) return;
+
+    const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+
+    try {
+      await setearLatitudYLongitud(direccionEntrega);
+      const res = await axios.post(direccionesEndpoint, direccionEntrega);
+      setDireccionesUsuario((prev) => [...prev, res.data]);
+      showToast('Dirección guardada', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Error al guardar la dirección', 'error');
     }
-  }, [user, navigate, showToast]);
+  };
+
   // Calcular total con conversión automática
   const {
     total,
@@ -70,6 +104,49 @@ export default function CartPage() {
     navigate('/productos');
   };
 
+  const setearLatitudYLongitud = async (direccion) => {
+    // Construir query de búsqueda con los datos de la dirección
+    const query = `${direccion.calle} ${direccion.altura}, ${direccion.ciudad}, ${direccion.provincia}, ${direccion.pais}`;
+
+    try {
+      // Nominatim API (OpenStreetMap) - gratuita, sin API key
+      const response = await axios.get(
+        'https://nominatim.openstreetmap.org/search',
+        {
+          params: {
+            q: query,
+            format: 'json',
+            limit: 1,
+            addressdetails: 1,
+          },
+          headers: {
+            'User-Agent': 'TiendaSol-App/1.0', // Nominatim requiere User-Agent
+          },
+        }
+      );
+
+      if (response.data && response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        direccion.lat = lat;
+        direccion.lon = lon;
+        console.log(`Coordenadas encontradas: lat=${lat}, lon=${lon}`);
+      } else {
+        console.warn(
+          'No se encontraron coordenadas para la dirección proporcionada'
+        );
+        // Dejar lat/lon vacíos o usar valores por defecto (ej. centro de la ciudad)
+        showToast(
+          'No se pudo geocodificar la dirección. Verifica los datos.',
+          'warning'
+        );
+      }
+    } catch (error) {
+      console.error('Error al obtener coordenadas:', error);
+      showToast('Error al obtener coordenadas de la dirección', 'error');
+      // No bloquear el flujo, seguir adelante con lat/lon vacíos o que el backend maneje
+    }
+  };
+
   // Confirmar compra con dirección
   const handleConfirmarCompra = async (e) => {
     e.preventDefault();
@@ -84,6 +161,9 @@ export default function CartPage() {
 
     // Usar la moneda predominante calculada automáticamente
     const moneda = monedaPredominante;
+
+    // Obtener coordenadas antes de enviar el pedido (await para esperar)
+    await setearLatitudYLongitud(direccionEntrega);
 
     const pedidoData = {
       compradorId,
@@ -272,7 +352,58 @@ export default function CartPage() {
                 <FaTimes />
               </button>
             </div>
+            {/* Lista de direcciones existentes */}
+            <div className="form-group">
+              <h3 className="form-section-title">Direcciones guardadas</h3>
 
+              {direccionesUsuario.length === 0 ? (
+                <p>No hay direcciones guardadas</p>
+              ) : (
+                <ul className="lista-direcciones">
+                  {direccionesUsuario.map((d) => (
+                    <li key={d._id} className="direccion-item">
+                      <button
+                        type="button"
+                        className="direccion-boton"
+                        onClick={() => setDireccionEntrega(d)} // selecciona dirección
+                      >
+                        {`${d.calle} ${d.altura}, ${d.ciudad}`}
+                      </button>
+
+                      {/* Botón de eliminar*/}
+                      <button
+                        type="button"
+                        className="btn-eliminar"
+                        onClick={async () => {
+                          if (!user?.id) return;
+
+                          const direccionesEndpoint = `${process.env.REACT_APP_API_URL}/usuarios/${user.id}/direcciones`;
+
+                          try {
+                            await axios.delete(
+                              `${direccionesEndpoint}/${d._id}`
+                            );
+                            setDireccionesUsuario((prev) =>
+                              prev.filter((dir) => dir._id !== d._id)
+                            );
+                            showToast('Dirección eliminada', 'success');
+                          } catch (err) {
+                            console.error(err);
+                            showToast(
+                              'Error al eliminar la dirección',
+                              'error'
+                            );
+                          }
+                        }}
+                        title="Eliminar dirección"
+                      >
+                        <FaTrash />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <form onSubmit={handleConfirmarCompra} className="direccion-form">
               <div className="form-row">
                 <div className="form-group">
@@ -381,33 +512,6 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="lat">Latitud *</label>
-                  <input
-                    type="text"
-                    id="lat"
-                    name="lat"
-                    value={direccionEntrega.lat}
-                    onChange={handleDireccionChange}
-                    required
-                    placeholder="Ej: -31.4201"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="lon">Longitud *</label>
-                  <input
-                    type="text"
-                    id="lon"
-                    name="lon"
-                    value={direccionEntrega.lon}
-                    onChange={handleDireccionChange}
-                    required
-                    placeholder="Ej: -64.1888"
-                  />
-                </div>
-              </div>
-
               <div className="modal-actions">
                 <button
                   type="button"
@@ -419,6 +523,13 @@ export default function CartPage() {
                 <button type="submit" className="btn-confirmar">
                   <FaCreditCard />
                   Confirmar Compra
+                </button>
+                <button
+                  type="button"
+                  onClick={handleGuardarDireccion} // Hace un post de la direccion y agrega a la lista
+                  className="btn-cancelar"
+                >
+                  <FaSave /> Guardar Dirección
                 </button>
               </div>
             </form>

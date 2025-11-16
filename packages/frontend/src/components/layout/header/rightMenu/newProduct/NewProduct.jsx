@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSession } from '../../../../../context/SessionContext';
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import { crearProducto } from '../../../../../services/productoService';
-import { useToast } from '../../../../common/Toast';
+import { useToast } from '../../../../../context/ToastContext';
 
 export default function NewProduct() {
   const { user } = useSession();

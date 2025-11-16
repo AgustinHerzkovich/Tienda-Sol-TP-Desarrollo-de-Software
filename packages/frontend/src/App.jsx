@@ -13,7 +13,7 @@ import { SessionProvider } from './context/SessionContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import SearchResultsPage from './components/productos/SearchResultsPage';
 import PedidosPage from './components/pedidos/PedidosPage';
-import { ToastProvider } from './components/common/Toast';
+import { ToastProvider } from './context/ToastContext';
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -53,10 +53,10 @@ export default function App() {
   }
   return (
     <div className="App">
-      <SessionProvider>
-        <CurrencyProvider>
-          <CartProvider>
-            <ToastProvider>
+      <ToastProvider>
+        <SessionProvider>
+          <CurrencyProvider>
+            <CartProvider>
               <BrowserRouter>
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
@@ -77,10 +77,10 @@ export default function App() {
                   </Route>
                 </Routes>
               </BrowserRouter>
-            </ToastProvider>
-          </CartProvider>
-        </CurrencyProvider>
-      </SessionProvider>
+            </CartProvider>
+          </CurrencyProvider>
+        </SessionProvider>
+      </ToastProvider>
     </div>
   );
 }

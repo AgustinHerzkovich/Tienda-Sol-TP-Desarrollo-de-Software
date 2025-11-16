@@ -4,7 +4,7 @@ import { useSession } from '../../context/SessionContext';
 import AuthFormContainer from '../common/AuthFormContainer';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
-import { useToast } from '../common/Toast';
+import { useToast } from '../../context/ToastContext';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export default function RegisterPage() {
 
       if (result.success) {
         showToast('¡Registro exitoso! Bienvenido', 'success');
-        navigate(-1);
+        navigate('/');
       } else {
         showToast(result.error, 'error');
       }

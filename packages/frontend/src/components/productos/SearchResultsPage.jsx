@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useCurrency } from '../../context/CurrencyContext';
 import { getProductos } from '../../services/productoService';
 import LoadingSpinner from '../common/LoadingSpinner';
+import Pagination from '../common/Pagination';
 
 export default function SearchResultsPage() {
   const location = useLocation();
@@ -33,7 +34,7 @@ export default function SearchResultsPage() {
   const query = new URLSearchParams(location.search).get('query') || '';
   const vendedorId =
     new URLSearchParams(location.search).get('vendedorId') || '';
-  const limit = 10; // Productos por página
+  const limit = 12; // Productos por página
 
   useEffect(() => {
     let isMounted = true;
@@ -348,9 +349,11 @@ export default function SearchResultsPage() {
 
                   <div className="product-info">
                     <h3 className="product-title">{producto.titulo}</h3>
-                    <p className="product-description">
-                      {producto.descripcion}
-                    </p>
+                    {producto.vendedor && (
+                      <p className="product-vendedor">
+                        Vendedor: {producto.vendedor.nombre || producto.vendedor}
+                      </p>
+                    )}
 
                     <div className="product-details">
                       <div className="product-categories">
@@ -394,87 +397,13 @@ export default function SearchResultsPage() {
           </div>
 
           {/* Paginación */}
-          {pagination && pagination.totalPages > 1 && (
-            <div className="pagination">
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                ← Anterior
-              </button>
-
-              <div className="pagination-numbers">
-                {/* Primera página */}
-                {currentPage > 3 && (
-                  <>
-                    <button
-                      className="pagination-number"
-                      onClick={() => handlePageChange(1)}
-                    >
-                      1
-                    </button>
-                    {currentPage > 4 && (
-                      <span className="pagination-ellipsis">...</span>
-                    )}
-                  </>
-                )}
-
-                {/* Páginas cercanas */}
-                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
-                  .filter((page) => {
-                    return (
-                      page === currentPage ||
-                      page === currentPage - 1 ||
-                      page === currentPage + 1 ||
-                      page === currentPage - 2 ||
-                      page === currentPage + 2
-                    );
-                  })
-                  .map((page) => (
-                    <button
-                      key={page}
-                      className={`pagination-number ${currentPage === page ? 'active' : ''}`}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                {/* Última página */}
-                {currentPage < pagination.totalPages - 2 && (
-                  <>
-                    {currentPage < pagination.totalPages - 3 && (
-                      <span className="pagination-ellipsis">...</span>
-                    )}
-                    <button
-                      className="pagination-number"
-                      onClick={() => handlePageChange(pagination.totalPages)}
-                    >
-                      {pagination.totalPages}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === pagination.totalPages}
-              >
-                Siguiente →
-              </button>
-            </div>
-          )}
-
-          {/* Información de paginación */}
           {pagination && (
-            <div className="pagination-info">
-              <p>
-                Página {pagination.currentPage} de {pagination.totalPages}{' '}
-                <space></space>({pagination.totalItems} productos en total)
-              </p>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.totalPages}
+              totalItems={pagination.totalItems}
+              onPageChange={handlePageChange}
+            />
           )}
         </>
       )}

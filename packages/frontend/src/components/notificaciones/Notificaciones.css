@@ -50,7 +50,7 @@
   position: absolute;
   right: 0;
   top: 100%;
-  width: min(90vw, 650px);
+  width: min(90vw, 800px);
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -58,9 +58,15 @@
   z-index: 1000;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
-  padding: 8px 0;
-
+  padding: 8px;
   transition: all 0.2s ease-in-out;
+}
+
+.notificaciones-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: 100%;
 }
 .notificacion {
   padding: 12px 16px;
@@ -68,6 +74,7 @@
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   margin: 12px;
+  color: #212529;
   transition:
     background-color 0.2s,
     transform 0.2s;
@@ -80,7 +87,7 @@
 
 .no-leida {
   background-color: #e9ecef;
-  color: #1a1a1a;
+  color: #212529;
   border: 1px solid #adb5bd;
   border-radius: 8px;
   padding: 8px 12px;
@@ -97,7 +104,7 @@
 
 .leida {
   background-color: #f8f9fa;
-  color: #333;
+  color: #495057;
   border: 1px solid #ced4da;
   border-radius: 8px;
   padding: 8px 12px;
@@ -109,7 +116,7 @@
 }
 
 .marcar-leida-btn {
-  background: #007bff;
+  background: #0056b3;
   color: white;
   border: none;
   padding: 4px 8px;
@@ -119,7 +126,7 @@
 }
 
 .marcar-leida-btn:hover {
-  background: #0056b3;
+  background: #003d82;
 }
 
 h4 {
@@ -127,18 +134,37 @@ h4 {
   color: #666;
 }
 
-.no-leidas-section {
-  color: #000000;
-  background-color: #ffffff;
-}
+.no-leidas-section,
 .leidas-section {
-  color: #6b6b6b;
-  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 300px;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #fafafa;
+}
+
+.no-leidas-section {
+  border-right: 1px solid #e0e0e0;
+}
+
+.notificaciones-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.no-notificaciones {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-style: italic;
 }
 
 .no-leidas-label {
   color: #fff;
-  background-color: #ff6b6b;
+  background-color: #d63031;
   border-radius: 15px;
   padding: 2px 8px;
   font-weight: 600;
@@ -146,7 +172,7 @@ h4 {
 }
 .leidas-label {
   color: #fff;
-  background-color: #4cd964;
+  background-color: #027a5e;
   border-radius: 15px;
   padding: 2px 8px;
   font-weight: 600;
@@ -166,6 +192,20 @@ h4 {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
 
+  .notificaciones-columns {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .no-leidas-section {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .notificaciones-list {
+    max-height: 200px;
+  }
+
   .notificacion {
     margin: 8px 6px;
   }
@@ -173,6 +213,7 @@ h4 {
   .notificaciones-dropdown .no-leidas-section,
   .notificaciones-dropdown .leidas-section {
     padding: 6px 2px;
+    min-height: 150px;
   }
 
   .no-leidas-label,
