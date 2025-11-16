@@ -41,6 +41,10 @@ export default class ProductoRepository extends Repository {
       query.descripcion = { $regex: filtros.descripcion, $options: 'i' };
     }
 
+    if (filtros.activo !== undefined) {
+      query.activo = filtros.activo === 'true' || filtros.activo === true;
+    }
+
     // Paginación
     const page = paginacion.page ? parseInt(paginacion.page) : 1;
     const limit = paginacion.limit ? parseInt(paginacion.limit) : 10;
@@ -55,6 +59,8 @@ export default class ProductoRepository extends Repository {
 
     if (necesitaConversion) {
       const pipeline = [
+        // Primero aplicar los filtros base
+        { $match: query },
         {
           $addFields: {
             precioConvertido: {
@@ -87,7 +93,6 @@ export default class ProductoRepository extends Repository {
         if (filtros.maxPrecio) matchPrecio.$lte = parseFloat(filtros.maxPrecio);
         pipeline.push({ $match: { precioConvertido: matchPrecio } });
       }
-      pipeline.push({ $match: query });
       // Ordenamiento
       if (filtros.sort === 'precio') {
         pipeline.push({
