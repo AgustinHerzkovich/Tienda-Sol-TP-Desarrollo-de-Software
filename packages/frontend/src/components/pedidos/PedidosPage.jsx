@@ -13,6 +13,7 @@ import EmptyState from '../common/EmptyState';
 import PageHeader from '../common/PageHeader';
 import { useToast } from '../../context/ToastContext';
 import PedidosList from './PedidosList';
+import ModalCancelarPedido from './ModalCancelarPedido';
 
 export default function PedidosPage() {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export default function PedidosPage() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [modalCancelarOpen, setModalCancelarOpen] = useState(false);
+  const [pedidoACancelar, setPedidoACancelar] = useState(null);
   const limit = 10;
 
   useEffect(() => {
@@ -54,6 +57,13 @@ export default function PedidosPage() {
   }, [user, navigate]);
 
   const handleCambiarEstado = async (pedidoId, nuevoEstado, motivo = null) => {
+    // Si es una cancelación y no viene con motivo, abrir el modal
+    if (nuevoEstado === 'CANCELADO' && !motivo) {
+      setPedidoACancelar(pedidoId);
+      setModalCancelarOpen(true);
+      return;
+    }
+
     try {
       // Pasar el ID del usuario actual como quien hizo el cambio
       await actualizarEstadoPedido(pedidoId, nuevoEstado, user?.id, motivo);
@@ -64,6 +74,19 @@ export default function PedidosPage() {
     } catch (error) {
       const msg = error.response?.data?.message || error.message;
       showToast(`Error al cambiar estado: ${msg}`, 'error');
+    }
+  };
+
+  const handleConfirmarCancelacion = async (pedidoId, motivo) => {
+    try {
+      await actualizarEstadoPedido(pedidoId, 'CANCELADO', user?.id, motivo);
+      setPedidos((prev) =>
+        prev.map((p) => (p.id === pedidoId ? { ...p, estado: 'CANCELADO' } : p))
+      );
+      showToast('Pedido cancelado exitosamente', 'success');
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message;
+      showToast(`Error al cancelar pedido: ${msg}`, 'error');
     }
   };
 
@@ -96,6 +119,13 @@ export default function PedidosPage() {
         onCambiarEstado={handleCambiarEstado}
         obtenerSimboloMoneda={obtenerSimboloMoneda}
         user={user}
+      />
+
+      <ModalCancelarPedido
+        isOpen={modalCancelarOpen}
+        onClose={() => setModalCancelarOpen(false)}
+        onConfirm={handleConfirmarCancelacion}
+        pedidoId={pedidoACancelar}
       />
     </div>
   );
