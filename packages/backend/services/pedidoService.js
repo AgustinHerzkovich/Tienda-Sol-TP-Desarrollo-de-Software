@@ -2,6 +2,7 @@ import Pedido from '../models/pedido.js';
 import ItemPedido from '../models/itemPedido.js';
 import PedidoOutOfStockError from '../error/pedidoOutOfStockError.js';
 import CancellationError from '../error/cancellationError.js';
+import CompradorNotFoundError from '../error/compradorNotFoundError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
 import { TipoUsuario } from '../models/tipoUsuario.js';
@@ -44,10 +45,6 @@ export default class PedidoService {
 
     // Traer el comprador
     const comprador = await this.getComprador(pedidoJSON.compradorId);
-    if (comprador == null) {
-      // deberia estar en el getComprador
-      throw new Error('El comprador no existe para este producto!');
-    }
 
     if (comprador.tipo !== TipoUsuario.COMPRADOR) {
       throw new InvalidUserTypeError(
@@ -107,10 +104,6 @@ export default class PedidoService {
     );
 
     const comprador = await this.getComprador(pedidoAlmacenado.comprador);
-    if (comprador == null) {
-      // deberia estar en el getComprador
-      throw new Error('El comprador no existe para este producto!');
-    }
 
     if (nuevoEstado === EstadoPedido.CANCELADO) {
       if (estadosIncancelables.includes(estadoActual)) {
@@ -142,13 +135,9 @@ export default class PedidoService {
     const quien = pedidoModificadoJSON.quien || null;
     const motivo = pedidoModificadoJSON.motivo || 'Cambio de estado';
 
-    // Crear un objeto Pedido temporal para usar el método
-    const pedidoModelo = Object.assign(new Pedido(), pedidoAlmacenado);
-    pedidoModelo.actualizarEstado(nuevoEstado, quien, motivo);
+    pedidoAlmacenado.actualizarEstado(nuevoEstado, quien, motivo);
 
-    // Actualizar en la base de datos con el estado y el historial
-    pedidoAlmacenado.estado = nuevoEstadoString;
-    pedidoAlmacenado.historialEstados = pedidoModelo.historialEstados;
+    pedidoAlmacenado.estado = nuevoEstado.valor // Se almacena el String
 
     const pedidoActualizado = await this.pedidoRepository.update(
       id,
@@ -184,7 +173,11 @@ export default class PedidoService {
   }
 
   async getComprador(id) {
-    return await this.usuarioService.findById(id);
+    const comprador = await this.usuarioService.findById(id);
+    if (comprador == null) {
+      throw new CompradorNotFoundError();
+    }
+    return comprador;
   }
 
   // Helper para crear una copia temporal con estado completo para notificaciones
