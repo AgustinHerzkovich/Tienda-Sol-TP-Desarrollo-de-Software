@@ -1,5 +1,5 @@
 import Pedido from '../models/pedido.js';
-import Item from '../models/itemPedido.js';
+import ItemPedido from '../models/itemPedido.js';
 import PedidoOutOfStockError from '../error/pedidoOutOfStockError.js';
 import CancellationError from '../error/cancellationError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
@@ -180,7 +180,7 @@ export default class PedidoService {
 
   async getItem(id, cantidad) {
     const producto = await this.productoService.findObjectById(id);
-    return new Item(producto, cantidad);
+    return new ItemPedido(producto, cantidad);
   }
 
   async getComprador(id) {
