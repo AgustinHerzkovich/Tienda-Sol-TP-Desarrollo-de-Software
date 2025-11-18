@@ -36,12 +36,13 @@ export default class Pedido {
 
   actualizarEstado(nuevoEstado, quien, motivo) {
     const cambioEstado = new CambioEstadoPedido(
-      this.estado,
+      this.estado, // estadoPrevio
+      nuevoEstado, // nuevoEstado
       this,
       quien,
       motivo
     );
-    this.historialEstados.push(cambioEstado); // Solo guardamos el estado previo, y el nuevo no lo guardamos hasta que se vuelve a cambiar de estado
+    this.historialEstados.push(cambioEstado);
     this.estado = nuevoEstado;
   }
 

@@ -105,11 +105,15 @@ const PedidoSchema = new mongoose.Schema({
         type: Date,
         required: true,
       },
-      estado: {
-        valor: {
-          type: String,
-          required: true,
-        },
+      estadoPrevio: {
+        type: String,
+        enum: Object.values(EstadoPedido).map((e) => e.valor),
+        required: true,
+      },
+      nuevoEstado: {
+        type: String,
+        enum: Object.values(EstadoPedido).map((e) => e.valor),
+        required: true,
       },
       pedido: {
         type: mongoose.Schema.Types.ObjectId,

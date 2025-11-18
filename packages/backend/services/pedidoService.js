@@ -135,14 +135,13 @@ export default class PedidoService {
     const quien = pedidoModificadoJSON.quien || null;
     const motivo = pedidoModificadoJSON.motivo || 'Cambio de estado';
 
-    pedidoAlmacenado.actualizarEstado(nuevoEstado, quien, motivo);
+    pedidoAlmacenado.actualizarEstado(nuevoEstadoString, quien, motivo);
 
-    pedidoAlmacenado.estado = nuevoEstado.valor // Se almacena el String
+    // Marcar el array como modificado para que Mongoose lo persista
+    pedidoAlmacenado.markModified('historialEstados');
 
-    const pedidoActualizado = await this.pedidoRepository.update(
-      id,
-      pedidoAlmacenado
-    );
+    // Usar save() en lugar de update() para preservar las modificaciones
+    const pedidoActualizado = await pedidoAlmacenado.save();
 
     // Crear una copia temporal con estado completo para la notificación
     const pedidoParaNotificacion = this.crearCopiaParaNotificacion(
@@ -197,6 +196,7 @@ export default class PedidoService {
       direccionEntrega: pedidoMongoose.direccionEntrega,
       estado: estadoCompleto,
       fechaCreacion: pedidoMongoose.fechaCreacion,
+      historialEstados: pedidoMongoose.historialEstados,
       getVendedor: function () {
         return this.items[0]?.producto?.vendedor;
       },

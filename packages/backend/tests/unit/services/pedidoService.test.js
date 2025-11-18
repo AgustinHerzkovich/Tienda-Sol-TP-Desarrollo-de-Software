@@ -312,16 +312,16 @@ describe('Tests unitarios de PedidoService', () => {
     });
 
     test('modifica estado de PENDIENTE a CONFIRMADO', async () => {
-      const pedidoModificadoJSON = { estado: 'CONFIRMADO' }; // Enviar como string
+      const pedidoModificadoJSON = { estado: 'CONFIRMADO' };
 
-      // Configurar mocks - IMPORTANTE: findById debe devolver el pedido
-      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
-      mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
-        // Simular que el repository actualiza el pedido y lo devuelve
+      pedidoParaModificar.markModified = jest.fn();
+      pedidoParaModificar.save = jest.fn().mockImplementation(() => {
         pedidoParaModificar.estado = 'CONFIRMADO';
         return Promise.resolve(pedidoParaModificar);
       });
+
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
@@ -332,21 +332,20 @@ describe('Tests unitarios de PedidoService', () => {
       expect(resultado.id).toBe(1);
       expect(resultado.estado).toBe('CONFIRMADO');
       expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1);
-      expect(mockPedidoRepository.update).toHaveBeenCalled();
     });
 
     test('modifica estado de CONFIRMADO a EN_PREPARACION', async () => {
-      // Configurar el pedido con estado CONFIRMADO
-      pedidoParaModificar.estado = 'CONFIRMADO'; // Como string
+      pedidoParaModificar.estado = 'CONFIRMADO';
+      const pedidoModificadoJSON = { estado: 'EN_PREPARACION' };
 
-      const pedidoModificadoJSON = { estado: 'EN_PREPARACION' }; // Enviar como string
-
-      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
-      mockUsuarioService.findById.mockResolvedValue(comprador);
-      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
+      pedidoParaModificar.markModified = jest.fn();
+      pedidoParaModificar.save = jest.fn().mockImplementation(() => {
         pedidoParaModificar.estado = 'EN_PREPARACION';
         return Promise.resolve(pedidoParaModificar);
       });
+
+      mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
+      mockUsuarioService.findById.mockResolvedValue(comprador);
 
       const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
@@ -357,7 +356,14 @@ describe('Tests unitarios de PedidoService', () => {
     });
 
     test('modifica estado a ENTREGADO y aumenta ventas', async () => {
-      const pedidoModificadoJSON = { estado: 'ENTREGADO' }; // Enviar como string
+      pedidoParaModificar.estado = 'ENVIADO';
+      const pedidoModificadoJSON = { estado: 'ENTREGADO' };
+
+      pedidoParaModificar.markModified = jest.fn();
+      pedidoParaModificar.save = jest.fn().mockImplementation(() => {
+        pedidoParaModificar.estado = 'ENTREGADO';
+        return Promise.resolve(pedidoParaModificar);
+      });
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
       mockUsuarioService.findById.mockResolvedValue(comprador);
@@ -388,18 +394,18 @@ describe('Tests unitarios de PedidoService', () => {
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
       mockUsuarioService.findById.mockResolvedValue(comprador);
 
-      // Mock de aumentarVentas que REALMENTE incremente el valor
+      pedidoParaModificar.markModified = jest.fn();
+      pedidoParaModificar.save = jest.fn().mockImplementation(() => {
+        pedidoParaModificar.estado = 'ENTREGADO';
+        return Promise.resolve(pedidoParaModificar);
+      });
+
       mockProductoService.aumentarVentas.mockImplementation(
         (producto, cantidad) => {
           producto.cantidadVentas += cantidad;
           return Promise.resolve();
         }
       );
-
-      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
-        pedidoParaModificar.estado = 'ENTREGADO';
-        return Promise.resolve(pedidoParaModificar);
-      });
 
       await pedidoService.modificar(
         pedidoParaModificar.id,
@@ -428,23 +434,23 @@ describe('Tests unitarios de PedidoService', () => {
       const ventasInicialesP1 = producto1.cantidadVentas;
       const ventasInicialesP2 = producto2.cantidadVentas;
 
-      const pedidoModificadoJSON = { estado: 'ENTREGADO' }; // Enviar como string
+      const pedidoModificadoJSON = { estado: 'ENTREGADO' };
+
+      pedidoMultiple.markModified = jest.fn();
+      pedidoMultiple.save = jest.fn().mockImplementation(() => {
+        pedidoMultiple.estado = 'ENTREGADO';
+        return Promise.resolve(pedidoMultiple);
+      });
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoMultiple);
       mockUsuarioService.findById.mockResolvedValue(comprador);
 
-      // Mock que incremente realmente las ventas
       mockProductoService.aumentarVentas.mockImplementation(
         (producto, cantidad) => {
           producto.cantidadVentas += cantidad;
           return Promise.resolve();
         }
       );
-
-      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
-        pedidoMultiple.estado = 'ENTREGADO';
-        return Promise.resolve(pedidoMultiple);
-      });
 
       await pedidoService.modificar(pedidoMultiple.id, pedidoModificadoJSON);
 
@@ -463,15 +469,17 @@ describe('Tests unitarios de PedidoService', () => {
     });
 
     test('permite cancelar pedido PENDIENTE y devuelve stock', async () => {
-      const pedidoModificadoJSON = { estado: 'CANCELADO' }; // Enviar como string
+      const pedidoModificadoJSON = { estado: 'CANCELADO' };
+
+      pedidoParaModificar.markModified = jest.fn();
+      pedidoParaModificar.save = jest.fn().mockImplementation(() => {
+        pedidoParaModificar.estado = 'CANCELADO';
+        return Promise.resolve(pedidoParaModificar);
+      });
 
       mockPedidoRepository.findById.mockResolvedValue(pedidoParaModificar);
       mockUsuarioService.findById.mockResolvedValue(comprador);
       mockProductoService.modificarStock.mockResolvedValue(undefined);
-      mockPedidoRepository.update.mockImplementation((id, pedidoModificado) => {
-        pedidoParaModificar.estado = 'CANCELADO';
-        return Promise.resolve(pedidoParaModificar);
-      });
 
       const resultado = await pedidoService.modificar(
         pedidoParaModificar.id,
@@ -745,17 +753,21 @@ describe('Tests unitarios de PedidoService', () => {
       });
 
       const pedidoCreado = await pedidoService.crear(pedidoJSON);
+
+      pedidoEjecutandose.markModified = jest.fn();
+      pedidoEjecutandose.save = jest.fn().mockImplementation(() => {
+        return Promise.resolve(pedidoEjecutandose);
+      });
       expect(pedidoCreado.estado).toBe('PENDIENTE');
 
-      // 2-5. Modificar estados (enviando como strings)
       const estados = ['CONFIRMADO', 'EN_PREPARACION', 'ENVIADO', 'ENTREGADO'];
 
       for (const estado of estados) {
         const pedidoModificado = await pedidoService.modificar(
           pedidoCreado.id,
-          { estado } // Enviar como string
+          { estado }
         );
-        expect(pedidoModificado.estado).toBe(estado); // Comparar como string
+        expect(pedidoModificado.estado).toBe(estado);
       }
 
       // 6. Verificar consulta

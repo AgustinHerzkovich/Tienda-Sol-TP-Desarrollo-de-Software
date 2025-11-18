@@ -18,7 +18,7 @@ export default class PedidoOutOfStockError extends AppError {
 
     super(
       `No hay stock suficiente para crear el Pedido. Items sin stock: ${itemsAsString}`,
-      400
+      500
     );
   }
 }

@@ -201,7 +201,8 @@ describe('Tests unitarios de pedido', () => {
       );
 
       const cambioEstado = pedidoParaEstados.historialEstados[0];
-      expect(cambioEstado.estado).toBe(EstadoPedido.PENDIENTE);
+      expect(cambioEstado.estadoPrevio).toBe(EstadoPedido.PENDIENTE.valor);
+      expect(cambioEstado.nuevoEstado).toBe(EstadoPedido.CONFIRMADO.valor);
       expect(cambioEstado.pedido).toBe(pedidoParaEstados);
       expect(cambioEstado.usuario).toBe(vendedor);
       expect(cambioEstado.motivo).toBe(motivo);
@@ -227,15 +228,23 @@ describe('Tests unitarios de pedido', () => {
       expect(pedidoParaEstados.historialEstados.length).toBe(3);
       expect(pedidoParaEstados.estado).toBe(EstadoPedido.ENVIADO);
 
-      // Verificar secuencia de estados
-      expect(pedidoParaEstados.historialEstados[0].estado).toBe(
-        EstadoPedido.PENDIENTE
+      expect(pedidoParaEstados.historialEstados[0].estadoPrevio).toBe(
+        EstadoPedido.PENDIENTE.valor
       );
-      expect(pedidoParaEstados.historialEstados[1].estado).toBe(
-        EstadoPedido.CONFIRMADO
+      expect(pedidoParaEstados.historialEstados[0].nuevoEstado).toBe(
+        EstadoPedido.CONFIRMADO.valor
       );
-      expect(pedidoParaEstados.historialEstados[2].estado).toBe(
-        EstadoPedido.EN_PREPARACION
+      expect(pedidoParaEstados.historialEstados[1].estadoPrevio).toBe(
+        EstadoPedido.CONFIRMADO.valor
+      );
+      expect(pedidoParaEstados.historialEstados[1].nuevoEstado).toBe(
+        EstadoPedido.EN_PREPARACION.valor
+      );
+      expect(pedidoParaEstados.historialEstados[2].estadoPrevio).toBe(
+        EstadoPedido.EN_PREPARACION.valor
+      );
+      expect(pedidoParaEstados.historialEstados[2].nuevoEstado).toBe(
+        EstadoPedido.ENVIADO.valor
       );
     });
   });
