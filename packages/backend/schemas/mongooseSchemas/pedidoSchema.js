@@ -119,7 +119,7 @@ const PedidoSchema = new mongoose.Schema({
       usuario: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Usuario',
-        required: true,
+        required: false, // Opcional porque puede ser un cambio automático del sistema
       },
       motivo: {
         type: String,

@@ -30,6 +30,7 @@ export default class PedidoService {
       direccionEntrega: pedido.direccionEntrega,
       estado: pedido.estado,
       fechaCreacion: pedido.fechaCreacion,
+      historialEstados: pedido.historialEstados || [],
     };
   }
 
@@ -137,8 +138,18 @@ export default class PedidoService {
       );
     }
 
-    // Actualizar el estado como string en la base de datos
+    // Usar el método actualizarEstado del modelo para mantener el historial
+    const quien = pedidoModificadoJSON.quien || null;
+    const motivo = pedidoModificadoJSON.motivo || 'Cambio de estado';
+
+    // Crear un objeto Pedido temporal para usar el método
+    const pedidoModelo = Object.assign(new Pedido(), pedidoAlmacenado);
+    pedidoModelo.actualizarEstado(nuevoEstado, quien, motivo);
+
+    // Actualizar en la base de datos con el estado y el historial
     pedidoAlmacenado.estado = nuevoEstadoString;
+    pedidoAlmacenado.historialEstados = pedidoModelo.historialEstados;
+
     const pedidoActualizado = await this.pedidoRepository.update(
       id,
       pedidoAlmacenado

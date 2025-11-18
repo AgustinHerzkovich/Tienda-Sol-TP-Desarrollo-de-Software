@@ -35,7 +35,7 @@ export default function PedidosPage() {
 
     const fetchPedidos = async () => {
       try {
-        setLoading(true);
+        if (isMounted) setLoading(true);
         const data = await getPedidos(user.id);
         if (isMounted) setPedidos(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -48,12 +48,15 @@ export default function PedidosPage() {
 
     fetchPedidos();
 
-    return () => (isMounted = false);
+    return () => {
+      isMounted = false;
+    };
   }, [user, navigate]);
 
-  const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
+  const handleCambiarEstado = async (pedidoId, nuevoEstado, motivo = null) => {
     try {
-      await actualizarEstadoPedido(pedidoId, nuevoEstado);
+      // Pasar el ID del usuario actual como quien hizo el cambio
+      await actualizarEstadoPedido(pedidoId, nuevoEstado, user?.id, motivo);
       setPedidos((prev) =>
         prev.map((p) => (p.id === pedidoId ? { ...p, estado: nuevoEstado } : p))
       );
@@ -63,6 +66,9 @@ export default function PedidosPage() {
       showToast(`Error al cambiar estado: ${msg}`, 'error');
     }
   };
+
+  // Si no hay usuario, no renderizar nada (el useEffect redirigirá)
+  if (!user) return null;
 
   if (loading) return <LoadingSpinner message="Cargando pedidos" />;
   if (pedidos.length === 0)

@@ -17,9 +17,16 @@ export const crearPedido = async (pedidoData) => {
 };
 
 // Actualizar el estado de un pedido
-export const actualizarEstadoPedido = async (pedidoId, estado) => {
-  const response = await axios.patch(`${pedidosEndpoint}/${pedidoId}`, {
-    estado,
-  });
+export const actualizarEstadoPedido = async (
+  pedidoId,
+  estado,
+  quien = null,
+  motivo = null
+) => {
+  const body = { estado };
+  if (quien) body.quien = quien;
+  if (motivo) body.motivo = motivo;
+
+  const response = await axios.patch(`${pedidosEndpoint}/${pedidoId}`, body);
   return response.data;
 };

@@ -30,4 +30,6 @@ export const pedidoPostSchema = z.object({
 
 export const pedidoPatchSchema = z.object({
   estado: z.enum(Object.values(EstadoPedido).map((e) => e.valor)),
+  quien: objectIdSchema.optional(), // ID del usuario que hace el cambio
+  motivo: z.string().optional(), // Razón del cambio de estado
 });
