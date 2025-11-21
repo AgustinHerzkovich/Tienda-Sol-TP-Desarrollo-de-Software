@@ -339,10 +339,14 @@ export default function CartPage() {
       </div>
 
       {/* Loading spinner durante el procesamiento */}
-      {isProcessingOrder && <LoadingSpinner message="Procesando tu compra" />}
+      {isProcessingOrder && (
+        <div className="modal-overlay">
+          <LoadingSpinner message="Procesando tu compra" />
+        </div>
+      )}
 
       {/* Modal de dirección de entrega */}
-      {showModal && (
+      {showModal && !isProcessingOrder && (
         <div
           className="modal-overlay"
           role="dialog"
