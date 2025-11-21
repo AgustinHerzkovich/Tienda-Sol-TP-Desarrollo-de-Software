@@ -17,6 +17,7 @@ import PageHeader from '../common/PageHeader';
 import Button from '../common/Button';
 import { useToast } from '../../context/ToastContext';
 import axios from 'axios';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, clearCart } = useCart();
@@ -27,6 +28,7 @@ export default function CartPage() {
   const { showToast } = useToast();
 
   const [direccionesUsuario, setDireccionesUsuario] = useState([]);
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -150,6 +152,7 @@ export default function CartPage() {
   // Confirmar compra con dirección
   const handleConfirmarCompra = async (e) => {
     e.preventDefault();
+    setIsProcessingOrder(true);
 
     const compradorId = user.id;
 
@@ -203,6 +206,8 @@ export default function CartPage() {
         `Error al procesar tu compra: ${error.response?.data?.message || error.message}`,
         'error'
       );
+    } finally {
+      setIsProcessingOrder(false);
     }
   };
 
@@ -332,6 +337,9 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Loading spinner durante el procesamiento */}
+      {isProcessingOrder && <LoadingSpinner message="Procesando tu compra" />}
 
       {/* Modal de dirección de entrega */}
       {showModal && (
