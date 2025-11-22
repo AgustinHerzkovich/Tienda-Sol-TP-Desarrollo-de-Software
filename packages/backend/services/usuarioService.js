@@ -143,7 +143,7 @@ export default class UsuarioService {
     const usuario = await this.usuarioRepository.findById(idUsuario);
     return usuario.direcciones;
   }
-  
+
   async agregarDireccion(idUsuario, direccionJson) {
     const direccion = new DireccionEntrega(
       direccionJson.calle,
@@ -166,7 +166,7 @@ export default class UsuarioService {
   }
 
   async eliminarDireccion(idUsuario, idDireccion) {
-    const usuario = await this.usuarioRepository.deleteDireccion(
+    await this.usuarioRepository.deleteDireccion(
       idUsuario,
       idDireccion
     );
