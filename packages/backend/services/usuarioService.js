@@ -143,6 +143,7 @@ export default class UsuarioService {
     const usuario = await this.usuarioRepository.findById(idUsuario);
     return usuario.direcciones;
   }
+  
   async agregarDireccion(idUsuario, direccionJson) {
     const direccion = new DireccionEntrega(
       direccionJson.calle,

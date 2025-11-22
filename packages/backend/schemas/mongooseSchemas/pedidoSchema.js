@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Pedido from '../../models/pedido.js';
 import { Moneda } from '../../models/moneda.js';
 import { EstadoPedido } from '../../models/estadoPedido.js';
+import { DireccionEntregaSchema } from './direccionEntregaSchema.js';
 
 /*
     this.comprador = ref a comprador;
@@ -50,48 +51,7 @@ const PedidoSchema = new mongoose.Schema(
       enum: Object.values(Moneda),
       required: true,
     },
-    direccionEntrega: {
-      calle: {
-        type: String,
-        required: true,
-      },
-      altura: {
-        type: String,
-        required: true,
-      },
-      piso: {
-        type: String,
-        required: true,
-      },
-      departamento: {
-        type: String,
-        required: true,
-      },
-      codigoPostal: {
-        type: String,
-        required: true,
-      },
-      ciudad: {
-        type: String,
-        required: true,
-      },
-      provincia: {
-        type: String,
-        required: true,
-      },
-      pais: {
-        type: String,
-        required: true,
-      },
-      lat: {
-        type: String,
-        required: true,
-      },
-      lon: {
-        type: String,
-        required: true,
-      },
-    },
+    direccionEntrega: DireccionEntregaSchema,
     estado: {
       type: String,
       enum: Object.values(EstadoPedido).map((e) => e.valor),

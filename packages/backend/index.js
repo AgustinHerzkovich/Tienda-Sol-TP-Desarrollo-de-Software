@@ -33,7 +33,7 @@ async function main() {
   );
 
   // Configuramos el puerto con el .env
-  const port = process.env.SERVER_PORT || 3000;
+  const port = process.env.SERVER_PORT || 8000;
 
   // Configuramos swagger
   setupSwagger(app);
