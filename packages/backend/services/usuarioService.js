@@ -1,7 +1,6 @@
 import NotFoundError from '../error/notFoundError.js';
 import UserAlreadyExists from '../error/userAlreadyExists.js';
 import IncorrectPasswordError from '../error/incorrectPasswordError.js';
-import PasswordRequiredError from '../error/passwordRequiredError.js';
 import bcrypt from 'bcrypt';
 import Usuario from '../models/usuario.js';
 import { TipoUsuario } from '../models/tipoUsuario.js';

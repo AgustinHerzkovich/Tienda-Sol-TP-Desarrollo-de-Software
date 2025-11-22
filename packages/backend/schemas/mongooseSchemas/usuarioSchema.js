@@ -33,7 +33,7 @@ const UsuarioSchema = new mongoose.Schema(
     },
     fechaAlta: {
       type: Date,
-      require: true,
+      required: true,
     },
     direcciones: [DireccionEntregaSchema],
   },

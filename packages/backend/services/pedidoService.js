@@ -2,7 +2,6 @@ import Pedido from '../models/pedido.js';
 import ItemPedido from '../models/itemPedido.js';
 import PedidoOutOfStockError from '../error/pedidoOutOfStockError.js';
 import CancellationError from '../error/cancellationError.js';
-import CompradorNotFoundError from '../error/compradorNotFoundError.js';
 import { EstadoPedido } from '../models/estadoPedido.js';
 import _ from 'lodash';
 import { TipoUsuario } from '../models/tipoUsuario.js';
@@ -173,9 +172,6 @@ export default class PedidoService {
 
   async getComprador(id) {
     const comprador = await this.usuarioService.findById(id);
-    if (comprador == null) {
-      throw new CompradorNotFoundError();
-    }
     return comprador;
   }
 
