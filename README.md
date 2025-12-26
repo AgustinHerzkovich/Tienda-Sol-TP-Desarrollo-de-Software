@@ -1,16 +1,29 @@
-# DDSO-K3511-2025-2C-G1
+# Tienda Sol – Plataforma de Comercio Electrónico
 
-Trabajo cuatrimestral DDSO 2C
+Tienda Sol es una aplicación web full-stack de comercio electrónico que permite a vendedores publicar productos,
+gestionar stock y recibir pedidos, y a compradores explorar catálogos, agregar productos al carrito y realizar compras.
 
----
+## 🧠 Descripción general
 
-## Integrantes:
+Este proyecto fue desarrollado como Trabajo Práctico Integrador en la materia Desarrollo de Software – UTN FRBA.
+Incluye backend, frontend, persistencia de datos, documentación de APIs, testing y despliegue en la nube.
 
-- Agustín Herzkovich
-- Julián Estévez
-- Lucas Presotto
-- Nicolás Piacentini
-- Tadeo Sorrentino
+## 🚀 Funcionalidades principales
+
+- Gestión de productos y pedidos.
+- Búsqueda de productos con filtros y paginación.
+- Carrito de compras del lado cliente.
+- Sistema de notificaciones.
+- Tests unitarios e integración.
+- Despliegue productivo en la nube.
+
+## 🛠️ Tecnologías utilizadas
+
+- **Backend:** Node.js, Express  
+- **Frontend:** React, Next.js, HTML, CSS  
+- **Base de datos:** MongoDB  
+- **Testing:** Jest, Cypress  
+- **Deploy:** Render (Backend), Netlify (Frontend)
 
 ---
 
